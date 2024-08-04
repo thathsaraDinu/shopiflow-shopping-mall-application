@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+   client:
+      image: ghcr.io/shanelkapramuditha/shopiflow-shopping-mall-application-client:main
+      container_name: shopiflow-client
+      restart: unless-stopped
+      ports:
+         - '4173:80'
+      volumes:
+         - shopiflow-client:/path/inside/container
+
+   server:
+      image: ghcr.io/shanelkapramuditha/shopiflow-shopping-mall-application-server:main
+      container_name: shopiflow-server
+      restart: unless-stopped
+      ports:
+         - '4174:3000'
+      env_file:
+         - stack.env
+      volumes:
+         - shopiflow-server:/path/inside/container
+
+volumes:
+   shopiflow-client:
+      name: shopiflow-client
+      driver: local
+   shopiflow-server:
+      name: shopiflow-server
+      driver: local
