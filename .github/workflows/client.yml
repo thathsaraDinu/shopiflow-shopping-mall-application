@@ -3,7 +3,7 @@ name: Client App CI/CD Pipeline
 on:
    push:
       branches:
-         - ci-cd
+         - dev
    workflow_dispatch:
 
 env:
@@ -30,7 +30,7 @@ jobs:
            id: meta
            uses: docker/metadata-action@v3
            with:
-              images: ${{ env.REGISTRY }}/${{ github.repository }}
+              images: ${{ env.REGISTRY }}/${{ github.repository }}-client
               flavor: |
                  latest=false
 
