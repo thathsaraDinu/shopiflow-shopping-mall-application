@@ -3,7 +3,7 @@ name: Client App CI/CD Pipeline
 on:
    push:
       branches:
-         - ci-cd
+         - dev
    workflow_dispatch:
 
 env:

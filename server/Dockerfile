@@ -16,4 +16,5 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 COPY --from=build /app /app
 WORKDIR /app
+EXPOSE 3000
 CMD ["node", "index.js"]
