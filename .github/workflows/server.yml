@@ -3,10 +3,8 @@ name: Server App CI/CD Pipeline
 on:
    push:
       branches:
-         - dev
-   pull_request:
-      branches:
          - main
+         - dev
    workflow_dispatch:
 
 env:
