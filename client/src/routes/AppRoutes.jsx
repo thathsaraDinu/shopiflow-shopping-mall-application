@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 // Static Pages
 const Home = lazy(() => import('@/pages/home/home'));
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Home />
       </Suspense>
     ),
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
   {
     path: 'login',
     element: (
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Login />
       </Suspense>
     ),
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Layout />
       </Suspense>
     ),
