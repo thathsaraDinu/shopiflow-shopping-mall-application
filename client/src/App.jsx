@@ -1,7 +1,7 @@
 function App() {
   return (
     <>
-      <h1>Hello World!</h1>
+      <h1>{import.meta.env.VITE_TEST_ENV}</h1>
     </>
   );
 }
