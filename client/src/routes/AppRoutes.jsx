@@ -15,26 +15,27 @@ const router = createBrowserRouter([
     path: '/',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <Home />
-      </Suspense>
-    ),
-  },
-  {
-    path: 'login',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
-        <Login />
-      </Suspense>
-    ),
-  },
-  {
-    path: '/',
-    element: (
-      <Suspense fallback={<LoadingSpinner />}>
         <Layout />
       </Suspense>
     ),
-    children: [],
+    children: [
+      {
+        path: '/',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'login',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Login />
+          </Suspense>
+        ),
+      },
+    ],
   },
 ]);
 
