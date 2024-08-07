@@ -5,7 +5,7 @@ import logo from '@/assets/logo/logo.png';
 
 const Signup = () => {
   return (
-    <section className="p-4 max-w-screen-lg mx-auto min-h-screen flex items-center">
+    <section className="p-4 max-w-screen-xl mx-auto min-h-screen flex items-center">
       <div className="lg:flex justify-between items-center grow">
         <div className="hidden lg:block w-[400px] px-10">
           <img src={logo} alt="logo" />
@@ -73,9 +73,9 @@ const Signup = () => {
             Get started
           </button>
 
-          <p className="mt-8 text-xs text-gray-500 text-center">
+          <p className="mt-8 text-sm text-gray-500 text-center">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-blue-600">
+            <Link to="/login" className="font-bold text-blue-600">
               Log in
             </Link>
           </p>
