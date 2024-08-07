@@ -7,10 +7,27 @@ const Home = lazy(() => import('@/pages/home/home'));
 
 // Auth Pages
 const Login = lazy(() => import('@/pages/login/login'));
+const Signup = lazy(() => import('@/pages/signup/signup'));
 
 const Layout = lazy(() => import('@/layout'));
 
 const router = createBrowserRouter([
+  {
+    path: 'login',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <Login />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/signup',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <Signup />
+      </Suspense>
+    ),
+  },
   {
     path: '/',
     element: (
@@ -24,14 +41,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSpinner />}>
             <Home />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'login',
-        element: (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Login />
           </Suspense>
         ),
       },
