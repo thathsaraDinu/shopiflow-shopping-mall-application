@@ -3,7 +3,10 @@
   "tabWidth": 2,
   "semi": true,
   "singleQuote": true,
-  "printWidth": 120,
+  "printWidth": 60,
   "bracketSpacing": true,
-  "endOfLine": "lf"
+  "endOfLine": "auto",
+  "htmlWhitespaceSensitivity": "strict",
+  "jsxBracketSameLine": false,
+  "jsxSingleQuote": false
 }
