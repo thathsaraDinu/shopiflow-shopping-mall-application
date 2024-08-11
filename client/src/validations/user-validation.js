@@ -23,3 +23,11 @@ export const createUserValidation = z
       path: ['confirmPassword'],
     },
   );
+
+export const userLoginValidation = z.object({
+  email: z
+    .string()
+    .min(1, 'Email required')
+    .email('Invalid email address'),
+  password: z.string().min(1, 'Password required'),
+});
