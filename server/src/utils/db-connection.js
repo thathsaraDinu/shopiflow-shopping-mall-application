@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import { DATABASE_CONFIG } from '../constants/constants.js';
 
-const uri = `${DATABASE_CONFIG.uri}/${DATABASE_CONFIG.dbName}`;
-
 async function dbConnect() {
   try {
     mongoose.set('strictQuery', true);
