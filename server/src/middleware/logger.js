@@ -1,5 +1,6 @@
 import pino from 'pino';
 import pinoHttp from 'pino-http';
+import { LOGGER_CONFIG } from '../constants/constants';
 
 // Create a transport for pino-pretty
 const transport = pino.transport({
@@ -30,7 +31,7 @@ const transport = pino.transport({
 
 const logger = pino(
   {
-    level: process.env.LOG_LEVEL || 'info'
+    level: LOGGER_CONFIG.level
   },
   transport
 );
