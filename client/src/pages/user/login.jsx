@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
 import {
   Card,
   CardHeader,
@@ -11,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { userLoginValidation } from '@/validations/user-validation';
 import InputField from '@/components/form-field';
+import { userLogin } from '@/api/auth.api';
 
 export default function Login() {
   const {
@@ -22,8 +25,28 @@ export default function Login() {
     reValidateMode: 'onBlur',
   });
 
+  const loginUser = useMutation({
+    mutationFn: userLogin,
+    onSuccess: () => {
+      toast.success('Logged in successfully');
+      setTimeout(() => {
+        window.location.href = '/profile';
+      }, 1000);
+    },
+    onError: (error) => {
+      console.log(error.response?.status);
+      if (error.response.status === 401) {
+        toast.error('Invalid credentials');
+      }
+
+      if (error.response?.status !== 401) {
+        toast.error('Something went wrong');
+      }
+    },
+  });
+
   const onSubmit = (data) => {
-    console.log(data);
+    loginUser.mutate(data);
   };
 
   return (
