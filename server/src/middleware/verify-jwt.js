@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { JWT_CONFIG } from '../constants/constants';
+import { JWT_CONFIG } from '../constants/constants.js';
 
 const verifyJwt = (req, res, next) => {
   const autheHeader = req.headers.authorization || req.headers.Authorization;
