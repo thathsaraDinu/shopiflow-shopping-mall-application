@@ -1,19 +1,28 @@
-import { register } from '../services/user.service.js';
+import { getProfile, register } from '../services/user.service.js';
 
 const UserController = {
+  // Register a new user
+  // Anyone can register
   register: async (req, res) => {
     try {
-      const { firstName, lastName, email, role, gender, mobile, password } = req.body;
+      const user = await register(req.body);
 
-      if (!firstName || !lastName || !email || !role || !gender || !mobile || !password) {
-        return res.status(400).json({ message: 'All fields are required' });
-      }
-
-      const user = await register({ firstName, lastName, email, role, gender, mobile, password });
-
+      // If the user is created successfully, return a 201 status code
       if (user) {
         return res.status(201).json({ message: 'User created successfully' });
       }
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  // Get user profile details
+  // Only authenticated users can access
+  profile: async (req, res) => {
+    try {
+      const user = await getProfile(req.user.id);
+
+      return res.status(200).json(user);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
