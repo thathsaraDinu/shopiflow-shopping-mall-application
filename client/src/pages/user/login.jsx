@@ -1,7 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useMutation } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import {
   Card,
   CardHeader,
@@ -14,8 +17,13 @@ import { Button } from '@/components/ui/button';
 import { userLoginValidation } from '@/validations/user-validation';
 import InputField from '@/components/form-field';
 import { userLogin } from '@/api/auth.api';
+import { useAuthStore } from '@/store/auth-store';
+import { getProfileData } from '@/api/user.api';
 
 export default function Login() {
+  const login = useAuthStore((state) => state.login);
+  const profile = useAuthStore((state) => state.profile);
+
   const {
     register,
     handleSubmit,
@@ -25,16 +33,47 @@ export default function Login() {
     reValidateMode: 'onBlur',
   });
 
+  const userData = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfileData,
+    enabled: false,
+  });
+
   const loginUser = useMutation({
     mutationFn: userLogin,
-    onSuccess: () => {
+    onSuccess: async (data) => {
+      login(data.accessToken);
       toast.success('Logged in successfully');
-      setTimeout(() => {
-        window.location.href = '/profile';
-      }, 1000);
+
+      // Fetch profile data after successful login
+      try {
+        // Enable the query and refetch
+        userData
+          .refetch()
+          .then((result) => {
+            profile(result.data.role);
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1000);
+          })
+          .catch((error) => {
+            // Handle errors from refetch
+            toast.error('Failed to fetch profile data');
+            console.error(
+              'Error fetching profile data:',
+              error,
+            );
+          });
+      } catch (error) {
+        toast.error('Failed to fetch profile data');
+        console.error(
+          'Error fetching profile data:',
+          error,
+        );
+      }
     },
     onError: (error) => {
-      console.log(error.response?.status);
+      console.log(error);
       if (error.response.status === 401) {
         toast.error('Invalid credentials');
       }
