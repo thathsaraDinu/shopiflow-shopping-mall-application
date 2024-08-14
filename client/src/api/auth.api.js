@@ -1,37 +1,32 @@
-import axios from 'axios';
-import axiosInstance from '@/api/axios-instance';
+import { instance } from '@/hooks/use-axios';
 
 // Login
 export const userLogin = async (data) => {
-  const response = await axiosInstance.post(
-    `http://localhost:3000/api/auth`,
-    data,
-  );
-  const { accessToken } = response.data;
-  localStorage.setItem('accessToken', accessToken);
+  const response = await instance.post(`/api/auth`, data, {
+    withCredentials: true,
+  });
+
   return response.data;
 };
 
 // Refresh Token
 export const refreshToken = async () => {
-  const response = await axios.get(
-    `http://localhost:3000/api/auth`,
+  const response = await instance.get(
+    `/api/auth`,
+    {},
     { withCredentials: true },
   );
-  const { accessToken } = response.data;
-
-  localStorage.setItem('accessToken', accessToken);
 
   return response.data;
 };
 
 // Logout
 export const userLogout = async () => {
-  await axiosInstance.post(
-    `http://localhost:3000/api/auth/logout`,
+  const response = await instance.post(
+    `/api/auth/logout`,
     {},
     { withCredentials: true },
   );
 
-  localStorage.removeItem('accessToken');
+  return response.data;
 };
