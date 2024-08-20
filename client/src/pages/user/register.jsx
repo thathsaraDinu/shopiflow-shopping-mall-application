@@ -1,7 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import PropTypes from 'prop-types';
+import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import {
   Card,
   CardHeader,
@@ -10,35 +11,10 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import InputField from '@/components/form-field';
 import { Button } from '@/components/ui/button';
-import { RadioGroup } from '@/components/ui/radio-group';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-
-// Zod validation schema
-const validationSchema = z
-  .object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    email: z.string().email('Invalid email address'),
-    mobile: z
-      .string()
-      .regex(/^\d{10}$/, 'Invalid mobile number'),
-    password: z
-      .string()
-      .min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string(),
-    gender: z.enum(['male', 'female']),
-  })
-  .refine(
-    (data) => data.password === data.confirmPassword,
-    {
-      message: 'Passwords do not match',
-      path: ['confirmPassword'],
-    },
-  );
+import { createUserValidation } from '@/validations/user-validation';
+import { userRegister } from '@/api/user.api';
 
 export default function Register() {
   const [form, setForm] = useState('user');
@@ -49,50 +25,33 @@ export default function Register() {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(validationSchema),
-    reValidateMode: 'onChange',
+    resolver: zodResolver(createUserValidation),
+    reValidateMode: 'onBlur',
     defaultValues: {
       gender: 'male',
     },
   });
 
+  const addUser = useMutation({
+    mutationFn: userRegister,
+    onSuccess: () => {
+      toast.success('Registered successfully');
+      reset();
+    },
+    onError: (error) => {
+      console.log(error.response?.status);
+      if (error.response.status === 400) {
+        toast.error('User already exists');
+      }
+
+      if (error.response?.status !== 400) {
+        toast.error('Something went wrong');
+      }
+    },
+  });
+
   const onSubmit = (data) => {
-    console.log(data);
-    toast.success('User registered successfully');
-    reset();
-  };
-
-  // Text input field component
-  const TextInputField = ({
-    label,
-    name,
-    type = 'text',
-  }) => (
-    <div className="space-y-2">
-      <Label htmlFor={name}>{label}</Label>
-      <Input
-        id={name}
-        type={type}
-        placeholder={label}
-        {...register(name)}
-        aria-invalid={errors[name] ? 'true' : 'false'}
-        aria-describedby={`${name}-error`}
-      />
-      {errors[name] && (
-        <span
-          id={`${name}-error`}
-          className="text-sm text-red-500"
-        >
-          {errors[name]?.message}
-        </span>
-      )}
-    </div>
-  );
-
-  TextInputField.propTypes = {
-    label: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string,
+    addUser.mutate(data);
   };
 
   // User registration form
@@ -109,73 +68,68 @@ export default function Register() {
       <div className="border-t border-gray-300" />
       <CardContent className="space-y-4 px-4 py-6">
         <div className="grid grid-cols-2 gap-4">
-          <TextInputField
+          <InputField
             label="First Name"
             name="firstName"
+            register={register}
+            errors={errors}
           />
-          <TextInputField
+          <InputField
             label="Last Name"
             name="lastName"
+            register={register}
+            errors={errors}
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <TextInputField
+          <InputField
             label="Email"
             name="email"
             type="email"
+            register={register}
+            errors={errors}
           />
-          <TextInputField label="Mobile" name="mobile" />
+          <InputField
+            label="Mobile"
+            name="mobile"
+            register={register}
+            errors={errors}
+          />
         </div>
+        <InputField
+          type="radio"
+          label="Gender"
+          name="gender"
+          options={[
+            { value: 'male', label: 'Male' },
+            { value: 'female', label: 'Female' },
+          ]}
+          register={register}
+          errors={errors}
+        />
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Gender</Label>
-            <RadioGroup
-              name="gender"
-              id="gender"
-              className="flex gap-8"
-            >
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  value="male"
-                  name="gender"
-                  id="male"
-                  {...register('gender')}
-                />
-                <Label htmlFor="male" className="ms-3">
-                  Male
-                </Label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  value="female"
-                  name="gender"
-                  id="female"
-                  {...register('gender')}
-                />
-                <Label htmlFor="female" className="ms-3">
-                  Female
-                </Label>
-              </div>
-            </RadioGroup>
-            {errors.gender && (
-              <span className="text-sm text-red-500">
-                {errors.gender?.message}
-              </span>
-            )}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <TextInputField
+          <InputField
             label="Password"
             name="password"
             type="password"
+            register={register}
+            errors={errors}
           />
-          <TextInputField
+          <InputField
             label="Confirm Password"
             name="confirmPassword"
             type="password"
+            register={register}
+            errors={errors}
+          />
+        </div>
+        <div className="hidden">
+          <InputField
+            label="Role"
+            name="role"
+            defaultValue="user"
+            register={register}
+            errors={errors}
           />
         </div>
       </CardContent>
