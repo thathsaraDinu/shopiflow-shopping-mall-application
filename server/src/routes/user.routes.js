@@ -1,10 +1,15 @@
 import { Router } from 'express';
 import UserController from '../controllers/user.controller.js';
-import verifyJwt from '../middleware/verify-jwt.js';
+import verifyAuth from '../middleware/authorize.js';
+import validateRequest from '../middleware/validate.js';
 
 const router = Router();
 
-router.post('/register', UserController.register);
-router.get('/profile', verifyJwt, UserController.profile);
+// All routes are prefixed with /api/users
+// Public routes
+router.post('/', validateRequest('createUser'), UserController.register);
+
+// User only routes
+router.get('/profile', verifyAuth(['admin', 'user']), UserController.profile);
 
 export default router;
