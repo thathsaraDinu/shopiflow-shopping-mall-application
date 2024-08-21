@@ -1,18 +1,20 @@
-import { userProfile } from '@/api/user.api';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getProfileData } from '@/api/user.api';
 
 const Profile = () => {
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       const response = await userProfile();
-  //       console.log(response);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchProfile();
-  // }, []);
+  // Get the user's profile data
+  const profile = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfileData,
+  });
+
+  if (profile.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (profile.isError) {
+    return <div>Error: {profile.error.message}</div>;
+  }
 
   return (
     <div>
