@@ -22,7 +22,18 @@ export const schema2 = z.object({
       message: 'Must be between 1 and 100',
     }), // Ensure it's in the range
 
-  applicableItems: z.array(z.string().min(1).max(255)),
+  applicableItems: z
+    .array(
+      z.union([
+        z
+          .string()
+          .min(1, { message: 'Please add an Item' }),
+
+        z.undefined(), // Allow undefined values
+      ]),
+    )
+    .min(1)
+    .max(255),
 
   description: z
     .string()

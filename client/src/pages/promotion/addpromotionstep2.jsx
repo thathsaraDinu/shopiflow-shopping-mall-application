@@ -1,4 +1,5 @@
 import InputField from '@/components/form-field';
+import { Button } from '@/components/ui/button';
 import { CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
 
@@ -10,10 +11,10 @@ export function AddPromotionStep2({
   applicableItems: applicableItems,
   qualifyingPurchaseAmount,
   description,
-  handleChange,
+  
   addItem,
   removeItem,
-  handleItemChange,
+  
   register,
   errors,
 }) {
@@ -31,7 +32,6 @@ export function AddPromotionStep2({
       <div className="grid pb-4 gap-4">
         <InputField
           label={'Store Name'}
-          className={`border-solid border-2`}
           type="text"
           name="storeName"
           register={register}
@@ -58,79 +58,91 @@ export function AddPromotionStep2({
               Applicable Items
             </div>
             {applicableItems.map((item, index) => (
-              <div className='w-full flex gap-5 items-center' key={index}>
-                <input
+              <div
+                id={`applicableItems.${index}`}
+                className="w-full flex gap-5 items-center"
+                key={index}
+              >
+                <InputField
                   type="text"
-                  className="flex h-9  rounded-md border border-input bg-transparent px-3 py-1 text-sm mb-3 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  {...register(`applicableItems.${index}`, {
-                    required: true,
-                    onChange: (e) =>
-                      handleItemChange(
-                        index,
-                        e.target.value,
-                        1,
-                      ),
-                  })}
+                  register={register}
                   name={`applicableItems[${index}]`}
                 />
-{applicableItems.length != 1 ? <button
-                  type="button"
-                  onClick={() => removeItem(index, 1)}
-                  className='inline-block'
-                >
-                  Remove
-                </button>: ""}
-                
+
+                {applicableItems.length != 1 ? (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      removeItem(index, 1);
+                    }}
+                    className="inline-block"
+                  >
+                    Remove
+                  </Button>
+                ) : (
+                  ''
+                )}
+
                 <span className="text-sm text-red-500">
-                  {errors.applicableItems &&
-                    errors.applicableItems[index] && (
+                  {errors.applicableItems ? (
+                    errors.applicableItems[index] ? (
                       <p>
                         {
                           errors.applicableItems[index]
                             .message
                         }
                       </p>
-                    )}
+                    ) : (
+                      ''
+                    )
+                  ) : (
+                    ''
+                  )}
                 </span>
               </div>
             ))}
-            <button
-            className='p-2'
+            <Button
+              className="mt-3"
               type="button"
+              variant="secondary"
+              size="sm"
               onClick={() => addItem(1)}
             >
               Add Item
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
         <div>
-          <InputField
-            label={'Qualifying Purchase Amount'}
-            type="number"
-            register={register}
-            name="qualifyingPurchaseAmount"
-            errors={errors}
-          />
-
-          <InputField
-            label={'Discount Amount'}
-            type="number"
-            register={register}
-            name="discountAmount"
-            className={`border-solid border-2`}
-            errors={errors}
-          />
+          <div className="pb-4">
+            <InputField
+              label={'Qualifying Purchase Amount'}
+              type="number"
+              register={register}
+              name="qualifyingPurchaseAmount"
+              errors={errors}
+            />
+          </div>
+          <div>
+            <InputField
+              label={'Discount Amount'}
+              type="number"
+              register={register}
+              name="discountAmount"
+              errors={errors}
+            />
+          </div>
         </div>
       )}
 
       <div>
         <InputField
           label={'Description'}
-          type="text"
+          type="textArea"
           name="description"
           register={register}
-          className={`border-solid border-2`}
           errors={errors}
         />
       </div>

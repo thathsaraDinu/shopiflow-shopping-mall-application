@@ -1,11 +1,6 @@
-import { CardTitle } from "@/components/ui/card";
+import { CardTitle } from '@/components/ui/card';
 
-export function AddPromotionStep1({
-  promotionType,
-  handleChange,
-  register,
-  errors,
-}) {
+export function AddPromotionStep1({ register, errors }) {
   return (
     <div
       id="firstpart"
@@ -17,14 +12,10 @@ export function AddPromotionStep1({
 
         <select
           name="promotionType"
-          className="mt-4 px-4 py-3 rounded-lg"
+          className="my-2 px-4 py-3 rounded-lg border border-gray-300"
           {...register('promotionType', {
-            onChange: (e) => {
-              handleChange(e);
-              // Update state
-            },
+            required: 'Promotion type is required',
           })}
-          value={promotionType}
         >
           <option className="px-4 py-3" value={0}>
             Select type
@@ -35,7 +26,7 @@ export function AddPromotionStep1({
 
           <option value={3}>Discount on Amount</option>
         </select>
-        <div>
+        <div className='text-sm text-red-500'>
           {errors.promotionType && (
             <p>{errors.promotionType.message}</p>
           )}

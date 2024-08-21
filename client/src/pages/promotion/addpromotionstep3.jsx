@@ -1,47 +1,35 @@
+import InputField from "@/components/form-field";
+
 export function AddPromotionStep3({
   startDate,
   endDate,
   register,
   errors,
-  handleChange,
+  
 }) {
   return (
     <div className="transition-all duration-500">
       <div></div>
       <div>
-        <label>Start Date:</label>
-        <input
+        <InputField
           type="date"
           name="startDate"
-          className={`border-solid border-2`}
-          value={startDate}
-          {...register('startDate', {
-            onChange: (e) => {
-              handleChange(e);
-              // Update state
-            },
-          })}
+          className="w-100"
+          label={'Start Date'}
+          errors={errors}
+          register={register}
         />
-        {errors.startDate && (
-          <p>{errors.startDate.message}</p>
-        )}
       </div>
 
       <div>
-        <label>End Date:</label>
-        <input
+        <InputField
           type="date"
           name="endDate"
-          className={`border-solid border-2`}
-          value={endDate}
-          {...register('endDate', {
-            onChange: (e) => {
-              handleChange(e);
-              // Update state
-            },
-          })}
+          className="w-100"
+          label={'End Date'}
+          errors={errors}
+          register={register}
         />
-        {errors.endDate && <p>{errors.endDate.message}</p>}
       </div>
     </div>
   );

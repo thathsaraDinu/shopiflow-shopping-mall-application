@@ -12,8 +12,11 @@ import {
   schema3,
   schema4,
 } from '../../validations/promotion-validation';
+import { useMutation } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { addpromotion } from '@/api/promotion.api';
+import { Button } from '@/components/ui/button';
+import toast from 'react-hot-toast';
 
 export function AddPromotionMain() {
   const [formData, setFormData] = useState({
@@ -43,6 +46,8 @@ export function AddPromotionMain() {
   const {
     register,
     handleSubmit,
+    unregister,
+    reset,
     formState: { errors, isSubmitting },
     setError,
   } = useForm({
@@ -56,66 +61,53 @@ export function AddPromotionMain() {
             : zodResolver(schema4),
   });
 
-  const onSubmit = async (data) => {
-    setFormData2(data);
-    console.log(data);
-    console.log('The formdata', formData);
-    console.log('secondformdata', formData2);
-    try {
-      if (currentStepIndex == 2) {
-        await new Promise((resolve) =>
-          setTimeout(resolve, 1000),
-        );
-        console.log('submitting');
-        addpromotion(formData2);
-        if (!response.ok) {
-          response.json().then((data) => {
-            setError('root', {
-              type: 'manual', // Optional: Specify the type of error (e.g., "manual")
-              message: data.message, // Accessing the message from the response JSON
-            });
-          });
-        }
-
-        if (response.status == 200) {
-          console.log('success');
-          setError('root', {
-            message: 'success',
-          });
-        }
-
-        const data = await response.json();
-        console.log(data);
+  const addPromotion = useMutation({
+    mutationFn: addpromotion,
+    onSuccess: () => {
+      toast.success('Promotion Created Successfully');
+      reset();
+    },
+    onError: (error) => {
+      console.log(error.response?.status);
+      if (error.response.status === 400) {
+        toast.error('Promotion already exists');
       }
-    } catch (error) {
-      setError('root', {
-        type: 'manual', // Optional: Specify the type of error (e.g., "manual")
-        message: 'Internal Error',
-      });
+      if (error.response?.status !== 500) {
+        toast.error('Something went wrong');
+      }
+    },
+  });
+
+  const onSubmit = async (data) => {
+    if(currentStepIndex == 0) setFormData((prevData) => ({ ...prevData, promotionType: parseInt(data.promotionType) }));
+    setFormData2(data);
+    if (currentStepIndex == 2) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      addPromotion.mutate(formData2);
     }
-    next();
+    next(); 
   };
 
-  const handleChange = (e) => {
-    console.log('the step', theStep);
-    const { name, value } = e.target;
-    console.log(name, typeof value);
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]:
-        name === 'promotionType'
-          ? parseInt(value)
-          : name === 'discountAmount' ||
-              name === 'qualifyingPurchaseAmount' ||
-              name === 'discountPercentage'
-            ? !isNaN(parseFloat(value))
-              ? parseFloat(value)
-              : ''
-            : value,
-    }));
+  // const handleChange = (e) => {
+  //   console.log('the step', theStep);
+  //   const { name, value } = e.target;
+  //   console.log(name, typeof value);
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]:
+  //       name === 'promotionType'
+  //         ? parseInt(value)
+  //         : name === 'discountAmount' ||
+  //             name === 'qualifyingPurchaseAmount' ||
+  //             name === 'discountPercentage'
+  //           ? !isNaN(parseFloat(value))
+  //             ? parseFloat(value)
+  //             : ''
+  //           : value,
+  //   }));
 
-    console.log(formData);
-  };
+  //   console.log(formData);
+  // };
 
   useEffect(() => {
     if (currentStepIndex == 0) setTheStep(1);
@@ -132,6 +124,18 @@ export function AddPromotionMain() {
     else setTheStep(4);
   });
 
+  
+  // const handleItemChange = (index, value, type) => {
+  //   if (type == 1) {
+  //     const items = [...formData2.applicableItems];
+  //     items[index] = value;
+  //     setFormData2({
+  //       ...formData2,
+  //       applicableItems: items,
+  //     });
+  //   }
+  // };
+
   const addItem = (type) => {
     if (type == 1) {
       setFormData({
@@ -141,28 +145,28 @@ export function AddPromotionMain() {
     }
     console.log(formData);
   };
-  const handleItemChange = (index, value, type) => {
-    if (type == 1) {
-      const items = [...formData2.applicableItems];
-      items[index] = value;
-      setFormData2({
-        ...formData2,
-        applicableItems: items,
-      });
-    }
-  };
 
   const removeItem = (index, type) => {
-    if (type == 1) {
+    if (type === 1) {
+      // Filter out the item from the form data
       const items = formData.applicableItems.filter(
         (_, i) => i !== index,
       );
+
+      // Update the form data state
       setFormData({
         ...formData,
         applicableItems: items,
       });
+
+      // Deregister the field before removing the item
+      unregister(`applicableItems[${index}]`, {
+        keepValue: false,
+      });
+      console.log(`applicableItems[${index}]`);
     }
   };
+
   const {
     steps,
     currentStepIndex,
@@ -176,24 +180,20 @@ export function AddPromotionMain() {
   } = useMultistepForm([
     <AddPromotionStep1
       {...formData}
-      handleChange={handleChange}
       register={register}
       errors={errors}
     />,
     <AddPromotionStep2
       {...formData}
-      handleChange={handleChange}
       addItem={addItem}
       register={register}
       removeItem={removeItem}
-      handleItemChange={handleItemChange}
       errors={errors}
     />,
     <AddPromotionStep3
       {...formData}
       register={register}
       errors={errors}
-      handleChange={handleChange}
     />,
   ]);
 
@@ -378,25 +378,22 @@ export function AddPromotionMain() {
                   className={`w-full gap-5 sm:gap-10 flex items-center justify-center sm:justify-end text-end`}
                 >
                   {!isFirstStep && (
-                    <button
+                    <Button
                       onClick={back}
                       type="button"
-                      className=" px-4 py-2 border-blue-500 border-solid border-2 bg-blue-700 text-white rounded-lg "
+                      varient="secondary"
                     >
                       Previous
-                    </button>
+                    </Button>
                   )}
 
-                  <button
+                  <Button
                     type="submit"
-                    className=" px-4 py-2 border-blue-500 border-solid border-2 bg-blue-700 text-white rounded-lg "
+                    disabled={isSubmitting}
+                    varient="default"
                   >
-                    {isLastStep
-                      ? 'Submit'
-                      : isLastStep && isSubmitting
-                        ? 'Submitting'
-                        : 'Next'}
-                  </button>
+                    {isSubmitting ? 'Submitting...' : isLastStep ? 'Submit':  'Next'}
+                  </Button>
                 </div>
               )}
             </form>
