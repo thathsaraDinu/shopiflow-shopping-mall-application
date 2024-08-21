@@ -1,18 +1,11 @@
 import { Router } from 'express';
 import loginLimiter from '../middleware/login-limiter.js';
-import { loginUser, refreshAccessToken, logoutUser } from '../controllers/auth.controller.js';
-import validateRequest from '../middleware/validate.js';
+import { login, logout, refresh } from '../controllers/auth.controller.js';
 
 const router = Router();
 
-// All routes are prefixed with /api/auth
-// Public routes
-router.post('/', loginLimiter, validateRequest('loginUser'), loginUser);
-
-// Protected routes
-router.get('/', refreshAccessToken);
-router.post('/logout', logoutUser);
-
-// Admin only route
+router.post('/', loginLimiter, login);
+router.get('/', refresh);
+router.post('/logout', logout);
 
 export default router;
