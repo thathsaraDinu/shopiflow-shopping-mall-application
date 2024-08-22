@@ -15,7 +15,5 @@ export const addpromotion = async(data) =>{
         );
         throw error;
     }
-    
-    
-
+    // return axios.post('api/addpromotion', data);
 }
