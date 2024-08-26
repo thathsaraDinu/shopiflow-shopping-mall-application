@@ -12,6 +12,14 @@ const PageLoader = () => (
   </div>
 );
 
+// dashboard pages
+const DasshboardLayout = lazy(
+  () => import('@/pages/dashboard/layout'),
+);
+const Inventory = lazy(
+  () => import('@/pages/dashboard/inventory'),
+);
+
 // Static Pages
 const Home = lazy(() => import('@/pages/home/home'));
 
@@ -22,6 +30,7 @@ const Register = lazy(
 const Login = lazy(() => import('@/pages/user/login'));
 const Profile = lazy(() => import('@/pages/user/profile'));
 
+// layouts
 const Layout = lazy(() => import('@/layout'));
 
 const router = createBrowserRouter([
@@ -61,6 +70,24 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <PrivateRoute element={<Profile />} />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+  {
+    path: 'dashboard',
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <DasshboardLayout />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: 'inventory',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Inventory />
           </Suspense>
         ),
       },
