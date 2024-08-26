@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import InventoryForm from './inventoryForm';
 
 const InventoryTable = () => {
   return (
@@ -10,9 +11,7 @@ const InventoryTable = () => {
             Products
           </h2>
           <div className="flex">
-            <Button className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
-              Add Product
-            </Button>
+            <InventoryForm />
             <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all mx-3">
               <svg
                 width="20"

@@ -12,6 +12,7 @@ function DasshboardLayout() {
           <div className="flex justify-between">
             <div className="relative grow">
               <Input
+                id="search"
                 className="text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500"
                 placeholder="Search"
               />
