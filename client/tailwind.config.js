@@ -75,6 +75,10 @@ export default {
           800: '#383e49',
           900: '#2b2f38',
         },
+        orange: '#E19133',
+        purple: '#845EBC',
+        red: '#F04438',
+        green: '#12B76A',
       },
       borderRadius: {
         lg: 'var(--radius)',
