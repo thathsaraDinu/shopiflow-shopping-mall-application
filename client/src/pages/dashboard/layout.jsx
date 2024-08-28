@@ -10,8 +10,9 @@ function DasshboardLayout() {
         <Sidebar />
         <div className="py-7 px-8 bg-grey-50 grow">
           <div className="flex justify-between">
-            <div className="relative max-w-screen-lg grow">
+            <div className="relative grow">
               <Input
+                id="search"
                 className="text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500"
                 placeholder="Search"
               />
@@ -50,7 +51,7 @@ function DasshboardLayout() {
                 </svg>
               </button>
 
-              <button>
+              <button className="mr-2">
                 <svg
                   width="28"
                   height="28"
