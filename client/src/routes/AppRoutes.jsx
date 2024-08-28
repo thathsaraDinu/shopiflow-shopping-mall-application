@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
+import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             <PrivateRoute element={<Profile />} />
           </Suspense>
         ),
+      },
+      {
+        path: 'addpromotion',
+        element: <AddPromotionMain></AddPromotionMain>
       },
     ],
   },
