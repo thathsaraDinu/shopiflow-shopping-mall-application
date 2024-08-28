@@ -8,7 +8,8 @@ const router = Router();
 // Public routes
 
 // Protected routes - user only
-router.get('/', verifyAuth(['user']), QueueController.getUserQueues);
+router.get('/:shopID', verifyAuth(['user']), QueueController.getQueues);
+router.get('/my', verifyAuth(['user']), QueueController.getUserQueues);
 router.post('/:shopID', verifyAuth(['user']), QueueController.joinQueue);
 router.put('/:shopID', verifyAuth(['user']), QueueController.changeQueuePosition);
 router.delete('/:id', verifyAuth(['user']), QueueController.leaveQueue);
