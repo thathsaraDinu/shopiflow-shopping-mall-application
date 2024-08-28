@@ -31,6 +31,14 @@ const Register = lazy(
 const Login = lazy(() => import('@/pages/user/login'));
 const Profile = lazy(() => import('@/pages/user/profile'));
 
+// Queue Related Pages
+const ShopQueue = lazy(
+  () => import('@/pages/queue/shop-queue'),
+);
+
+// Shop Related Pages
+const Shop = lazy(() => import('@/pages/shop/shop'));
+
 // layouts
 const Layout = lazy(() => import('@/layout'));
 
@@ -76,7 +84,23 @@ const router = createBrowserRouter([
       },
       {
         path: 'addpromotion',
-        element: <AddPromotionMain></AddPromotionMain>
+        element: <AddPromotionMain></AddPromotionMain>,
+      },
+      {
+        path: 'queue/:shopID',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ShopQueue />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'shops',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Shop />
+          </Suspense>
+        ),
       },
     ],
   },
