@@ -22,6 +22,20 @@ const ProductController = {
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
+  },
+
+  getProductById: async (req, res) => {
+    try {
+      const product = await productService.getProductById(req.params);
+
+      if (!product) {
+        return res.status(404).json({ success: false, message: 'Product not fonud' });
+      }
+
+      res.status(200).json({ success: true, data: product });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
   }
 };
 

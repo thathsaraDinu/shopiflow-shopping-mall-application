@@ -12,6 +12,12 @@ const productService = {
     const products = await Product.find();
 
     return products;
+  },
+
+  getProductById: async ({ id }) => {
+    const product = await Product.findOne({ productID: id });
+
+    return product;
   }
 };
 
