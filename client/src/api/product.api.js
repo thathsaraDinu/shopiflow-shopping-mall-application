@@ -13,3 +13,10 @@ export const getAllProducts = async () => {
 
   return response.data;
 };
+
+// get product by id
+export const getProductById = async (id) => {
+  const response = await instance.get('api/product/' + id);
+
+  return response.data;
+};
