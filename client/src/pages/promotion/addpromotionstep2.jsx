@@ -64,6 +64,7 @@ export function AddPromotionStep2({
                 key={index}
               >
                 <InputField
+                label={`Item ${index + 1}`}
                   type="text"
                   register={register}
                   name={`applicableItems[${index}]`}

@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 const DiscountAmount = new mongoose.Schema({
   promotionType: {
     type: Number,
@@ -34,4 +33,4 @@ const DiscountAmount = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('DiscountAmount', DiscountAmount);
+export default mongoose.model.DiscountAmount || mongoose.model('DiscountAmount', DiscountAmount);
