@@ -6,6 +6,12 @@ const productService = {
     await product.save();
 
     return product;
+  },
+
+  getAllProducts: async () => {
+    const products = await Product.find();
+
+    return products;
   }
 };
 
