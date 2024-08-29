@@ -8,7 +8,7 @@ const ProductController = {
       res.status(201).json({ success: true, data: product });
     } catch (error) {
       if (error.code === 11000) {
-        res.status(500).json({ success: false, message: 'Product already exists' });
+        return res.status(500).json({ success: false, message: 'Product already exists' });
       }
       res.status(500).json({ success: false, message: error.message });
     }
