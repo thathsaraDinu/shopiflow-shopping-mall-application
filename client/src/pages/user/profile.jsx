@@ -16,7 +16,7 @@ const Profile = () => {
     return <div>Error: {profile.error.message}</div>;
   }
 
-  return (
+  return (  
     <div>
       <h1>Profile</h1>
     </div>

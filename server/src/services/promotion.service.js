@@ -6,8 +6,7 @@ export const getAllPromotions = async () => {
     // Find all promotions
     const discountPercentage = await DiscountPercentageSchema.find();
     const discountAmount = await DiscountAmount.find();
-    console.log("test controller");
-    
+    console.log('test controller');
 
     return {
       discountPercentage,
@@ -21,23 +20,57 @@ export const getAllPromotions = async () => {
   }
 };
 
-
-
 // Add a new promotion type percentage discount
 
 export const addPromotionPercentage = async (data) => {
   try {
-    // Create a new promotion
-    const promotion = await DiscountPercentageSchema.create(data);
+    const {
+      promotionType,
+      storeName,
+      startDate,
+      endDate,
+      description,
+      discountPercentage,
+      applicableItems
+    } = data;
 
-    return promotion;
+    const now = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return {
+        status: 400,
+        message: 'Invalid Date format for startDate or endDate'
+      };
+    }
+
+    const isActive = now >= start && now <= end;
+
+    const newPromotion = new DiscountPercentageSchema({
+      promotionType: 1,
+      storeName,
+      discountPercentage,
+      applicableItems,
+      startDate: start,
+      endDate: end,
+      description,
+      isActive
+    });
+
+    const savedPromotion = await newPromotion.save();
+    return savedPromotion;
   } catch (error) {
-    throw {
-      status: 500,
-      message: error.message
-    };
+    console.error('Error saving promotion:', error);
+    if (!error.status) {
+      error.status = 500;
+      error.message = 'Failed to save the promotion';
+    }
+    throw error;
   }
-}
+};
+
+
 
 export const addPromotionAmount = async (data) => {
   try {
@@ -51,4 +84,4 @@ export const addPromotionAmount = async (data) => {
       message: error.message
     };
   }
-}
+};
