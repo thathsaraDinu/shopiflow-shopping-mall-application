@@ -84,10 +84,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'addpromotion',
-        element: <AddPromotionMain></AddPromotionMain>,
-      },
-      {
         path: 'queue/:shopID',
         element: (
           <Suspense fallback={<PageLoader />}>
@@ -100,19 +96,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Shop />
-          </Suspense>
-        ),
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <AddPromotionMain />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'allpromotions',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <AllPromotions />
           </Suspense>
         ),
       },
@@ -131,6 +114,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Inventory />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'addpromotion',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AddPromotionMain />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'allpromotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AllPromotions />
           </Suspense>
         ),
       },
