@@ -68,11 +68,13 @@ export function AddPromotionMain() {
       reset();
     },
     onError: (error) => {
+      console.log("the formdata: ",formData2);
+      console.log("the error: ",error);
       console.log(error.response?.status);
       if (error.response.status === 400) {
         toast.error('Promotion already exists');
       }
-      if (error.response?.status !== 500) {
+      else if (error.response?.status !== 500) {
         toast.error('Something went wrong');
       }
     },
@@ -80,7 +82,10 @@ export function AddPromotionMain() {
 
   const onSubmit = async (data) => {
     if(currentStepIndex == 0) setFormData((prevData) => ({ ...prevData, promotionType: parseInt(data.promotionType) }));
-    setFormData2(data);
+    console.log(data)
+    setFormData2((prevData) => ({ ...prevData, ...data }));
+   console.log(formData2);
+
     if (currentStepIndex == 2) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       addPromotion.mutate(formData2);

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const DiscountPercentageSchema = new mongoose.Schema({
   promotionType: {
@@ -35,4 +35,4 @@ const DiscountPercentageSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('DiscountPercentage', DiscountPercentageSchema);
+export default mongoose.model.DiscountPercentage || mongoose.model('DiscountPercentage', DiscountPercentageSchema);

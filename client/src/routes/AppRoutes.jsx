@@ -6,6 +6,7 @@ import {
 import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
+import { AllPromotions } from '@/pages/promotion/allpromotions';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -83,10 +84,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'addpromotion',
-        element: <AddPromotionMain></AddPromotionMain>,
-      },
-      {
         path: 'queue/:shopID',
         element: (
           <Suspense fallback={<PageLoader />}>
@@ -117,6 +114,22 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Inventory />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'addpromotion',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AddPromotionMain />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'allpromotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AllPromotions />
           </Suspense>
         ),
       },
