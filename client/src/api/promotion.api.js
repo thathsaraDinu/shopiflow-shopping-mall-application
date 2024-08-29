@@ -7,11 +7,11 @@ export const addpromotion = async (data) => {
     if (data.promotionType === '1') {
       console.log(
         'Sending request to add promotion type 1:',
-        data,
+        data
       );
       const response = await instance.post(
         '/api/promotions/addpromotiontype1',
-        data,
+        data
       );
       console.log('Response received:', response);
       return response;
@@ -37,7 +37,7 @@ export const addpromotion = async (data) => {
 
 export const getPromotions = async () => {
   try {
-    const response = await instance.get(
+    const response = await instance.get( 
       '/api/promotions/getpromotions',
     );
     console.log('Promotions retrieved:', response);

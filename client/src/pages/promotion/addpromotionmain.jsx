@@ -4,7 +4,11 @@ import { useMultistepForm } from '../../hooks/useMultiStepForm';
 import { AddPromotionStep1 } from './addpromotionstep1';
 import { AddPromotionStep2 } from './addpromotionstep2';
 import { AddPromotionStep3 } from './addpromotionstep3';
-import { set, useForm } from 'react-hook-form';
+import {
+  set,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   schema1,
@@ -30,17 +34,7 @@ export function AddPromotionMain() {
     endDate: '',
     description: '',
   });
-  const [formData2, setFormData2] = useState({
-    promotionType: -1,
-    storeName: '',
-    discountAmount: 0,
-    discountPercentage: 0,
-    applicableItems: [''],
-    qualifyingPurchaseAmount: 0,
-    startDate: '',
-    endDate: '',
-    description: '',
-  });
+
   const [theStep, setTheStep] = useState(1);
 
   const {
@@ -50,7 +44,11 @@ export function AddPromotionMain() {
     reset,
     formState: { errors, isSubmitting },
     setError,
+    control,
   } = useForm({
+    defaultValues: {
+      applicableItems: [' '], // Initialize with an empty item or default value
+    },
     resolver:
       theStep == 1
         ? zodResolver(schema1)
@@ -61,58 +59,64 @@ export function AddPromotionMain() {
             : zodResolver(schema4),
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'applicableItems',
+  });
+
   const addPromotion = useMutation({
     mutationFn: addpromotion,
     onSuccess: () => {
+      console.log('Promotion Created Successfully');
       toast.success('Promotion Created Successfully');
-      reset();
     },
     onError: (error) => {
-      console.log("the formdata: ",formData2);
-      console.log("the error: ",error);
+      console.log('the formdata: ', formData);
+      console.log('the error: ', error);
       console.log(error.response?.status);
       if (error.response.status === 400) {
         toast.error('Promotion already exists');
-      }
-      else if (error.response?.status !== 500) {
+      } else if (error.response?.status !== 500) {
         toast.error('Something went wrong');
       }
     },
   });
 
   const onSubmit = async (data) => {
-    if(currentStepIndex == 0) setFormData((prevData) => ({ ...prevData, promotionType: parseInt(data.promotionType) }));
-    console.log(data)
-    setFormData2((prevData) => ({ ...prevData, ...data }));
-   console.log(formData2);
+    try {
+      if (currentStepIndex == 0)
+        setFormData((prevData) => ({
+          ...prevData,
+          promotionType: parseInt(data.promotionType),
+        }));
+      console.log(data);
 
-    if (currentStepIndex == 2) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      addPromotion.mutate(formData2);
-    }
-    next(); 
+      setFormData((prevData) => ({ ...prevData, ...data }));
+      console.log(formData);
+      console.log(isSubmitting);
+
+      if (currentStepIndex == 2) {
+        const formData3 = {
+          promotionType: formData.promotionType,
+          storeName: formData.storeName,
+          discountAmount: formData.discountAmount,
+          discountPercentage: formData.discountPercentage,
+          applicableItems: formData.applicableItems,
+          qualifyingPurchaseAmount:
+            formData.qualifyingPurchaseAmount,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          description: formData.description,
+        };
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000),
+        );
+        addPromotion.mutate(formData3, data);
+      }
+
+      next();
+    } catch (error) {}
   };
-
-  // const handleChange = (e) => {
-  //   console.log('the step', theStep);
-  //   const { name, value } = e.target;
-  //   console.log(name, typeof value);
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]:
-  //       name === 'promotionType'
-  //         ? parseInt(value)
-  //         : name === 'discountAmount' ||
-  //             name === 'qualifyingPurchaseAmount' ||
-  //             name === 'discountPercentage'
-  //           ? !isNaN(parseFloat(value))
-  //             ? parseFloat(value)
-  //             : ''
-  //           : value,
-  //   }));
-
-  //   console.log(formData);
-  // };
 
   useEffect(() => {
     if (currentStepIndex == 0) setTheStep(1);
@@ -129,47 +133,13 @@ export function AddPromotionMain() {
     else setTheStep(4);
   });
 
-  
-  // const handleItemChange = (index, value, type) => {
-  //   if (type == 1) {
-  //     const items = [...formData2.applicableItems];
-  //     items[index] = value;
-  //     setFormData2({
-  //       ...formData2,
-  //       applicableItems: items,
-  //     });
-  //   }
-  // };
-
-  const addItem = (type) => {
-    if (type == 1) {
-      setFormData({
-        ...formData,
-        applicableItems: [...formData.applicableItems, ''],
-      });
-    }
-    console.log(formData);
+  const removeItem = (index) => {
+    remove(index); // Remove the item using `remove` from `useFieldArray`
   };
 
-  const removeItem = (index, type) => {
-    if (type === 1) {
-      // Filter out the item from the form data
-      const items = formData.applicableItems.filter(
-        (_, i) => i !== index,
-      );
-
-      // Update the form data state
-      setFormData({
-        ...formData,
-        applicableItems: items,
-      });
-
-      // Deregister the field before removing the item
-      unregister(`applicableItems[${index}]`, {
-        keepValue: false,
-      });
-      console.log(`applicableItems[${index}]`);
-    }
+  // Function to handle adding a new item
+  const addItem = () => {
+    append(''); // Add a new item using `append` from `useFieldArray`
   };
 
   const {
@@ -193,6 +163,7 @@ export function AddPromotionMain() {
       addItem={addItem}
       register={register}
       removeItem={removeItem}
+      fields={fields}
       errors={errors}
     />,
     <AddPromotionStep3
@@ -206,12 +177,10 @@ export function AddPromotionMain() {
     <div className="">
       <div className="sm:px-20 px-10">
         <div className=" pt-10">
-          <div className="text-3xl font-semibold ">
-            topic 1
+          <div className="text-2xl font-semibold ">
+            Add Promotion
           </div>
-          <div className="text-xl pt-5 font-medium ">
-            topic 2!
-          </div>
+         
         </div>
         <div className="flex justify-center mb-10 sm:mb-20">
           <Card className="mt-10 w-[120vh] rounded-xl  sm:px-10 py-20 pb-10 h-auto ">
@@ -229,13 +198,13 @@ export function AddPromotionMain() {
                         : isSecondStep
                           ? 'w-1/2'
                           : 'w-full'
-                    }  -translate-y-2/4 bg-green-500 transition-all duration-500`}
+                    }  -translate-y-2/4 bg-green' transition-all duration-500`}
                   ></div>
                   <div
                     className={`relative z-10 grid w-10 h-10 font-bold transition-all duration-300  ${
                       isFirstStep
                         ? 'text-white  bg-gray-900'
-                        : 'text-white bg-green-500'
+                        : 'text-white bg-green'
                     } rounded-full place-items-center`}
                   >
                     <svg
@@ -259,7 +228,7 @@ export function AddPromotionMain() {
                         className={`block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal ${
                           isFirstStep
                             ? 'text-black'
-                            : 'text-green-500'
+                            : 'text-green'
                         }`}
                       >
                         Step 1
@@ -269,7 +238,7 @@ export function AddPromotionMain() {
                         className={`lg:block hidden font-sans text-base antialiased font-normal leading-relaxed  ${
                           isFirstStep
                             ? 'text-black'
-                            : 'text-green-500'
+                            : 'text-green'
                         }`}
                       >
                         Select Type
@@ -281,7 +250,7 @@ export function AddPromotionMain() {
                       isSecondStep
                         ? 'text-white  bg-gray-900'
                         : isLastStep || isComplete
-                          ? 'text-white bg-green-500'
+                          ? 'text-white bg-green'
                           : 'text-white  bg-gray-300'
                     } rounded-full place-items-center`}
                   >
@@ -306,7 +275,7 @@ export function AddPromotionMain() {
                           isSecondStep
                             ? 'text-gray-900 '
                             : isLastStep || isComplete
-                              ? 'text-green-500'
+                              ? 'text-green'
                               : 'text-gray-300 '
                         }`}
                       >
@@ -317,7 +286,7 @@ export function AddPromotionMain() {
                           isSecondStep
                             ? 'text-gray-900 '
                             : isLastStep || isComplete
-                              ? 'text-green-500'
+                              ? 'text-green'
                               : 'text-gray-300 '
                         }`}
                       >
@@ -330,7 +299,7 @@ export function AddPromotionMain() {
                       isLastStep
                         ? 'text-white  bg-gray-900'
                         : isComplete
-                          ? 'text-white  bg-green-500'
+                          ? 'text-white  bg-green'
                           : 'text-white bg-gray-300'
                     } rounded-full place-items-center`}
                   >
@@ -355,7 +324,7 @@ export function AddPromotionMain() {
                           isLastStep
                             ? 'text-black'
                             : isComplete
-                              ? 'text-green-500'
+                              ? 'text-green'
                               : 'text-gray-300'
                         }`}
                       >
@@ -366,7 +335,7 @@ export function AddPromotionMain() {
                           isLastStep
                             ? 'text-black'
                             : isComplete
-                              ? 'text-green-500'
+                              ? 'text-green'
                               : 'text-gray-300'
                         }`}
                       >
@@ -376,31 +345,39 @@ export function AddPromotionMain() {
                   </div>
                 </div>
               </div>
-              {step}
-              {errors.root && <p>{errors.root.message}</p>}
-              {!isComplete && (
-                <div
-                  className={`w-full gap-5 sm:gap-10 flex items-center justify-center sm:justify-end text-end`}
-                >
-                  {!isFirstStep && (
-                    <Button
-                      onClick={back}
-                      type="button"
-                      varient="secondary"
-                    >
-                      Previous
-                    </Button>
-                  )}
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    varient="default"
+              <div className="mx-0 md:mx-5 lg:mx-20 my-10">
+                <div className=" my-5">{step}</div>
+                {errors.root && (
+                  <p>{errors.root.message}</p>
+                )}
+                {!isComplete && (
+                  <div
+                    className={`w-full gap-5 sm:gap-10 flex items-center justify-center sm:justify-end text-end`}
                   >
-                    {isSubmitting ? 'Submitting...' : isLastStep ? 'Submit':  'Next'}
-                  </Button>
-                </div>
-              )}
+                    {!isFirstStep && (
+                      <Button
+                        onClick={back}
+                        type="button"
+                        varient="secondary"
+                      >
+                        Previous
+                      </Button>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      varient="default"
+                    >
+                      {isSubmitting
+                        ? 'Submitting...'
+                        : isLastStep
+                          ? 'Submit'
+                          : 'Next'}
+                    </Button>
+                  </div>
+                )}
+              </div>
             </form>
           </Card>
         </div>

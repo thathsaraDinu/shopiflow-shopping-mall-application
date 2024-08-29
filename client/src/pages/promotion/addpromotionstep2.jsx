@@ -5,16 +5,9 @@ import { useState } from 'react';
 
 export function AddPromotionStep2({
   promotionType,
-  storeName,
-  discountAmount,
-  discountPercentage,
-  applicableItems: applicableItems,
-  qualifyingPurchaseAmount,
-  description,
-  
+  fields,
   addItem,
   removeItem,
-  
   register,
   errors,
 }) {
@@ -57,20 +50,19 @@ export function AddPromotionStep2({
             <div className="text-sm font-medium pb-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Applicable Items
             </div>
-            {applicableItems.map((item, index) => (
+            {fields.map((item, index) => (
               <div
                 id={`applicableItems.${index}`}
                 className="w-full flex gap-5 items-center"
                 key={index}
               >
                 <InputField
-                label={`Item ${index + 1}`}
                   type="text"
                   register={register}
                   name={`applicableItems[${index}]`}
                 />
 
-                {applicableItems.length != 1 ? (
+                {fields.length != 1 ? (
                   <Button
                     type="button"
                     variant="destructive"
