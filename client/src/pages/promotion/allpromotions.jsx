@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import EditIcon from '@/assets/edit_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
-import DeleteIcon from '@/assets/delete_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
+import EditIcon from '@/assets/actions/edit_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
+import DeleteIcon from '@/assets/actions/delete_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
