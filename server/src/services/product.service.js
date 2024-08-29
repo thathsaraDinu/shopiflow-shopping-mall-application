@@ -18,6 +18,12 @@ const productService = {
     const product = await Product.findOne({ productID: id });
 
     return product;
+  },
+
+  deleteProductById: async ({ id }) => {
+    const product = await Product.deleteOne({ productID: id });
+
+    return product;
   }
 };
 

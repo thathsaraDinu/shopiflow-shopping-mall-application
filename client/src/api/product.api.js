@@ -20,3 +20,12 @@ export const getProductById = async (id) => {
 
   return response.data;
 };
+
+// delete product by id
+export const deleteProductById = async (id) => {
+  const response = await instance.delete(
+    'api/product/' + id,
+  );
+
+  return response.data;
+};

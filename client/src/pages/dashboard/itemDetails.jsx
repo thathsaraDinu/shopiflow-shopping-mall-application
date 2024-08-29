@@ -3,9 +3,30 @@ import { Button } from '@/components/ui/button';
 import useProduct from '@/hooks/useProduct';
 import { useParams } from 'react-router-dom';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { deleteProductById } from '@/api/product.api';
+
 const ItemDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data, isLoading } = useProduct(id);
+  const [open, setOpen] = useState(false);
+
+  const handleDelete = async () => {
+    await deleteProductById(id);
+    navigate('/dashboard/inventory');
+  };
 
   return (
     <>
@@ -46,7 +67,36 @@ const ItemDetails = () => {
                 </svg>
                 Edit
               </Button>
-              <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-red hover:bg-white text-sm font-medium transition-all mx-3">
+              <AlertDialog
+                open={open}
+                onOpenChange={setOpen}
+              >
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This
+                      will permanently delete the product.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <Button
+                onClick={() => setOpen(true)}
+                className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-red hover:bg-white text-sm font-medium transition-all mx-3"
+              >
                 <svg
                   width="20"
                   height="20"
@@ -87,6 +137,7 @@ const ItemDetails = () => {
                 </svg>
                 Delete
               </Button>
+
               <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all">
                 Download
               </Button>
