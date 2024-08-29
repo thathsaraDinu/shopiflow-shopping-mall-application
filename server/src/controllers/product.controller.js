@@ -38,9 +38,23 @@ const ProductController = {
     }
   },
 
-  deleteProductById: async (req, res) => {
+  updateProduct: async (req, res) => {
     try {
-      const product = await productService.deleteProductById(req.params);
+      const product = await productService.updateProduct(req.body);
+
+      if (!product) {
+        return res.status(404).json({ success: false, message: 'Product not fonud' });
+      }
+
+      res.status(200).json({ success: true, data: product });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  deleteProduct: async (req, res) => {
+    try {
+      const product = await productService.deleteProduct(req.params);
 
       if (!product) {
         return res.status(404).json({ success: false, message: 'Product not fonud' });

@@ -16,10 +16,19 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createProduct } from '@/api/product.api';
+import {
+  createProduct,
+  updateProduct,
+} from '@/api/product.api';
 import { useMutation } from '@tanstack/react-query';
 
-const InventoryForm = () => {
+const InventoryForm = ({
+  title,
+  button,
+  data,
+  task,
+  refetch,
+}) => {
   const {
     register,
     handleSubmit,
@@ -45,29 +54,40 @@ const InventoryForm = () => {
       toast.success('Product added successfully');
       setOpen(false);
       reset();
+      refetch();
     },
     onError: (error) => {
-      toast.error('Something went wrong');
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const editProduct = useMutation({
+    mutationFn: updateProduct,
+    onSuccess: async (data) => {
+      toast.success('Product edited successfully');
+      setOpen(false);
+      reset();
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
     },
   });
 
   const onSubmit = async (data) => {
-    addProduct.mutate(data);
+    if (task === 'edit') editProduct.mutate(data);
+    else addProduct.mutate(data);
   };
 
   return (
     <>
       <Toaster />
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
-            Add Product
-          </Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{button}</DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-grey-800 text-xl font-medium">
-              New Product
+              {title}
             </DialogTitle>
             <DialogDescription className="sr-only">
               Enter product details
@@ -120,6 +140,7 @@ const InventoryForm = () => {
                   id="productName"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.name && 'ring-1 ring-red'}`}
                   placeholder="Enter product name"
+                  defaultValue={data && data.name}
                   {...register('name')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -141,6 +162,7 @@ const InventoryForm = () => {
                   id="productId"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.productID && 'ring-1 ring-red'}`}
                   placeholder="Enter product ID"
+                  defaultValue={data && data.productID}
                   {...register('productID')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -162,6 +184,7 @@ const InventoryForm = () => {
                   id="category"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.category && 'ring-1 ring-red'}`}
                   placeholder="Enter product category"
+                  defaultValue={data && data.category}
                   {...register('category')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -183,6 +206,7 @@ const InventoryForm = () => {
                   id="buyingPrice"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.buyingPrice && 'ring-1 ring-red'}`}
                   placeholder="Enter buying price"
+                  defaultValue={data && data.buyingPrice}
                   {...register('buyingPrice')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -204,6 +228,7 @@ const InventoryForm = () => {
                   id="quantity"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.quantity && 'ring-1 ring-red'}`}
                   placeholder="Enter product quantity"
+                  defaultValue={data && data.quantity}
                   {...register('quantity')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -225,6 +250,7 @@ const InventoryForm = () => {
                   id="unitPrice"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.unitPrice && 'ring-1 ring-red'}`}
                   placeholder="Enter product unit price"
+                  defaultValue={data && data.unitPrice}
                   {...register('unitPrice')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -246,6 +272,7 @@ const InventoryForm = () => {
                   id="supplier"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.supplier && 'ring-1 ring-red'}`}
                   placeholder="Enter product supplier"
+                  defaultValue={data && data.supplier}
                   {...register('supplier')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">
@@ -267,6 +294,7 @@ const InventoryForm = () => {
                   id="thresholdValue"
                   className={`max-w-[270px] text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500 rounded-lg ${errors.thresholdValue && 'ring-1 ring-red'}`}
                   placeholder="Enter threshold value"
+                  defaultValue={data && data.thresholdValue}
                   {...register('thresholdValue')}
                 />
                 <div className="absolute left-[140px] bottom-[-20px]">

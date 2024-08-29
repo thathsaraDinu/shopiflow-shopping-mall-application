@@ -5,12 +5,17 @@ import useProducts from '@/hooks/useProducts';
 import React from 'react';
 
 const Inventory = () => {
-  const { data: tableData } = useProducts();
+  const { data: tableData, refetch } = useProducts();
 
   return (
     <>
       <OverallInventory />
-      {tableData && <InventoryTable data={tableData} />}
+      {tableData && (
+        <InventoryTable
+          data={tableData}
+          refetch={refetch}
+        />
+      )}
     </>
   );
 };

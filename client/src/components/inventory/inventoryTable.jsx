@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import InventoryForm from './inventoryForm';
 import { Link } from 'react-router-dom';
 
-const InventoryTable = ({ data }) => {
+const InventoryTable = ({ data, refetch }) => {
   return (
     <>
       <div className="mt-5 bg-white rounded-lg pt-5 pb-3">
@@ -12,7 +12,15 @@ const InventoryTable = ({ data }) => {
             Products
           </h2>
           <div className="flex">
-            <InventoryForm />
+            <InventoryForm
+              refetch={refetch}
+              title="New Product"
+              button={
+                <Button className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
+                  Add Product
+                </Button>
+              }
+            />
             <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all mx-3">
               <svg
                 width="20"

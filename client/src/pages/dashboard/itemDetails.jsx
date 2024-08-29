@@ -16,11 +16,12 @@ import {
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteProductById } from '@/api/product.api';
+import InventoryForm from '@/components/inventory/inventoryForm';
 
 const ItemDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading } = useProduct(id);
+  const { data, refetch } = useProduct(id);
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
@@ -37,36 +38,45 @@ const ItemDetails = () => {
               {data.name}
             </h2>
             <div className="flex">
-              <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="text-grey-600 mr-2"
-                >
-                  <g clipPath="url(#clip0_443_6232)">
-                    <path
-                      d="M14.1665 2.49993C14.3854 2.28106 14.6452 2.10744 14.9312 1.98899C15.2171 1.87054 15.5236 1.80957 15.8332 1.80957C16.1427 1.80957 16.4492 1.87054 16.7352 1.98899C17.0211 2.10744 17.281 2.28106 17.4998 2.49993C17.7187 2.7188 17.8923 2.97863 18.0108 3.2646C18.1292 3.55057 18.1902 3.85706 18.1902 4.16659C18.1902 4.47612 18.1292 4.78262 18.0108 5.06859C17.8923 5.35455 17.7187 5.61439 17.4998 5.83326L6.24984 17.0833L1.6665 18.3333L2.9165 13.7499L14.1665 2.49993Z"
-                      stroke="currentColor"
-                      strokeWidth="1.66667"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_443_6232">
-                      <rect
-                        width="20"
-                        height="20"
-                        fill="white"
-                      />
-                    </clipPath>
-                  </defs>
-                </svg>
-                Edit
-              </Button>
+              <InventoryForm
+                refetch={refetch}
+                task="edit"
+                title="Edit Product"
+                data={data}
+                button={
+                  <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-grey-600 mr-2"
+                    >
+                      <g clipPath="url(#clip0_443_6232)">
+                        <path
+                          d="M14.1665 2.49993C14.3854 2.28106 14.6452 2.10744 14.9312 1.98899C15.2171 1.87054 15.5236 1.80957 15.8332 1.80957C16.1427 1.80957 16.4492 1.87054 16.7352 1.98899C17.0211 2.10744 17.281 2.28106 17.4998 2.49993C17.7187 2.7188 17.8923 2.97863 18.0108 3.2646C18.1292 3.55057 18.1902 3.85706 18.1902 4.16659C18.1902 4.47612 18.1292 4.78262 18.0108 5.06859C17.8923 5.35455 17.7187 5.61439 17.4998 5.83326L6.24984 17.0833L1.6665 18.3333L2.9165 13.7499L14.1665 2.49993Z"
+                          stroke="currentColor"
+                          strokeWidth="1.66667"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_443_6232">
+                          <rect
+                            width="20"
+                            height="20"
+                            fill="white"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    Edit
+                  </Button>
+                }
+              />
+
               <AlertDialog
                 open={open}
                 onOpenChange={setOpen}

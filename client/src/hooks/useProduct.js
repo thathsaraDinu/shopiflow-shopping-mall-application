@@ -24,7 +24,9 @@ const useProduct = (id) => {
     fetchData();
   }, []);
 
-  return { data, isLoading, error };
+  const refetch = () => fetchData();
+
+  return { data, isLoading, error, refetch };
 };
 
 export default useProduct;

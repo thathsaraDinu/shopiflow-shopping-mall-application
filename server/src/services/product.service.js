@@ -20,7 +20,17 @@ const productService = {
     return product;
   },
 
-  deleteProductById: async ({ id }) => {
+  updateProduct: async (productData) => {
+    const product = await Product.findOneAndUpdate(
+      { productID: productData.productID },
+      productData,
+      { new: true }
+    );
+
+    return product;
+  },
+
+  deleteProduct: async ({ id }) => {
     const product = await Product.deleteOne({ productID: id });
 
     return product;
