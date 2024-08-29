@@ -6,6 +6,7 @@ import {
 import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
+import ItemDetails from '@/pages/dashboard/itemDetails';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -117,6 +118,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Inventory />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'inventory/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ItemDetails />
           </Suspense>
         ),
       },

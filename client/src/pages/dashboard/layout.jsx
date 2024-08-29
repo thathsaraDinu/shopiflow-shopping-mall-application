@@ -8,7 +8,7 @@ function DasshboardLayout() {
     <>
       <div className="flex flex-row min-h-screen">
         <Sidebar />
-        <div className="py-7 px-8 bg-grey-50 grow">
+        <div className="py-7 px-8 bg-grey-50 grow overflow-hidden">
           <div className="flex justify-between">
             <div className="relative grow">
               <Input
