@@ -29,14 +29,6 @@ const MenuItems = [
     title: 'Contact',
     url: '/contact',
   },
-  {
-    title: 'Shops',
-    url: '/shops',
-  },
-  {
-    title: 'My Queue',
-    url: '/queue',
-  },
 ];
 
 export default function Navbar() {

@@ -9,8 +9,7 @@ export const QueueSchema = new Schema(
       unique: false
     },
     shopID: {
-      type: Types.ObjectId,
-      ref: 'Shop',
+      type: Object,
       required: [true, 'Shop ID is required'],
       unique: false
     },

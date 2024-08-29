@@ -32,14 +32,6 @@ const Register = lazy(
 const Login = lazy(() => import('@/pages/user/login'));
 const Profile = lazy(() => import('@/pages/user/profile'));
 
-// Queue Related Pages
-const ShopQueue = lazy(
-  () => import('@/pages/queue/shop-queue'),
-);
-
-// Shop Related Pages
-const Shop = lazy(() => import('@/pages/shop/shop'));
-
 // layouts
 const Layout = lazy(() => import('@/layout'));
 

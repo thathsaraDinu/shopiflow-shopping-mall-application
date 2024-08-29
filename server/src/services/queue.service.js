@@ -6,9 +6,7 @@ export const getQueues = async (shopID) => {
     // Find all queues in the shop
     const queues = await QueueSchema.find({
       shopID
-    })
-      .populate('userID')
-      .populate('shopID');
+    });
 
     return queues;
   } catch (error) {

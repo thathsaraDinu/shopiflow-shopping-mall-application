@@ -18,7 +18,9 @@ const QueueController = {
       // Get all queues in the shop
       const queues = await getQueues(shopID);
 
-      return res.status(200).json(queues);
+      return res.status(200).json({
+        queues
+      });
     } catch (error) {
       return res.status(error.status || 500).json({
         message: error.message
@@ -35,7 +37,9 @@ const QueueController = {
       // Get all queues of the user
       const queues = await getUserQueues(userID);
 
-      return res.status(200).json(queues);
+      return res.status(200).json({
+        queues
+      });
     } catch (error) {
       return res.status(error.status || 500).json({
         message: error.message
