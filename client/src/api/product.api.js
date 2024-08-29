@@ -6,3 +6,10 @@ export const createProduct = async (data) => {
 
   return response.data;
 };
+
+// get all products
+export const getAllProducts = async () => {
+  const response = await instance.get('api/product');
+
+  return response.data;
+};

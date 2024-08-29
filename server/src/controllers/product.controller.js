@@ -5,7 +5,7 @@ const ProductController = {
     try {
       const product = await productService.createProduct(req.body);
 
-      res.status(201).json({ success: true, data: product });
+      res.status(200).json({ success: true, data: product });
     } catch (error) {
       if (error.code === 11000) {
         return res.status(500).json({ success: false, message: 'Product already exists' });
@@ -18,7 +18,7 @@ const ProductController = {
     try {
       const products = await productService.getAllProducts();
 
-      res.status(201).json({ success: true, data: products });
+      res.status(200).json({ success: true, data: products });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }

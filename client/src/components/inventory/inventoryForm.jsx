@@ -28,8 +28,6 @@ const InventoryForm = () => {
     reValidateMode: 'onBlur',
   });
 
-  console.log(errors);
-
   const onSubmit = async (data) => {
     try {
       const response = await createProduct(data);
