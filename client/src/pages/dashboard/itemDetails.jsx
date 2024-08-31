@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import useProduct from '@/hooks/useProduct';
 import { useParams } from 'react-router-dom';
@@ -17,16 +17,68 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteProductById } from '@/api/product.api';
 import InventoryForm from '@/components/inventory/inventoryForm';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const ItemDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, refetch } = useProduct(id);
   const [open, setOpen] = useState(false);
+  const detailsRef = useRef(null);
 
   const handleDelete = async () => {
     await deleteProductById(id);
     navigate('/dashboard/inventory');
+  };
+
+  const handleDownloadPDF = () => {
+    const input = detailsRef.current;
+
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+
+      // Create a landscape PDF (wide page)
+      const pdf = new jsPDF('l', 'mm', 'a4'); // 'l' is for landscape orientation
+
+      // Get the width and height for the PDF
+      const imgWidth = 297; // A4 landscape width in mm
+      const pageHeight = pdf.internal.pageSize.height;
+      const imgHeight =
+        (canvas.height * imgWidth) / canvas.width; // Preserve aspect ratio
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add the image to the PDF
+      pdf.addImage(
+        imgData,
+        'PNG',
+        0,
+        position,
+        imgWidth,
+        imgHeight,
+      );
+      heightLeft -= pageHeight;
+
+      // Add additional pages if necessary
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(
+          imgData,
+          'PNG',
+          0,
+          position,
+          imgWidth,
+          imgHeight,
+        );
+        heightLeft -= pageHeight;
+      }
+
+      // Save the PDF with the product name
+      pdf.save(`${data.name}_details.pdf`);
+    });
   };
 
   return (
@@ -148,7 +200,10 @@ const ItemDetails = () => {
                 Delete
               </Button>
 
-              <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all">
+              <Button
+                onClick={handleDownloadPDF}
+                className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all"
+              >
                 Download
               </Button>
             </div>
@@ -163,7 +218,7 @@ const ItemDetails = () => {
               <li className="px-2 mr-10">History</li>
             </ul>
           </div>
-          <div className="flex">
+          <div ref={detailsRef} className="flex">
             <div className="ml-2 w-1/3">
               <h3 className="font-semibold text-grey-700 mb-4">
                 Primary Details
@@ -245,7 +300,15 @@ const ItemDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-10 h-[170px] w-[170px] border-dashed border-2 border-[#9D9D9D] rounded-sm mb-[60px]"></div>
+            <div className="mt-10 h-[170px] w-[170px] border-dashed border-2 border-[#9D9D9D] rounded-sm mb-[60px] overflow-hidden">
+              {data.image && (
+                <img
+                  className="w-full h-full"
+                  src={data.image}
+                  alt="image"
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

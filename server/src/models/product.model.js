@@ -12,6 +12,11 @@ export const ProductSchema = new Schema(
       required: [true, 'Product name is required'],
       unique: false
     },
+    image: {
+      type: String,
+      required: [true, 'Product image is required'],
+      unique: false
+    },
     category: {
       type: String,
       required: [true, 'Product category is required'],

@@ -44,7 +44,11 @@ const InventoryForm = ({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -68,6 +72,7 @@ const InventoryForm = ({
       setOpen(false);
       reset();
       refetch();
+      setImage(null);
     },
     onError: (error) => {
       toast.error(error.response.data.message);
@@ -75,6 +80,9 @@ const InventoryForm = ({
   });
 
   const onSubmit = async (data) => {
+    if (image) {
+      data.image = image;
+    }
     if (task === 'edit') editProduct.mutate(data);
     else addProduct.mutate(data);
   };
@@ -122,6 +130,7 @@ const InventoryForm = ({
                       id="image"
                       type="file"
                       className="hidden"
+                      {...register('image')}
                       onChange={handleImageChange}
                     />
                   </Label>
@@ -315,7 +324,9 @@ const InventoryForm = ({
                   </Button>
                 </DialogClose>
                 <Button className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
-                  Add Product
+                  {task === 'edit'
+                    ? 'Edit Product'
+                    : 'Add Product'}
                 </Button>
               </div>
             </div>
