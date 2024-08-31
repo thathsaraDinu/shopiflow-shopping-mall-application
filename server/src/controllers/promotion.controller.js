@@ -36,7 +36,7 @@ export const PromotionController = {
 
   async addpromotiontype2(req, res) {
     try {
-      const promotion = addPromotionAmount(req.body);
+      const promotion = await addPromotionAmount(req.body);
 
       return res.status(200).json({
         promotion

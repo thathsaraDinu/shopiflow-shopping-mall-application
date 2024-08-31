@@ -19,7 +19,7 @@ export function AddPromotionStep3({
         )}
       </CardTitle>
       <div></div>
-      <div>
+      <div className="pb-4">
         <InputField
           type="date"
           name="startDate"
