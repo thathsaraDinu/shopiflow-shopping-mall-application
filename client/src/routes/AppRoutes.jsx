@@ -5,6 +5,8 @@ import {
 } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
+import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
+import { AllPromotions } from '@/pages/promotion/allpromotions';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -12,8 +14,17 @@ const PageLoader = () => (
   </div>
 );
 
+// dashboard pages
+const DasshboardLayout = lazy(
+  () => import('@/pages/dashboard/layout'),
+);
+const Inventory = lazy(
+  () => import('@/pages/dashboard/inventory'),
+);
+
 // Static Pages
 const Home = lazy(() => import('@/pages/home/home'));
+const About = lazy(() => import('@/pages/about/about'));
 
 // Auth Pages
 const Register = lazy(
@@ -22,6 +33,18 @@ const Register = lazy(
 const Login = lazy(() => import('@/pages/user/login'));
 const Profile = lazy(() => import('@/pages/user/profile'));
 
+// Queue Related Pages
+const ShopQueue = lazy(
+  () => import('@/pages/queue/shop-queue'),
+);
+const MyQueue = lazy(
+  () => import('@/pages/queue/my-queue'),
+);
+
+// Shop Related Pages
+const Shop = lazy(() => import('@/pages/shop/shop'));
+
+// layouts
 const Layout = lazy(() => import('@/layout'));
 
 const router = createBrowserRouter([
@@ -37,6 +60,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'about',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <About />
           </Suspense>
         ),
       },
@@ -61,6 +92,64 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <PrivateRoute element={<Profile />} />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'queue/:shopID',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ShopQueue />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'myqueue',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute element={<MyQueue />} />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'shops',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Shop />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+  {
+    path: 'dashboard',
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <DasshboardLayout />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: 'inventory',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Inventory />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'addpromotion',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AddPromotionMain />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'allpromotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AllPromotions />
           </Suspense>
         ),
       },

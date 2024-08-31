@@ -15,8 +15,10 @@ import {
 } from '@/components/ui/sheet';
 import Logo from '@/assets/logo/logo.png';
 import AvatarIcon from '@/components/navbar/avatar';
+import { useAuthStore } from '@/store/auth-store';
 
-const MenuItems = [
+// Menu Items for all users (public)
+const MenuItemsAll = [
   {
     title: 'Home',
     url: '/',
@@ -26,12 +28,54 @@ const MenuItems = [
     url: '/about',
   },
   {
-    title: 'Contact',
-    url: '/contact',
+    title: 'Shops',
+    url: '/shops',
+  },
+];
+
+// Menu Items for authenticated users (role: user)
+const MenuItemsUser = [
+  {
+    title: 'Home',
+    url: '/',
+  },
+  {
+    title: 'About',
+    url: '/about',
+  },
+  {
+    title: 'Shops',
+    url: '/shops',
+  },
+  {
+    title: 'My Queue',
+    url: '/myqueue',
+  },
+];
+
+// Menu Items for authenticated users (role: admin)
+const MenuItemsAdmin = [
+  {
+    title: 'Dashboard',
+    url: '/dashboard',
+  },
+];
+
+// Menu Items for authenticated users (role: shop owner)
+const MenuItemsShopOwner = [
+  {
+    title: 'Queue',
+    url: '/queue',
   },
 ];
 
 export default function Navbar() {
+  // Check if user is authenticated
+  const isAuthenticated = useAuthStore(
+    (state) => state.isLoggedIn,
+  );
+  const role = useAuthStore((state) => state.role);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
@@ -45,15 +89,52 @@ export default function Navbar() {
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           {/* Menu Items map */}
-          {MenuItems.map((item, index) => (
-            <Link
-              key={index}
-              to={item.url}
-              className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            >
-              {item.title}
-            </Link>
-          ))}
+          {!isAuthenticated &&
+            MenuItemsAll.map((item, index) => (
+              <Link
+                key={index}
+                to={item.url}
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              >
+                {item.title}
+              </Link>
+            ))}
+
+          {isAuthenticated &&
+            role === 'user' &&
+            MenuItemsUser.map((item, index) => (
+              <Link
+                key={index}
+                to={item.url}
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              >
+                {item.title}
+              </Link>
+            ))}
+
+          {isAuthenticated &&
+            role === 'admin' &&
+            MenuItemsAdmin.map((item, index) => (
+              <Link
+                key={index}
+                to={item.url}
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              >
+                {item.title}
+              </Link>
+            ))}
+
+          {isAuthenticated &&
+            role === 'shopOwner' &&
+            MenuItemsShopOwner.map((item, index) => (
+              <Link
+                key={index}
+                to={item.url}
+                className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+              >
+                {item.title}
+              </Link>
+            ))}
         </nav>
         <div className="flex items-center gap-4">
           <DropdownMenu>
@@ -95,7 +176,7 @@ export default function Navbar() {
             <SheetContent side="left" className="md:hidden">
               <div className="grid gap-4 p-4">
                 {/* Menu Items map */}
-                {MenuItems.map((item, index) => (
+                {MenuItemsAll.map((item, index) => (
                   <Link
                     key={index}
                     to={item.url}
@@ -104,6 +185,16 @@ export default function Navbar() {
                     {item.title}
                   </Link>
                 ))}
+                {isAuthenticated &&
+                  MenuItemsAll.map((item, index) => (
+                    <Link
+                      key={index}
+                      to={item.url}
+                      className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
               </div>
             </SheetContent>
           </Sheet>
