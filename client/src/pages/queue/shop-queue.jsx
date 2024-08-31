@@ -16,6 +16,7 @@ const ShopQueue = () => {
     data: queues,
     isLoading: queuesLoading,
     isError: queuesError,
+    refetch,
   } = useQuery({
     queryKey: ['queues'],
     queryFn: () => getQueues(shopID),
@@ -30,7 +31,10 @@ const ShopQueue = () => {
           <h2 className="text-2xl font-bold">
             Queue of {shopName}
           </h2>
-          <AddQueueModal shopID={shopID} />
+          <AddQueueModal
+            shopID={shopID}
+            onSuccess={refetch}
+          />
         </div>
         {queues && (
           <div className="mt-5 grid grid-cols-1 gap-4 justify-items-center">
