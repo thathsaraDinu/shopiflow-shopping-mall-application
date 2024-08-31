@@ -24,6 +24,7 @@ const Inventory = lazy(
 
 // Static Pages
 const Home = lazy(() => import('@/pages/home/home'));
+const About = lazy(() => import('@/pages/about/about'));
 
 // Auth Pages
 const Register = lazy(
@@ -35,6 +36,9 @@ const Profile = lazy(() => import('@/pages/user/profile'));
 // Queue Related Pages
 const ShopQueue = lazy(
   () => import('@/pages/queue/shop-queue'),
+);
+const MyQueue = lazy(
+  () => import('@/pages/queue/my-queue'),
 );
 
 // Shop Related Pages
@@ -56,6 +60,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'about',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <About />
           </Suspense>
         ),
       },
@@ -88,6 +100,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <ShopQueue />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'myqueue',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute element={<MyQueue />} />
           </Suspense>
         ),
       },
