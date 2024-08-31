@@ -59,6 +59,15 @@ const Shop = () => {
       setError('Error deleting shop');
     }
   };
+  }
+
+  try {
+    await deleteShop(shopId);
+    fetchShops(); // Refresh shops list after deleting
+  } catch (err) {
+    setError('Error deleting shop');
+  }
+};
 
   const joinQueueHandler = (shopID, shopName) => {
     navigate(`/queue/${shopID}`, { state: { shopName } });
@@ -77,36 +86,47 @@ const Shop = () => {
 
       {/* Add Shop Form */}
       <div className="p-4 border rounded mb-5">
-        <h2>Add New Shop</h2>
-        <input
-          type="text"
-          name="name"
-          placeholder="Shop Name"
-          value={newShop.name}
-          onChange={handleInputChange}
-          className="border p-2 m-2"
-        />
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={newShop.location}
-          onChange={handleInputChange}
-          className="border p-2 m-2"
-        />
-        <input
-          type="text"
-          name="openTime"
-          placeholder="Open Time"
-          value={newShop.openTime}
-          onChange={handleInputChange}
-          className="border p-2 m-2"
-        />
-        {/* Additional input fields for items can be added here */}
-        <Button onClick={handleAddShop} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
-          Add Shop
-        </Button>
-      </div>
+  <h2>Add New Shop</h2>
+  <input
+    type="text"
+    name="name"
+    placeholder="Shop Name"
+    value={newShop.name}
+    onChange={handleInputChange}
+    className="border p-2 m-2"
+  />
+  
+  {/* Dropdown for Location */}
+  <select
+    name="location"
+    value={newShop.location}
+    onChange={handleInputChange}
+    className="border p-2 m-2"
+  >
+    <option value="" disabled>Select Location</option>
+    <option value="1st floor">1st floor</option>
+    <option value="2nd floor">2nd floor</option>
+    <option value="3rd floor">3rd floor</option>
+    <option value="4th floor">4th floor</option>
+    <option value="6th floor">6th floor</option>
+    <option value="7th floor">7th floor</option>
+    <option value="8th floor">8th floor</option>
+  </select>
+
+  <input
+    type="text"
+    name="openTime"
+    placeholder="Open Time"
+    value={newShop.openTime}
+    onChange={handleInputChange}
+    className="border p-2 m-2"
+  />
+
+  <Button onClick={handleAddShop} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
+    Add Shop
+  </Button>
+</div>
+
 
       {/* Display Shops */}
       {shops.map((shop) => (
@@ -123,13 +143,13 @@ const Shop = () => {
           </Button>
           <Button
             onClick={() => setEditingShop(shop)} // Set shop to be edited
-            className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
+            className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
           >
             Update Shop
           </Button>
           <Button
   onClick={() => handleDeleteShop(shop._id)}
-  className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
+  className="bg-red hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
 >
   Delete Shop
 </Button>
