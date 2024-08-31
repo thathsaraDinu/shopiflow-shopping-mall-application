@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import propTypes from 'prop-types';
+import { useState } from 'react';
 
 export function DeleteModal({
   description,
@@ -16,12 +17,21 @@ export function DeleteModal({
   title,
   btnClassName = '',
   onYes,
-  onNo,
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleNoClick = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className={btnClassName}>
+        <Button
+          variant="outline"
+          className={btnClassName}
+          onClick={() => setIsOpen(true)}
+        >
           {btnText}
         </Button>
       </DialogTrigger>
@@ -33,10 +43,19 @@ export function DeleteModal({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="submit" onClick={onNo}>
+          <Button
+            type="submit"
+            className="bg-gray-500 text-white hover:bg-gray-400 hover:text-white"
+            // Close the modal
+            onClick={handleNoClick}
+          >
             No
           </Button>
-          <Button type="submit" onClick={onYes}>
+          <Button
+            type="submit"
+            onClick={onYes}
+            className="bg-red-500 text-white hover:bg-red-400 hover:text-white"
+          >
             Yes
           </Button>
         </DialogFooter>
@@ -52,5 +71,4 @@ DeleteModal.propTypes = {
   title: propTypes.string.isRequired,
   btnClassName: propTypes.string,
   onYes: propTypes.func.isRequired,
-  onNo: propTypes.func.isRequired,
 };

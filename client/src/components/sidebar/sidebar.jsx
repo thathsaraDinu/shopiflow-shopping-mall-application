@@ -1,10 +1,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuthStore } from '@/store/auth-store';
+import toast from 'react-hot-toast';
 
 import Logo from '@/assets/logo/logo.png';
 
 const Sidebar = () => {
   const { pathname } = useLocation();
+  const logOut = useAuthStore((state) => state.logOut);
+
+  const logOutHandler = () => {
+    logOut();
+    toast.success('Logged out successfully');
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1000);
+  };
 
   return (
     <>
@@ -172,9 +183,9 @@ const Sidebar = () => {
               </li>
               <li className="py-4">
                 <div className="inline-flex items-center group">
-                  <Link
+                  <button
                     className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('logout') && 'text-blue-500'}`}
-                    to="logout"
+                    onClick={logOutHandler}
                   >
                     <svg
                       width="24"
@@ -190,7 +201,7 @@ const Sidebar = () => {
                       />
                     </svg>
                     Logout
-                  </Link>
+                  </button>
                 </div>
               </li>
             </ul>

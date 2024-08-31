@@ -18,8 +18,10 @@ import { useForm } from 'react-hook-form';
 import { joinQueueValidation } from '@/validations/queue-validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import propTypes from 'prop-types';
+import { useState } from 'react';
 
 const AddQueueModal = ({ shopID, onSuccess }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const isAuthenticated = useAuthStore(
     (state) => state.isLoggedIn,
   );
@@ -42,7 +44,8 @@ const AddQueueModal = ({ shopID, onSuccess }) => {
   const joinQueueQuery = useMutation({
     mutationFn: joinQueue,
     onSuccess: () => {
-      toast.success('Joined queue successfully'),
+      setIsOpen(false),
+        toast.success('Joined queue successfully'),
         onSuccess();
     },
     onError: (error) => {
@@ -57,9 +60,14 @@ const AddQueueModal = ({ shopID, onSuccess }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Join to Queue</Button>
+        <Button
+          variant="outline"
+          onClick={() => setIsOpen(true)}
+        >
+          Join to Queue
+        </Button>
       </DialogTrigger>
       {isAuthenticated && role === USER_ROLES.USER && (
         <DialogContent className="sm:max-w-[425px]">
