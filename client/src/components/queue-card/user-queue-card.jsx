@@ -9,8 +9,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import propTypes from 'prop-types';
 import { Button } from '@/components/ui/button';
-import { DeleteModal } from '../modals/delete';
-// import { DeleteModal } from '../modals/delete';
+import { DeleteModal } from '@/components/modals/delete';
 
 const UserQueueCard = ({ queue, index, onLeave }) => {
   return (
@@ -52,15 +51,12 @@ const UserQueueCard = ({ queue, index, onLeave }) => {
           </Button>
 
           <DeleteModal
-            description={queue._id}
+            description={queue.shopID.name}
             btnText={'Leave'}
             btnClassName="w-full bg-red-500 text-white hover:bg-red-400 hover:text-white"
-            title={'Leave Queue'}
+            title={`Are you sure you want to leave from ${queue.shopID.name}?`}
             onYes={() => {
               onLeave(queue._id);
-            }}
-            onNo={() => {
-              console.log('No');
             }}
           />
         </div>
