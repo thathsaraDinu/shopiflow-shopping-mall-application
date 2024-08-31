@@ -38,15 +38,15 @@ const ShopQueue = () => {
           <h2 className="text-2xl font-bold">
             Queue of {shopName}
           </h2>
-          <AddQueueModal />
+          <AddQueueModal shopID={shopID} />
         </div>
         {queues && (
-          <div className="grid grid-cols-1 gap-4 justify-items-center">
+          <div className="mt-5 grid grid-cols-1 gap-4 justify-items-center">
             {queues.map((queue, index) => (
               <Card
                 key={queue._id}
                 className={cn(
-                  'min-w-[1000px] p-1 flex flex-row',
+                  'w-full p-1 flex flex-row',
                   'hover:shadow-md',
                 )}
               >

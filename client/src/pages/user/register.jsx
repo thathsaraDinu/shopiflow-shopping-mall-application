@@ -42,7 +42,6 @@ export default function Register() {
       }, 1000);
     },
     onError: (error) => {
-      console.log(error.response?.status);
       if (error.response.status === 400) {
         toast.error('User already exists');
       }
