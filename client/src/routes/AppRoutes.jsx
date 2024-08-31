@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 import ItemDetails from '@/pages/dashboard/itemDetails';
+import { AllPromotions } from '@/pages/promotion/allpromotions';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -24,6 +25,7 @@ const Inventory = lazy(
 
 // Static Pages
 const Home = lazy(() => import('@/pages/home/home'));
+const About = lazy(() => import('@/pages/about/about'));
 
 // Auth Pages
 const Register = lazy(
@@ -35,6 +37,9 @@ const Profile = lazy(() => import('@/pages/user/profile'));
 // Queue Related Pages
 const ShopQueue = lazy(
   () => import('@/pages/queue/shop-queue'),
+);
+const MyQueue = lazy(
+  () => import('@/pages/queue/my-queue'),
 );
 
 // Shop Related Pages
@@ -56,6 +61,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'about',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <About />
           </Suspense>
         ),
       },
@@ -84,14 +97,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'addpromotion',
-        element: <AddPromotionMain></AddPromotionMain>,
-      },
-      {
         path: 'queue/:shopID',
         element: (
           <Suspense fallback={<PageLoader />}>
             <ShopQueue />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'myqueue',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute element={<MyQueue />} />
           </Suspense>
         ),
       },
@@ -126,6 +143,21 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <ItemDetails />
+          </Suspense>
+      },
+      {
+        path: 'addpromotion',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AddPromotionMain />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'allpromotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AllPromotions />
           </Suspense>
         ),
       },

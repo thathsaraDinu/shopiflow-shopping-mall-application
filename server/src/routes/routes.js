@@ -4,6 +4,7 @@ import authRoutes from './auth.routes.js';
 import productRoutes from './product.routes.js';
 import queueRoutes from './queue.routes.js';
 import shopRoutes from './shop.routes.js';
+import promotionRoutes from './promotion.routes.js'
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use('/auth', authRoutes);
 router.use('/product', productRoutes);
 router.use('/queue', queueRoutes);
 router.use('/shop', shopRoutes);
+router.use('/promotions', promotionRoutes)
 
 export default router;

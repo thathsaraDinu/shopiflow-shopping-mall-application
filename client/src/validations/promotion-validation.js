@@ -27,13 +27,16 @@ export const schema2 = z.object({
       z.union([
         z
           .string()
-          .min(1, { message: 'Please add an Item' }),
-
+          .min(1, { message: 'Please add an Item' }) // Ensures the string is not empty
+          .transform((value) => value.trim()) // Trim whitespace from both ends
+          .refine((value) => value.length > 0, {
+            message: 'Please add an Item',
+          }), // Ensure trimmed string is not empty
         z.undefined(), // Allow undefined values
       ]),
     )
-    .min(1)
-    .max(255),
+    .nonempty({ message: 'At least one item is required' }) // Ensures the array is not empty
+    .max(255, { message: 'Too many items' }),
 
   description: z
     .string()
@@ -67,11 +70,50 @@ export const schema3 = z.object({
     .max(255),
 });
 
-export const schema4 = z.object({
-  startDate: z
-    .string()
-    .min(1, { message: 'Start date is required' }),
-  endDate: z
-    .string()
-    .min(1, { message: 'End date is required' }),
-});
+export const schema4 = z
+  .object({
+    startDate: z
+      .string()
+      .min(1, { message: 'Start date is required' })
+      .refine(
+        (date) => {
+          const today = new Date().setHours(0, 0, 0, 0);
+          const startDate = new Date(date).setHours(
+            0,
+            0,
+            0,
+            0,
+          );
+          return startDate >= today;
+        },
+        {
+          message:
+            'Start date cannot be earlier than today',
+        },
+      ),
+
+    endDate: z
+      .string()
+      .min(1, { message: 'End date is required' }),
+  })
+  .refine(
+    (data) => {
+      const startDate = new Date(data.startDate).setHours(
+        0,
+        0,
+        0,
+        0,
+      );
+      const endDate = new Date(data.endDate).setHours(
+        0,
+        0,
+        0,
+        0,
+      );
+      return endDate >= startDate;
+    },
+    {
+      message: 'End date cannot be earlier than start date',
+      path: ['endDate'], // Attach the error to the endDate field
+    },
+  );

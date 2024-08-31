@@ -1,16 +1,25 @@
 import InputField from "@/components/form-field";
+import { CardTitle } from "@/components/ui/card";
 
 export function AddPromotionStep3({
-  startDate,
-  endDate,
+  promotionType,
   register,
   errors,
   
 }) {
   return (
     <div className="transition-all duration-500">
+      <CardTitle className="text-center pb-10">
+        {promotionType == 1 ? (
+          <span>Discount By Percentage</span>
+        ) : promotionType == 3 ? (
+          <span>Discount on Amount</span>
+        ) : (
+          `No Type Selected ${promotionType}`
+        )}
+      </CardTitle>
       <div></div>
-      <div>
+      <div className="pb-4">
         <InputField
           type="date"
           name="startDate"

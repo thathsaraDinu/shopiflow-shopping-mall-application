@@ -1,16 +1,9 @@
 import { getQueues } from '@/api/queue.api';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { useLocation } from 'react-router-dom';
 import AddQueueModal from './join-queue';
+import QueueCard from '@/components/queue-card/queue-card';
 
 const ShopQueue = () => {
   const { shopID } = useParams();
@@ -23,6 +16,7 @@ const ShopQueue = () => {
     data: queues,
     isLoading: queuesLoading,
     isError: queuesError,
+    refetch,
   } = useQuery({
     queryKey: ['queues'],
     queryFn: () => getQueues(shopID),
@@ -37,31 +31,19 @@ const ShopQueue = () => {
           <h2 className="text-2xl font-bold">
             Queue of {shopName}
           </h2>
-          <AddQueueModal />
+          <AddQueueModal
+            shopID={shopID}
+            onSuccess={refetch}
+          />
         </div>
         {queues && (
-          <div className="grid grid-cols-1 gap-4 justify-items-center">
+          <div className="mt-5 grid grid-cols-1 gap-4 justify-items-center">
             {queues.map((queue, index) => (
-              <Card
+              <QueueCard
                 key={queue._id}
-                className={cn(
-                  'min-w-[1000px] p-1 flex flex-row',
-                  'hover:shadow-md',
-                )}
-              >
-                <div className="p-2">{index + 1}</div>
-                <div>
-                  <CardHeader>
-                    <CardTitle>{queue._id}</CardTitle>
-                    <CardDescription>
-                      {queue._id}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm">
-                    {queue._id}
-                  </CardContent>
-                </div>
-              </Card>
+                queue={queue}
+                index={index}
+              />
             ))}
           </div>
         )}
