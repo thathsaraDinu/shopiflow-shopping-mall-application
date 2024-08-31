@@ -1,17 +1,9 @@
 import { getQueues } from '@/api/queue.api';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { useLocation } from 'react-router-dom';
 import AddQueueModal from './join-queue';
-import { format } from 'date-fns';
+import QueueCard from '@/components/queue-card/queue-card';
 
 const ShopQueue = () => {
   const { shopID } = useParams();
@@ -43,38 +35,11 @@ const ShopQueue = () => {
         {queues && (
           <div className="mt-5 grid grid-cols-1 gap-4 justify-items-center">
             {queues.map((queue, index) => (
-              <Card
+              <QueueCard
                 key={queue._id}
-                className={cn(
-                  'w-full p-1 flex flex-row',
-                  'hover:shadow-md',
-                )}
-              >
-                <div className="p-2">{index + 1}</div>
-                <div>
-                  <CardHeader>
-                    <CardTitle>
-                      {queue.userID.firstName +
-                        ' ' +
-                        queue.userID.lastName}
-                    </CardTitle>
-                    <CardDescription>
-                      {format(
-                        new Date(queue.createdAt),
-                        'MM/dd/yyyy',
-                      )}
-                      {' at '}
-                      {format(
-                        new Date(queue.createdAt),
-                        'hh:mm a',
-                      )}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm">
-                    {queue._id}
-                  </CardContent>
-                </div>
-              </Card>
+                queue={queue}
+                index={index}
+              />
             ))}
           </div>
         )}

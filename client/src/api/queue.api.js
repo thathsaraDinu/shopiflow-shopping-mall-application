@@ -1,6 +1,6 @@
 import { instance } from '@/hooks/use-axios';
 
-// Get queues
+// Get queues by shop ID
 export const getQueues = async (shopID) => {
   try {
     const response = await instance.get(
@@ -9,6 +9,17 @@ export const getQueues = async (shopID) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching queues:', error);
+    throw error;
+  }
+};
+
+// Get user's queues
+export const getUserQueues = async () => {
+  try {
+    const response = await instance.get(`/api/queue`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user queues:', error);
     throw error;
   }
 };
