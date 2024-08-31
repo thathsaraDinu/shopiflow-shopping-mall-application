@@ -1,5 +1,6 @@
 import { loginUserValidation } from './auth-validation.js';
 import { createUserValidation } from './user-validation.js';
+import { createProductValidation } from './product-validation.js';
 import {
   createPromotionType1Validation,
   createPromotionType2Validation
@@ -11,6 +12,9 @@ export const schemas = {
 
   // Auth Validation Schema
   loginUser: loginUserValidation,
+
+  // Product Validation Schema
+  createProduct: createProductValidation
 
   // promotion validation schema
   createPromotionType1: createPromotionType1Validation,

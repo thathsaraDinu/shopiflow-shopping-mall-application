@@ -6,6 +6,7 @@ import {
 import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
+import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
 
 const PageLoader = () => (
@@ -136,6 +137,13 @@ const router = createBrowserRouter([
             <Inventory />
           </Suspense>
         ),
+      },
+      {
+        path: 'inventory/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ItemDetails />
+          </Suspense>
       },
       {
         path: 'addpromotion',
