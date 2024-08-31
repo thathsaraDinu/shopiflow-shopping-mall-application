@@ -19,7 +19,7 @@ import { joinQueueValidation } from '@/validations/queue-validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import propTypes from 'prop-types';
 
-const AddQueueModal = ({ shopID }) => {
+const AddQueueModal = ({ shopID, onSuccess }) => {
   const isAuthenticated = useAuthStore(
     (state) => state.isLoggedIn,
   );
@@ -42,7 +42,8 @@ const AddQueueModal = ({ shopID }) => {
   const joinQueueQuery = useMutation({
     mutationFn: joinQueue,
     onSuccess: () => {
-      toast.success('Joined queue successfully');
+      toast.success('Joined queue successfully'),
+        onSuccess();
     },
     onError: (error) => {
       console.error(error);
@@ -123,4 +124,5 @@ export default AddQueueModal;
 // Prop Validations
 AddQueueModal.propTypes = {
   shopID: propTypes.string.isRequired,
+  onSuccess: propTypes.func.isRequired,
 };

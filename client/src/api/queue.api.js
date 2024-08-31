@@ -36,3 +36,16 @@ export const joinQueue = async (shopID) => {
     throw error;
   }
 };
+
+// Leave from a queue
+export const leaveQueue = async (queueID) => {
+  try {
+    const response = await instance.delete(
+      `/api/queue/${queueID}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error leaving queue:', error);
+    throw error;
+  }
+};

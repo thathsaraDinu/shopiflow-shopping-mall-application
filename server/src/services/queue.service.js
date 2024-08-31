@@ -43,7 +43,9 @@ export const getUserQueues = async (userID) => {
     // Find all queues of the user
     const queues = await QueueSchema.find({
       userID
-    });
+    })
+      .populate('shopID')
+      .populate('userID');
 
     return queues;
   } catch (error) {
