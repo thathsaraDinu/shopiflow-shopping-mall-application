@@ -13,6 +13,6 @@ export const getProfileData = async () => {
     return response.data;
   } catch (error) {
     console.error('Error fetching profile data:', error);
-    throw error; // Rethrow the error so it can be handled by the caller
+    throw error;
   }
 };

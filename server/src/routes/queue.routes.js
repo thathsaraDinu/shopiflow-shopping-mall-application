@@ -6,6 +6,7 @@ const router = Router();
 
 // All routes are prefixed with /api/queue
 // Public routes
+router.get('/:shopID', QueueController.getQueues);
 
 // Protected routes - user only
 router.get('/', verifyAuth(['user']), QueueController.getUserQueues);
