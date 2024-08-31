@@ -1,12 +1,23 @@
-import { instance } from '@/hooks/use-axios';
+import axios from 'axios';
 
-// Get shops
+const apiUrl = 'http://localhost:3000/api/shop'; // Update with your backend URL
+
 export const getShops = async () => {
-  try {
-    const response = await instance.get('/api/shop');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching shops:', error);
-    throw error;
-  }
+  const response = await axios.get(apiUrl);
+  return response.data;
+};
+
+export const createShop = async (shopData) => {
+  const response = await axios.post(apiUrl, shopData);
+  return response.data;
+};
+
+export const updateShop = async (shopId, updatedData) => {
+  const response = await axios.put(`${apiUrl}/${shopId}`, updatedData);
+  return response.data;
+};
+
+export const deleteShop = async (shopId) => {
+  const response = await axios.delete(`${apiUrl}/${shopId}`);
+  return response.data;
 };

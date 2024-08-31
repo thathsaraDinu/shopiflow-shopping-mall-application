@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { useLocation } from 'react-router-dom';
 import AddQueueModal from './join-queue';
+import { format } from 'date-fns';
 
 const ShopQueue = () => {
   const { shopID } = useParams();
@@ -37,24 +38,36 @@ const ShopQueue = () => {
           <h2 className="text-2xl font-bold">
             Queue of {shopName}
           </h2>
-          <AddQueueModal />
+          <AddQueueModal shopID={shopID} />
         </div>
         {queues && (
-          <div className="grid grid-cols-1 gap-4 justify-items-center">
+          <div className="mt-5 grid grid-cols-1 gap-4 justify-items-center">
             {queues.map((queue, index) => (
               <Card
                 key={queue._id}
                 className={cn(
-                  'min-w-[1000px] p-1 flex flex-row',
+                  'w-full p-1 flex flex-row',
                   'hover:shadow-md',
                 )}
               >
                 <div className="p-2">{index + 1}</div>
                 <div>
                   <CardHeader>
-                    <CardTitle>{queue._id}</CardTitle>
+                    <CardTitle>
+                      {queue.userID.firstName +
+                        ' ' +
+                        queue.userID.lastName}
+                    </CardTitle>
                     <CardDescription>
-                      {queue._id}
+                      {format(
+                        new Date(queue.createdAt),
+                        'MM/dd/yyyy',
+                      )}
+                      {' at '}
+                      {format(
+                        new Date(queue.createdAt),
+                        'hh:mm a',
+                      )}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-sm">
