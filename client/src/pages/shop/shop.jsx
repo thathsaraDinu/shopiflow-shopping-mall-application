@@ -6,10 +6,11 @@ import { useEffect, useState } from 'react';
 const Shop = () => {
   const navigate = useNavigate();
   const [shops, setShops] = useState([]);
-  const [newShop, setNewShop] = useState({ name: '', location: '', openTime: '', items: [] });
+  const [newShop, setNewShop] = useState({ name: '', location: '', openTime: '', contactNumber: '', items: [] });
   const [editingShop, setEditingShop] = useState(null); // To hold the shop currently being edited
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [contactError, setContactError] = useState(null);
 
   // Fetch the shops data
   const fetchShops = async () => {
@@ -29,11 +30,22 @@ const Shop = () => {
     fetchShops();
   }, []);
 
+  // Validate contact number
+  const validateContactNumber = (number) => {
+    return /^0\d{9}$/.test(number);
+  };
+
   // Handler to create a new shop
   const handleAddShop = async () => {
+    if (!validateContactNumber(newShop.contactNumber)) {
+      setContactError('Contact number must start with 0 and be 10 digits long.');
+      return;
+    }
+    setContactError(null);
     try {
       await createShop(newShop);
       fetchShops(); // Refresh shops list after adding
+      setNewShop({ name: '', location: '', openTime: '', contactNumber: '', items: [] }); // Clear the form
     } catch (err) {
       setError('Error creating shop');
     }
@@ -41,6 +53,11 @@ const Shop = () => {
 
   // Handler to update a shop
   const handleUpdateShop = async (shopId, updatedData) => {
+    if (!validateContactNumber(updatedData.contactNumber)) {
+      setContactError('Contact number must start with 0 and be 10 digits long.');
+      return;
+    }
+    setContactError(null);
     try {
       await updateShop(shopId, updatedData);
       fetchShops(); // Refresh shops list after updating
@@ -50,27 +67,26 @@ const Shop = () => {
     }
   };
 
-// Handler to delete a shop
-const handleDeleteShop = async (shopId) => {
-  // Show a confirmation dialog
-  const isConfirmed = window.confirm('Are you sure you want to delete this shop?');
+  // Handler to delete a shop
+  const handleDeleteShop = async (shopId) => {
+    const isConfirmed = window.confirm('Are you sure you want to delete this shop?');
 
-  if (!isConfirmed) {
-    return; // Exit if the user cancels
-  }
+    if (!isConfirmed) {
+      return;
+    }
 
-  try {
-    await deleteShop(shopId);
-    fetchShops(); // Refresh shops list after deleting
-  } catch (err) {
-    setError('Error deleting shop');
-  }
-};
+    try {
+      await deleteShop(shopId);
+      fetchShops();
+    } catch (err) {
+      setError('Error deleting shop');
+    }
+  };
 
   const joinQueueHandler = (shopID, shopName) => {
     navigate(`/queue/${shopID}`, { state: { shopName } });
   };
-  
+
   // Handler for the add shop form input change
   const handleInputChange = (e) => {
     setNewShop({ ...newShop, [e.target.name]: e.target.value });
@@ -84,47 +100,56 @@ const handleDeleteShop = async (shopId) => {
 
       {/* Add Shop Form */}
       <div className="p-4 border rounded mb-5">
-  <h2>Add New Shop</h2>
-  <input
-    type="text"
-    name="name"
-    placeholder="Shop Name"
-    value={newShop.name}
-    onChange={handleInputChange}
-    className="border p-2 m-2"
-  />
-  
-  {/* Dropdown for Location */}
-  <select
-    name="location"
-    value={newShop.location}
-    onChange={handleInputChange}
-    className="border p-2 m-2"
-  >
-    <option value="" disabled>Select Location</option>
-    <option value="1st floor">1st floor</option>
-    <option value="2nd floor">2nd floor</option>
-    <option value="3rd floor">3rd floor</option>
-    <option value="4th floor">4th floor</option>
-    <option value="6th floor">6th floor</option>
-    <option value="7th floor">7th floor</option>
-    <option value="8th floor">8th floor</option>
-  </select>
+        <h2>Add New Shop</h2>
+        <input
+          type="text"
+          name="name"
+          placeholder="Shop Name"
+          value={newShop.name}
+          onChange={handleInputChange}
+          className="border p-2 m-2"
+        />
 
-  <input
-    type="text"
-    name="openTime"
-    placeholder="Open Time"
-    value={newShop.openTime}
-    onChange={handleInputChange}
-    className="border p-2 m-2"
-  />
+        {/* Dropdown for Location */}
+        <select
+          name="location"
+          value={newShop.location}
+          onChange={handleInputChange}
+          className="border p-2 m-2"
+        >
+          <option className="text-sm text-gray-600" value="" disabled>Select Location</option>
+          <option value="1st floor">1st floor</option>
+          <option value="2nd floor">2nd floor</option>
+          <option value="3rd floor">3rd floor</option>
+          <option value="4th floor">4th floor</option>
+          <option value="6th floor">6th floor</option>
+          <option value="7th floor">7th floor</option>
+          <option value="8th floor">8th floor</option>
+        </select>
 
-  <Button onClick={handleAddShop} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
-    Add Shop
-  </Button>
-</div>
+        <input
+          type="text"
+          name="openTime"
+          placeholder="Open Time"
+          value={newShop.openTime}
+          onChange={handleInputChange}
+          className="border p-2 m-2"
+        />
 
+        <input
+          type="text"
+          name="contactNumber"
+          placeholder="Contact Number"
+          value={newShop.contactNumber}
+          onChange={handleInputChange}
+          className="border p-2 m-2"
+        />
+        {contactError && <p className="text-red-600">{contactError}</p>}
+
+        <Button onClick={handleAddShop} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
+          Add Shop
+        </Button>
+      </div>
 
       {/* Display Shops */}
       {shops.map((shop) => (
@@ -132,25 +157,26 @@ const handleDeleteShop = async (shopId) => {
           <h2 className="text-lg font-semibold">{shop.name}</h2>
           <p className="text-sm text-gray-600">Location: {shop.location}</p>
           <p className="text-sm text-gray-600">Open Time: {shop.openTime}</p>
+          <p className="text-sm text-gray-600">Contact Number: {shop.contactNumber}</p>
 
           <Button
-            onClick={() => joinQueueHandler(shop._id, shop.name)} // Assuming you have a route for viewing virtual queue
+            onClick={() => joinQueueHandler(shop._id, shop.name)}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
           >
             View Virtual Queue
           </Button>
           <Button
-            onClick={() => setEditingShop(shop)} // Set shop to be edited
+            onClick={() => setEditingShop(shop)}
             className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
           >
             Update Shop
           </Button>
           <Button
-  onClick={() => handleDeleteShop(shop._id)}
-  className="bg-red hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
->
-  Delete Shop
-</Button>
+            onClick={() => handleDeleteShop(shop._id)}
+            className="bg-red hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
+          >
+            Delete Shop
+          </Button>
         </div>
       ))}
 
@@ -166,14 +192,24 @@ const handleDeleteShop = async (shopId) => {
             onChange={(e) => setEditingShop({ ...editingShop, name: e.target.value })}
             className="border p-2 m-2"
           />
-          <input
-            type="text"
+
+          {/* Dropdown for Location in Edit Form */}
+          <select
             name="location"
-            placeholder="Location"
             value={editingShop.location}
             onChange={(e) => setEditingShop({ ...editingShop, location: e.target.value })}
             className="border p-2 m-2"
-          />
+          >
+            <option value="" disabled>Select Location</option>
+            <option value="1st floor">1st floor</option>
+            <option value="2nd floor">2nd floor</option>
+            <option value="3rd floor">3rd floor</option>
+            <option value="4th floor">4th floor</option>
+            <option value="6th floor">6th floor</option>
+            <option value="7th floor">7th floor</option>
+            <option value="8th floor">8th floor</option>
+          </select>
+
           <input
             type="text"
             name="openTime"
@@ -182,6 +218,17 @@ const handleDeleteShop = async (shopId) => {
             onChange={(e) => setEditingShop({ ...editingShop, openTime: e.target.value })}
             className="border p-2 m-2"
           />
+
+          <input
+            type="text"
+            name="contactNumber"
+            placeholder="Contact Number"
+            value={editingShop.contactNumber}
+            onChange={(e) => setEditingShop({ ...editingShop, contactNumber: e.target.value })}
+            className="border p-2 m-2"
+          />
+          {contactError && <p className="text-red-600">{contactError}</p>}
+
           <Button
             onClick={() => handleUpdateShop(editingShop._id, editingShop)}
             className="bg-yellow-500 text-white px-4 py-2 rounded"

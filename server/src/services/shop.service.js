@@ -1,11 +1,11 @@
 import ShopSchema from '../models/shop.model.js';
 
-// Add shop
-export const addShop = async (data) => {
+
+// Get shops
+export const getShops = async () => {
   try {
-    const shop = new ShopSchema(data);
-    await shop.save();
-    return shop;
+    const shops = await ShopSchema.find();
+    return shops;
   } catch (error) {
     throw {
       status: 500,
@@ -14,11 +14,13 @@ export const addShop = async (data) => {
   }
 };
 
-// Get shops
-export const getShops = async () => {
+
+// Add shop
+export const addShop = async (data) => {
   try {
-    const shops = await ShopSchema.find();
-    return shops;
+    const shop = new ShopSchema(data);
+    await shop.save();
+    return shop;
   } catch (error) {
     throw {
       status: 500,
@@ -47,6 +49,7 @@ export const updateShop = async (shopId, data) => {
     };
   }
 };
+
 
 // Delete shop
 export const deleteShop = async (shopId) => {
