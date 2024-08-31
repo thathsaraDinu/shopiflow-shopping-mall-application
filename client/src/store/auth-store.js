@@ -14,10 +14,11 @@ export const useAuthStore = create(
   persist(
     (set) => ({
       ...initialState,
-      login: (accessToken) => {
+      login: (accessToken, role) => {
         set({
           isLoggedIn: true,
           accessToken: accessToken,
+          role: role,
         });
       },
       profile: (role) => {
