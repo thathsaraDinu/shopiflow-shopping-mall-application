@@ -112,6 +112,7 @@ export function AddPromotionMain() {
           setTimeout(resolve, 1000),
         );
         addPromotion.mutate(formData3, data);
+         window.location.href = '/dashboard/allpromotions';
       }
 
       next();
@@ -180,7 +181,6 @@ export function AddPromotionMain() {
           <div className="text-2xl font-semibold ">
             Add Promotion
           </div>
-         
         </div>
         <div className="flex justify-center mb-10 sm:mb-20">
           <Card className="mt-10 w-[120vh] rounded-xl  sm:px-10 py-20 pb-10 h-auto ">
@@ -346,7 +346,7 @@ export function AddPromotionMain() {
                 </div>
               </div>
               <div className="mx-0 md:mx-5 lg:mx-20 my-10">
-                <div className=" my-5">{step}</div>
+                <div className='pb-10'>{step}</div>
                 {errors.root && (
                   <p>{errors.root.message}</p>
                 )}
@@ -358,16 +358,20 @@ export function AddPromotionMain() {
                       <Button
                         onClick={back}
                         type="button"
-                        varient="secondary"
+                       
+                        className="bg-blue-600 text-white hover:bg-blue-500"
                       >
                         Previous
                       </Button>
                     )}
 
+
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      varient="default"
+                      className="bg-green-600 text-white hover:bg-green-500"
+
+                      
                     >
                       {isSubmitting
                         ? 'Submitting...'

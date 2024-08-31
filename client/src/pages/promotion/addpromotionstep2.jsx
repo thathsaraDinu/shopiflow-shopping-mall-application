@@ -97,9 +97,8 @@ export function AddPromotionStep2({
               </div>
             ))}
             <Button
-              className="mt-3"
+              className="mt-3 bg-blue-600 text-white hover:bg-blue-500"
               type="button"
-              variant="secondary"
               size="sm"
               onClick={() => addItem(1)}
             >
@@ -118,7 +117,7 @@ export function AddPromotionStep2({
               errors={errors}
             />
           </div>
-          <div>
+          <div className="pb-4">
             <InputField
               label={'Discount Amount'}
               type="number"

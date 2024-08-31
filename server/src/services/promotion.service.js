@@ -73,15 +73,49 @@ export const addPromotionPercentage = async (data) => {
 
 
 export const addPromotionAmount = async (data) => {
-  try {
-    // Create a new promotion
-    const promotion = await DiscountAmount.create(data);
+   try {
+     const {
+       promotionType,
+       storeName,
+       startDate,
+       endDate,
+       description,
+       discountAmount,
+       qualifyingPurchaseAmount
+     } = data;
 
-    return promotion;
-  } catch (error) {
-    throw {
-      status: 500,
-      message: error.message
-    };
-  }
+     const now = new Date();
+     const start = new Date(startDate);
+     const end = new Date(endDate);
+
+     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+       return {
+         status: 400,
+         message: 'Invalid Date format for startDate or endDate'
+       };
+     }
+
+     const isActive = now >= start && now <= end;
+
+     const newPromotion = new DiscountAmount({
+       promotionType: 3,
+       storeName,
+       discountAmount,
+       qualifyingPurchaseAmount,
+       startDate: start,
+       endDate: end,
+       description,
+       isActive
+     });
+
+     const savedPromotion = await newPromotion.save();
+     return savedPromotion;
+   } catch (error) {
+     console.error('Error saving promotion:', error);
+     if (!error.status) {
+       error.status = 500;
+       error.message = 'Failed to save the promotion';
+     }
+     throw error;
+   }
 };
