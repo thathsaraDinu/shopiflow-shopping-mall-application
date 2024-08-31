@@ -19,3 +19,10 @@ export const JWT_CONFIG = {
 export const LOGGER_CONFIG = {
   level: process.env.LOG_LEVEL || 'info'
 };
+
+// Role configuration constants
+export const USER_ROLES = {
+  USER: 'user',
+  ADMIN: 'admin',
+  SHOP_OWNER: 'shopOwner'
+};
