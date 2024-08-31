@@ -50,15 +50,13 @@ const Shop = () => {
     }
   };
 
-  // Handler to delete a shop
-  const handleDeleteShop = async (shopId) => {
-    try {
-      await deleteShop(shopId);
-      fetchShops(); // Refresh shops list after deleting
-    } catch (err) {
-      setError('Error deleting shop');
-    }
-  };
+// Handler to delete a shop
+const handleDeleteShop = async (shopId) => {
+  // Show a confirmation dialog
+  const isConfirmed = window.confirm('Are you sure you want to delete this shop?');
+
+  if (!isConfirmed) {
+    return; // Exit if the user cancels
   }
 
   try {
