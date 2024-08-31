@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import QueueController from '../controllers/queue.controller.js';
 import verifyAuth from '../middleware/authorize.js';
+import { USER_ROLES } from '../constants/constants.js';
 
 const router = Router();
 
@@ -9,15 +10,15 @@ const router = Router();
 router.get('/:shopID', QueueController.getQueues);
 
 // Protected routes - user only
-router.get('/', verifyAuth(['user']), QueueController.getUserQueues);
-router.post('/:shopID', verifyAuth(['user']), QueueController.joinQueue);
-router.put('/:shopID', verifyAuth(['user']), QueueController.changeQueuePosition);
-router.delete('/:id', verifyAuth(['user']), QueueController.leaveQueue);
+router.get('/', verifyAuth([USER_ROLES.USER]), QueueController.getUserQueues);
+router.post('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.joinQueue);
+router.put('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.changeQueuePosition);
+router.delete('/:id', verifyAuth([USER_ROLES.USER]), QueueController.leaveQueue);
 
 // Admin and user route
-router.get('/:shopID', verifyAuth(['user']), QueueController.getQueues);
+router.get('/:shopID', verifyAuth([USER_ROLES.ADMIN, USER_ROLES.USER]), QueueController.getQueues);
 
 // Admin routes
-router.delete('/:shopID/clear', verifyAuth(['admin']), QueueController.clearShopQueues);
+router.delete('/:shopID/clear', verifyAuth([USER_ROLES.ADMIN]), QueueController.clearShopQueues);
 
 export default router;

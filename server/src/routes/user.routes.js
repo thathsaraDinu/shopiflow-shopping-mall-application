@@ -2,6 +2,7 @@ import { Router } from 'express';
 import UserController from '../controllers/user.controller.js';
 import verifyAuth from '../middleware/authorize.js';
 import validateRequest from '../middleware/validate.js';
+import { USER_ROLES } from '../constants/constants.js';
 
 const router = Router();
 
@@ -10,6 +11,10 @@ const router = Router();
 router.post('/', validateRequest('createUser'), UserController.register);
 
 // User only routes
-router.get('/profile', verifyAuth(['admin', 'user']), UserController.profile);
+router.get(
+  '/profile',
+  verifyAuth([USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.SHOP_OWNER]),
+  UserController.profile
+);
 
 export default router;

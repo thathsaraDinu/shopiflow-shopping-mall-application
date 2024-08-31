@@ -27,6 +27,10 @@ export const ShopSchema = new Schema(
     openTime: {
       type: String,
       required: [true, 'Open time is required']
+    },
+    contactNumber: {
+      type: String, // Use String to accommodate different phone number formats
+      required: [true, 'Contact number is required']
     }
   },
   {

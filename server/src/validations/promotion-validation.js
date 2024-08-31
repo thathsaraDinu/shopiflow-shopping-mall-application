@@ -28,20 +28,11 @@ export const createPromotionType2Validation = z.object({
   }),
   storeName: z.string().min(1, { message: 'Store name is required' }).max(255),
   discountAmount: z
-    .string()
-    .min(1, { message: 'Discount amount is required' })
-    .transform((val) => parseFloat(val))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: 'Must be a valid number'
-    }),
+    .number().min(1),
 
   qualifyingPurchaseAmount: z
-    .string()
-    .min(1, { message: 'Purchase amount is required' })
-    .transform((val) => parseFloat(val))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: 'Must be a valid number'
-    }),
+    .number().min(1),
+    
   description: z.string().min(1, { message: 'Description is required' }).max(255),
   startDate: z.string().min(1, { message: 'Start date is required' }),
   endDate: z.string().min(1, { message: 'End date is required' })
