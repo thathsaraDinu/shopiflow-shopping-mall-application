@@ -144,6 +144,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<PageLoader />}>
             <ItemDetails />
           </Suspense>
+        ),
       },
       {
         path: 'addpromotion',

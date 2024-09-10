@@ -14,7 +14,7 @@ export const schemas = {
   loginUser: loginUserValidation,
 
   // Product Validation Schema
-  createProduct: createProductValidation
+  createProduct: createProductValidation,
 
   // promotion validation schema
   createPromotionType1: createPromotionType1Validation,
