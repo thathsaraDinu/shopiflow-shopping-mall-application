@@ -92,12 +92,10 @@ export function AllPromotions() {
         </h4>
       </div>
       <div>
-        {isLoading && <p>Loading...</p>}
-
         {promotionType == 1 ? (
           <Table>
             <TableCaption>
-              Discount on Percentage
+              
             </TableCaption>
             <TableHeader>
               <TableRow>
@@ -125,6 +123,12 @@ export function AllPromotions() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {isLoading && (
+                <p className="text-blue-400 font-semibold text-md italic">
+                  Loading...
+                </p>
+              )}
+
               {discounts && discounts.length > 0
                 ? discounts.map((promotion) => (
                     <TableRow>
@@ -199,7 +203,6 @@ export function AllPromotions() {
         ) : (
           <Table>
             <TableCaption>
-              Discount on Fixed Amount
             </TableCaption>
             <TableHeader>
               <TableRow>
@@ -227,6 +230,11 @@ export function AllPromotions() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {isLoading && (
+                <p className="text-blue-400 font-semibold text-md italic">
+                  Loading...
+                </p>
+              )}
               {amounts && amounts.length > 0
                 ? amounts.map((promotion) => (
                     <TableRow>
