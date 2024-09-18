@@ -1,16 +1,28 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { getShops, createShop, updateShop, deleteShop } from '@/api/shop.api';
+import {
+  getShops,
+  createShop,
+  updateShop,
+  deleteShop,
+} from '@/api/shop.api';
 import { useEffect, useState } from 'react';
 
 const Shop = () => {
   const navigate = useNavigate();
   const [shops, setShops] = useState([]);
-  const [newShop, setNewShop] = useState({ name: '', location: '', openTime: '', contactNumber: '', items: [] });
+  const [newShop, setNewShop] = useState({
+    name: '',
+    location: '',
+    openTime: '',
+    contactNumber: '',
+    items: [],
+  });
   const [editingShop, setEditingShop] = useState(null); // To hold the shop currently being edited
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [contactError, setContactError] = useState(null);
+  const [queueLength, setQueueLength] = useState(0);
 
   // Fetch the shops data
   const fetchShops = async () => {
@@ -38,14 +50,22 @@ const Shop = () => {
   // Handler to create a new shop
   const handleAddShop = async () => {
     if (!validateContactNumber(newShop.contactNumber)) {
-      setContactError('Contact number must start with 0 and be 10 digits long.');
+      setContactError(
+        'Contact number must start with 0 and be 10 digits long.',
+      );
       return;
     }
     setContactError(null);
     try {
       await createShop(newShop);
       fetchShops(); // Refresh shops list after adding
-      setNewShop({ name: '', location: '', openTime: '', contactNumber: '', items: [] }); // Clear the form
+      setNewShop({
+        name: '',
+        location: '',
+        openTime: '',
+        contactNumber: '',
+        items: [],
+      }); // Clear the form
     } catch (err) {
       setError('Error creating shop');
     }
@@ -54,7 +74,9 @@ const Shop = () => {
   // Handler to update a shop
   const handleUpdateShop = async (shopId, updatedData) => {
     if (!validateContactNumber(updatedData.contactNumber)) {
-      setContactError('Contact number must start with 0 and be 10 digits long.');
+      setContactError(
+        'Contact number must start with 0 and be 10 digits long.',
+      );
       return;
     }
     setContactError(null);
@@ -69,7 +91,9 @@ const Shop = () => {
 
   // Handler to delete a shop
   const handleDeleteShop = async (shopId) => {
-    const isConfirmed = window.confirm('Are you sure you want to delete this shop?');
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this shop?',
+    );
 
     if (!isConfirmed) {
       return;
@@ -89,7 +113,10 @@ const Shop = () => {
 
   // Handler for the add shop form input change
   const handleInputChange = (e) => {
-    setNewShop({ ...newShop, [e.target.name]: e.target.value });
+    setNewShop({
+      ...newShop,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -117,7 +144,13 @@ const Shop = () => {
           onChange={handleInputChange}
           className="border p-2 m-2"
         >
-          <option className="text-sm text-gray-600" value="" disabled>Select Location</option>
+          <option
+            className="text-sm text-gray-600"
+            value=""
+            disabled
+          >
+            Select Location
+          </option>
           <option value="1st floor">1st floor</option>
           <option value="2nd floor">2nd floor</option>
           <option value="3rd floor">3rd floor</option>
@@ -144,27 +177,54 @@ const Shop = () => {
           onChange={handleInputChange}
           className="border p-2 m-2"
         />
-        {contactError && <p className="text-red-600">{contactError}</p>}
+        {contactError && (
+          <p className="text-red-600">{contactError}</p>
+        )}
 
-        <Button onClick={handleAddShop} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
+        <Button
+          onClick={handleAddShop}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
+        >
           Add Shop
         </Button>
       </div>
 
       {/* Display Shops */}
       {shops.map((shop) => (
-        <div key={shop._id} className="m-5 p-4 border rounded shadow">
-          <h2 className="text-lg font-semibold">{shop.name}</h2>
-          <p className="text-sm text-gray-600">Location: {shop.location}</p>
-          <p className="text-sm text-gray-600">Open Time: {shop.openTime}</p>
-          <p className="text-sm text-gray-600">Contact Number: {shop.contactNumber}</p>
+        <div
+          key={shop._id}
+          className="m-5 p-4 border rounded shadow"
+        >
+          <h2 className="text-lg font-semibold">
+            {shop.name}
+          </h2>
+          <p className="text-sm text-gray-600">
+            Location: {shop.location}
+          </p>
+          <p className="text-sm text-gray-600">
+            Open Time: {shop.openTime}
+          </p>
+          <p className="text-sm text-gray-600">
+            Contact Number: {shop.contactNumber}
+          </p>
+          {/* Number of buyers in queue */}
+          <div>
+            <span
+              className={`${queueLength > 10 ? 'bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded' : 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded'}`}
+            >
+              {queueLength} buyers in queue
+            </span>
+          </div>
 
           <Button
-            onClick={() => joinQueueHandler(shop._id, shop.name)}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
+            onClick={() =>
+              joinQueueHandler(shop._id, shop.name)
+            }
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2"
           >
-            View Virtual Queue
+            Join Queue
           </Button>
+
           <Button
             onClick={() => setEditingShop(shop)}
             className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
@@ -189,7 +249,12 @@ const Shop = () => {
             name="name"
             placeholder="Shop Name"
             value={editingShop.name}
-            onChange={(e) => setEditingShop({ ...editingShop, name: e.target.value })}
+            onChange={(e) =>
+              setEditingShop({
+                ...editingShop,
+                name: e.target.value,
+              })
+            }
             className="border p-2 m-2"
           />
 
@@ -197,10 +262,17 @@ const Shop = () => {
           <select
             name="location"
             value={editingShop.location}
-            onChange={(e) => setEditingShop({ ...editingShop, location: e.target.value })}
+            onChange={(e) =>
+              setEditingShop({
+                ...editingShop,
+                location: e.target.value,
+              })
+            }
             className="border p-2 m-2"
           >
-            <option value="" disabled>Select Location</option>
+            <option value="" disabled>
+              Select Location
+            </option>
             <option value="1st floor">1st floor</option>
             <option value="2nd floor">2nd floor</option>
             <option value="3rd floor">3rd floor</option>
@@ -215,7 +287,12 @@ const Shop = () => {
             name="openTime"
             placeholder="Open Time"
             value={editingShop.openTime}
-            onChange={(e) => setEditingShop({ ...editingShop, openTime: e.target.value })}
+            onChange={(e) =>
+              setEditingShop({
+                ...editingShop,
+                openTime: e.target.value,
+              })
+            }
             className="border p-2 m-2"
           />
 
@@ -224,13 +301,22 @@ const Shop = () => {
             name="contactNumber"
             placeholder="Contact Number"
             value={editingShop.contactNumber}
-            onChange={(e) => setEditingShop({ ...editingShop, contactNumber: e.target.value })}
+            onChange={(e) =>
+              setEditingShop({
+                ...editingShop,
+                contactNumber: e.target.value,
+              })
+            }
             className="border p-2 m-2"
           />
-          {contactError && <p className="text-red-600">{contactError}</p>}
+          {contactError && (
+            <p className="text-red-600">{contactError}</p>
+          )}
 
           <Button
-            onClick={() => handleUpdateShop(editingShop._id, editingShop)}
+            onClick={() =>
+              handleUpdateShop(editingShop._id, editingShop)
+            }
             className="bg-yellow-500 text-white px-4 py-2 rounded"
           >
             Save Changes
