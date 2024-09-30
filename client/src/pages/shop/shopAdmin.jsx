@@ -190,21 +190,23 @@ const Shop = () => {
                     key={shop._id}
                     className="m-5 p-4 border rounded shadow"
                 >
-                    <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif', fontSize: '30px' }}>
-                        {shop.name}
-                    </h2>
-                    <p className="text-sm text-gray-600">
+                    <div className='mt-2 mb-4'>
+                        <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif', fontSize: '30px' }}>
+                            {shop.name}
+                        </h2>
+                    </div>
+                    <p className="text-base text-gray-600">
                         Location: {shop.location}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-base text-gray-600">
                         Open Time: {shop.openTime}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-base text-gray-600">
                         Contact Number: {shop.contactNumber}
                     </p>
                     <Button
                         onClick={() => setEditingShop(shop)}
-                        className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
+                        className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-10"
                     >
                         Update Shop
                     </Button>
