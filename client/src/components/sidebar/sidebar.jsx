@@ -60,6 +60,34 @@ const Sidebar = () => {
               <li className="py-4 mb-3">
                 <div className="inline-flex group">
                   <Link
+                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('shopsadmin') && 'text-blue-500'}`}
+                    to="shopsadmin"
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('shopsadmin') && 'text-blue-500'}`}
+                    >
+                      <path
+                        d="M4 7V5C4 3.89543 4.89543 3 6 3H18C19.1046 3 20 3.89543 20 5V7M3 9H21L20.3726 18.4244C20.2984 19.5052 19.4244 20.3455 18.3411 20.3455H5.65894C4.57561 20.3455 3.70161 19.5052 3.62736 18.4244L3 9Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path d="M9 13H10V18H9V13ZM14 13H15V18H14V13Z" fill="currentColor"/>
+                    </svg>
+                    Shops
+                  </Link>
+                </div>
+              </li>
+
+              <li className="py-4 mb-3">
+                <div className="inline-flex group">
+                  <Link
                     className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('inventory') && 'text-blue-500'}`}
                     to="inventory"
                   >
