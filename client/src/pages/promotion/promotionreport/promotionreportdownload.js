@@ -43,9 +43,7 @@ export const PromotionReportDownload = async (
   const chartData = {
     labels:
       promotionType === '1'
-        ? promotions.map((promotion) =>
-            promotion.applicableItems.map((item) => item),
-          )
+        ? promotions.map((promotion) => promotion.storeName) // Changed to store names only
         : promotions.map((p) => p.storeName),
     datasets:
       promotionType === '1'
@@ -115,10 +113,6 @@ export const PromotionReportDownload = async (
     [
       'Store Name',
       promotionType === '1'
-        ? 'Applicable Items'
-        : 'Qualifying Purchase Amount',
-
-      promotionType === '1'
         ? 'Discount Percentage'
         : 'Discount Amount',
       'Description',
@@ -130,19 +124,24 @@ export const PromotionReportDownload = async (
   const body = promotions.map((promotion) => [
     promotion.storeName,
     promotionType === '1'
-      ? `${promotion.applicableItems.join(', ')}`
-      : `${promotion.qualifyingPurchaseAmount}`,
-    promotionType === '1'
       ? `${promotion.discountPercentage}%`
       : `${promotion.discountAmount}`,
     promotion.description,
     new Date(promotion.startDate).toLocaleDateString(
-      promotion.startDateformat,
-      'yyyy-MM-dd',
+      'en-GB',
+      {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      },
     ),
     new Date(promotion.endDate).toLocaleDateString(
-      promotion.endDateformat,
-      'yyyy-MM-dd',
+      'en-GB',
+      {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      },
     ),
   ]);
 
@@ -174,5 +173,4 @@ export const PromotionReportDownload = async (
       : `DiscountFixedAmountReport-${formattedDate}-${formattedTime}.pdf`;
 
   doc.save(fileName);
-
 };

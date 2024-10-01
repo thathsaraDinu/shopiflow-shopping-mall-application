@@ -19,6 +19,7 @@ export const generateChartImage = (data) => {
     new Chart(ctx, {
       type: 'bar',
       data: {
+        // Update labels to remove applicable items
         labels: data.labels,
         datasets: data.datasets,
       },

@@ -1,13 +1,11 @@
 import InputField from '@/components/form-field';
 import { Button } from '@/components/ui/button';
 import { CardTitle } from '@/components/ui/card';
+import { Dialog } from '@/components/ui/dialog';
 import { useState } from 'react';
 
 export function AddPromotionStep2({
   promotionType,
-  fields,
-  addItem,
-  removeItem,
   register,
   errors,
 }) {
@@ -22,7 +20,7 @@ export function AddPromotionStep2({
           `No Type Selected ${promotionType}`
         )}
       </CardTitle>
-      <div className="grid pb-4 gap-4">
+      <div className="">
         <InputField
           label={'Store Name'}
           type="text"
@@ -35,80 +33,18 @@ export function AddPromotionStep2({
 
       {promotionType == 1 ? (
         <div>
-          <div className="grid pb-4 gap-4">
             <InputField
               label="Discount Percentage"
               type="number"
               register={register}
               name="discountPercentage"
               errors={errors}
-
               // Max is only relevant for discountPercentage
             />
-          </div>
-          <div className=" pb-4 gap-4">
-            <div className="text-sm font-medium pb-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Applicable Items
-            </div>
-            {fields.map((item, index) => (
-              <div
-                id={`applicableItems.${index}`}
-                className="w-full flex gap-5 items-center"
-                key={index}
-              >
-                <InputField
-                  type="text"
-                  register={register}
-                  name={`applicableItems[${index}]`}
-                />
-
-                {fields.length != 1 ? (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      removeItem(index, 1);
-                    }}
-                    className="inline-block"
-                  >
-                    Remove
-                  </Button>
-                ) : (
-                  ''
-                )}
-
-                <span className="text-sm text-red-500">
-                  {errors.applicableItems ? (
-                    errors.applicableItems[index] ? (
-                      <p>
-                        {
-                          errors.applicableItems[index]
-                            .message
-                        }
-                      </p>
-                    ) : (
-                      ''
-                    )
-                  ) : (
-                    ''
-                  )}
-                </span>
-              </div>
-            ))}
-            <Button
-              className="mt-3 bg-blue-600 text-white hover:bg-blue-500"
-              type="button"
-              size="sm"
-              onClick={() => addItem(1)}
-            >
-              Add Item
-            </Button>
-          </div>
         </div>
       ) : (
         <div>
-          <div className="pb-4">
+          <div className="">
             <InputField
               label={'Qualifying Purchase Amount'}
               type="number"
@@ -117,7 +53,7 @@ export function AddPromotionStep2({
               errors={errors}
             />
           </div>
-          <div className="pb-4">
+          <div className="">
             <InputField
               label={'Discount Amount'}
               type="number"
