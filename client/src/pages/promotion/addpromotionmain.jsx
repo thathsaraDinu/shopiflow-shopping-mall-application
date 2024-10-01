@@ -1,14 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMultistepForm } from '../../hooks/useMultiStepForm';
-
 import { AddPromotionStep1 } from './addpromotionstep1';
 import { AddPromotionStep2 } from './addpromotionstep2';
 import { AddPromotionStep3 } from './addpromotionstep3';
-import {
-  set,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   schema1,
@@ -21,18 +16,29 @@ import { Card } from '@/components/ui/card';
 import { addpromotion } from '@/api/promotion.api';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog'; // Import DialogContent, DialogHeader, DialogFooter
+import { Link } from 'react-router-dom';
 
-export function AddPromotionMain() {
+export function AddPromotionMain({ refetch }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     promotionType: -1,
     storeName: '',
     discountAmount: 0,
     discountPercentage: 0,
-    applicableItems: [''],
     qualifyingPurchaseAmount: 0,
     startDate: '',
     endDate: '',
     description: '',
+    photo: [],
   });
 
   const [theStep, setTheStep] = useState(1);
@@ -46,9 +52,6 @@ export function AddPromotionMain() {
     setError,
     control,
   } = useForm({
-    defaultValues: {
-      applicableItems: [' '], // Initialize with an empty item or default value
-    },
     resolver:
       theStep == 1
         ? zodResolver(schema1)
@@ -59,16 +62,17 @@ export function AddPromotionMain() {
             : zodResolver(schema4),
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'applicableItems',
-  });
-
   const addPromotion = useMutation({
     mutationFn: addpromotion,
     onSuccess: () => {
       console.log('Promotion Created Successfully');
       toast.success('Promotion Created Successfully');
+      refetch();
+      reset();
+      back();
+      back();
+      setTheStep(1);
+      setIsOpen(false);
     },
     onError: (error) => {
       console.log('the formdata: ', formData);
@@ -80,7 +84,45 @@ export function AddPromotionMain() {
         toast.error('Something went wrong');
       }
     },
+    onSettled: () => {
+      console.log('Settled');
+    },
   });
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // This will return a Base64 string
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log('file:', file);
+    if (file) {
+      convertToBase64(file)
+        .then((base64) => {
+          setFormData((prevData) => ({
+            ...prevData,
+            photo: base64,
+          }));
+          console.log('Base64:', base64);
+        })
+        .catch((error) => {
+          console.error(
+            'Error converting file to Base64:',
+            error,
+          );
+        });
+    }
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -89,11 +131,8 @@ export function AddPromotionMain() {
           ...prevData,
           promotionType: parseInt(data.promotionType),
         }));
-      console.log(data);
 
       setFormData((prevData) => ({ ...prevData, ...data }));
-      console.log(formData);
-      console.log(isSubmitting);
 
       if (currentStepIndex == 2) {
         const formData3 = {
@@ -101,20 +140,18 @@ export function AddPromotionMain() {
           storeName: formData.storeName,
           discountAmount: formData.discountAmount,
           discountPercentage: formData.discountPercentage,
-          applicableItems: formData.applicableItems,
           qualifyingPurchaseAmount:
             formData.qualifyingPurchaseAmount,
           startDate: data.startDate,
           endDate: data.endDate,
           description: formData.description,
+          photo: formData.photo,
         };
         await new Promise((resolve) =>
           setTimeout(resolve, 1000),
         );
-        addPromotion.mutate(formData3, data);
-         window.location.href = '/dashboard/allpromotions';
+        addPromotion.mutate(formData3);
       }
-
       next();
     } catch (error) {}
   };
@@ -134,15 +171,6 @@ export function AddPromotionMain() {
     else setTheStep(4);
   });
 
-  const removeItem = (index) => {
-    remove(index); // Remove the item using `remove` from `useFieldArray`
-  };
-
-  // Function to handle adding a new item
-  const addItem = () => {
-    append(''); // Add a new item using `append` from `useFieldArray`
-  };
-
   const {
     steps,
     currentStepIndex,
@@ -161,231 +189,74 @@ export function AddPromotionMain() {
     />,
     <AddPromotionStep2
       {...formData}
-      addItem={addItem}
       register={register}
-      removeItem={removeItem}
-      fields={fields}
       errors={errors}
     />,
     <AddPromotionStep3
       {...formData}
       register={register}
       errors={errors}
+      handleFileChange={handleFileChange}
     />,
   ]);
 
   return (
-    <div className="">
-      <div className="sm:px-20 px-10">
-        <div className=" pt-10">
-          <div className="text-2xl font-semibold ">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button className="bg-blue-500 text-white text-sm px-5 py-5 rounded-lg hover:bg-blue-600 transition">
+          Add Promotion
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <div className="text-2xl font-semibold">
             Add Promotion
           </div>
-        </div>
-        <div className="flex justify-center mb-10 sm:mb-20">
-          <Card className="mt-10 w-[120vh] rounded-xl  sm:px-10 py-20 pb-10 h-auto ">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-6 "
-            >
-              <div className="w-full px-5 sm:px-10 md:px-20 h-[4rem] lg:h-[8rem] py-">
-                <div className="relative flex items-center justify-between w-full">
-                  <div className="absolute left-0 top-2/4 h-0.5 w-full -translate-y-2/4 bg-gray-300"></div>
-                  <div
-                    className={`absolute left-0 top-2/4 h-0.5 ${
-                      isFirstStep
-                        ? 'w-0'
-                        : isSecondStep
-                          ? 'w-1/2'
-                          : 'w-full'
-                    }  -translate-y-2/4 bg-green' transition-all duration-500`}
-                  ></div>
-                  <div
-                    className={`relative z-10 grid w-10 h-10 font-bold transition-all duration-300  ${
-                      isFirstStep
-                        ? 'text-white  bg-gray-900'
-                        : 'text-white bg-green'
-                    } rounded-full place-items-center`}
+        </DialogHeader>
+
+        <div className=" mx-auto w-[400px]">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className=""
+          >
+            <div className="pb-4">{step}</div>
+            {errors.root && (
+              <p className="text-red-500">
+                {errors.root.message}
+              </p>
+            )}
+            {/* Step content */}
+            {!isComplete && (
+              <div className="flex items-center gap-10 justify-center">
+                {!isFirstStep && (
+                  <Button
+                    onClick={back}
+                    type="button"
+                    className="bg-blue-600 text-white hover:bg-blue-500 transition"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                      ></path>
-                    </svg>
-                    <div className="absolute bottom-[3.5rem] lg:-bottom-[4.5rem] w-max text-center">
-                      <h6
-                        id="steptext"
-                        className={`block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal ${
-                          isFirstStep
-                            ? 'text-black'
-                            : 'text-green'
-                        }`}
-                      >
-                        Step 1
-                      </h6>
-                      <p
-                        id="steptext"
-                        className={`lg:block hidden font-sans text-base antialiased font-normal leading-relaxed  ${
-                          isFirstStep
-                            ? 'text-black'
-                            : 'text-green'
-                        }`}
-                      >
-                        Select Type
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    className={`relative z-10 grid w-10 h-10 font-bold transition-all duration-300  ${
-                      isSecondStep
-                        ? 'text-white  bg-gray-900'
-                        : isLastStep || isComplete
-                          ? 'text-white bg-green'
-                          : 'text-white  bg-gray-300'
-                    } rounded-full place-items-center`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495"
-                      ></path>
-                    </svg>
-                    <div className="absolute bottom-[3.5rem] lg:-bottom-[4.5rem] w-max text-center">
-                      <h6
-                        className={`block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal ${
-                          isSecondStep
-                            ? 'text-gray-900 '
-                            : isLastStep || isComplete
-                              ? 'text-green'
-                              : 'text-gray-300 '
-                        }`}
-                      >
-                        Step 2
-                      </h6>
-                      <p
-                        className={`lg:block hidden font-sans text-base antialiased font-normal leading-relaxed  ${
-                          isSecondStep
-                            ? 'text-gray-900 '
-                            : isLastStep || isComplete
-                              ? 'text-green'
-                              : 'text-gray-300 '
-                        }`}
-                      >
-                        Fill Out Information
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    className={`relative z-10 grid w-10 h-10 font-bold transition-all duration-300  ${
-                      isLastStep
-                        ? 'text-white  bg-gray-900'
-                        : isComplete
-                          ? 'text-white  bg-green'
-                          : 'text-white bg-gray-300'
-                    } rounded-full place-items-center`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"
-                      ></path>
-                    </svg>
-                    <div className="absolute bottom-[3.5rem] lg:-bottom-[4.5rem] w-max text-center">
-                      <h6
-                        className={`block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal ${
-                          isLastStep
-                            ? 'text-black'
-                            : isComplete
-                              ? 'text-green'
-                              : 'text-gray-300'
-                        }`}
-                      >
-                        Step 3
-                      </h6>
-                      <p
-                        className={`lg:block hidden font-sans text-base antialiased font-normal leading-relaxed  ${
-                          isLastStep
-                            ? 'text-black'
-                            : isComplete
-                              ? 'text-green'
-                              : 'text-gray-300'
-                        }`}
-                      >
-                        Confirm
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mx-0 md:mx-5 lg:mx-20 my-10">
-                <div className='pb-10'>{step}</div>
-                {errors.root && (
-                  <p>{errors.root.message}</p>
+                    Previous
+                  </Button>
                 )}
-                {!isComplete && (
-                  <div
-                    className={`w-full gap-5 sm:gap-10 flex items-center justify-center sm:justify-end text-end`}
-                  >
-                    {!isFirstStep && (
-                      <Button
-                        onClick={back}
-                        type="button"
-                       
-                        className="bg-blue-600 text-white hover:bg-blue-500"
-                      >
-                        Previous
-                      </Button>
-                    )}
 
-
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="bg-green-600 text-white hover:bg-green-500"
-
-                      
-                    >
-                      {isSubmitting
-                        ? 'Submitting...'
-                        : isLastStep
-                          ? 'Submit'
-                          : 'Next'}
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-green-600 text-white hover:bg-green-500 transition"
+                >
+                  {isSubmitting
+                    ? 'Submitting...'
+                    : isLastStep
+                      ? 'Submit'
+                      : 'Next'}
+                </Button>
               </div>
-            </form>
-          </Card>
+            )}
+          </form>
         </div>
-      </div>
-    </div>
+
+        <DialogFooter>{/* Optional footer */}</DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

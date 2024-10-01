@@ -18,7 +18,7 @@ export const PromotionController = {
       console.log('test controller');
 
       // Await the result of the addPromotionPercentage function
-      const promotion = await addPromotionPercentage(req.body);
+      const promotion = await addPromotionPercentage(req);
 
       console.log('the test in backend:', promotion);
 

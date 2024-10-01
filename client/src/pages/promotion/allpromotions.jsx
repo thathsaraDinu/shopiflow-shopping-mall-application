@@ -17,11 +17,13 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PromotionReportDownload } from './promotionreport/promotionreportdownload';
+import { AddPromotionMain } from './addpromotionmain';
 
 export function AllPromotions() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['promotions'],
     queryFn: getPromotions,
+    enabled: true,
   });
 
   const discounts =
@@ -54,6 +56,7 @@ export function AllPromotions() {
       setLoading(false); // End loading
     }
   };
+
   return (
     <div className="my-10 mx-3">
       <div className="flex justify-between items-center">
@@ -61,19 +64,15 @@ export function AllPromotions() {
           All Promotions
         </h3>
         <div className="flex gap-6">
-          <Link
-            to={'/dashboard/addpromotion'}
-            className="bg-blue-500 text-white text-sm rounded-lg px-5 py-3 hover:bg-blue-600"
-          >
-            Add Promotion
-          </Link>
-          <Link
+          <AddPromotionMain refetch={refetch} />
+
+          <Button
             disabled={loading}
             onClick={handleClick}
-            className="bg-rose-500 text-white text-sm rounded-lg px-5 py-3 hover:bg-rose-600"
+            className="bg-rose-500 text-white text-sm rounded-lg px-5 py-5 hover:bg-rose-600"
           >
             {loading ? 'Loading...' : 'Download Report'}
-          </Link>
+          </Button>
         </div>
       </div>
 
@@ -86,7 +85,7 @@ export function AllPromotions() {
         </h4>
         <h4
           onClick={() => setPromotionType('2')}
-          className={`${promotionType == 2 ? 'bg-blue-200' : ''} transition-all duration-300 rounded-lg cursor-pointer text-center w-1/2 py-6 h-full underlined scroll-m-20 text-xl font-semibold tracking-tight`}
+          className={`${promotionType == 2 ? 'bg-blue-200' : ''} transition-all duration-300  rounded-lg cursor-pointer text-center w-1/2 py-6 scroll-m-20 text-xl font-semibold tracking-tight`}
         >
           Discount By Amount
         </h4>
@@ -94,17 +93,13 @@ export function AllPromotions() {
       <div>
         {promotionType == 1 ? (
           <Table>
-            <TableCaption>
-              
-            </TableCaption>
+            <TableCaption></TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="text-black">
                   Store Name
                 </TableHead>
-                <TableHead className="text-black">
-                  Applicable Items
-                </TableHead>
+
                 <TableHead className="text-black">
                   Discount Percentage
                 </TableHead>
@@ -135,11 +130,7 @@ export function AllPromotions() {
                       <TableHead>
                         {promotion.storeName}
                       </TableHead>
-                      <TableHead>
-                        {promotion.applicableItems.join(
-                          ', ',
-                        )}
-                      </TableHead>
+
                       <TableHead>
                         {promotion.discountPercentage}
                       </TableHead>
@@ -202,8 +193,7 @@ export function AllPromotions() {
           </Table>
         ) : (
           <Table>
-            <TableCaption>
-            </TableCaption>
+            <TableCaption></TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="text-black">
