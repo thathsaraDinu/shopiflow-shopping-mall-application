@@ -9,6 +9,7 @@ import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
 import { ShowPromotions } from '@/pages/promotion/show-promotions';
+import { PromotionDetails } from '@/pages/promotion/promotion-details';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -133,6 +134,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: 'promotiondetails/:type/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PromotionDetails />
+          </Suspense>
+        ),
+      }
     ],
   },
   {
