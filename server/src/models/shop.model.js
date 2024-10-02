@@ -30,11 +30,28 @@ export const ShopSchema = new Schema(
     contactNumber: {
       type: String, // Use String to accommodate different phone number formats
       required: [true, 'Contact number is required']
+    },
+    ownerEmail: {
+      // New field for owner's email
+      type: String,
+      required: [true, 'Owner email is required'],
+      validate: {
+        validator: function (v) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); // Basic email validation regex
+        },
+        message: (props) => `${props.value} is not a valid email address!`
+      }
+    },
+    shopType: {
+      // New field for shop type
+      type: String,
+      required: [true, 'Shop type is required'] // You can set this as required or optional
     }
   },
   {
-    timestamps: { currentTime: () => Date.now() + 5.5 * 60 * 60 * 1000 }
+    timestamps: { currentTime: () => Date.now() + 5.5 * 60 * 60 * 1000 } // Set timezone to UTC+5:30
   }
 );
 
+// Export the Shop model
 export default mongoose.models.Shop || mongoose.model('Shop', ShopSchema);

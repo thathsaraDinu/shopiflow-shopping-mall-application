@@ -6,7 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const shopAdmin = () => {
+const ShopAdmin = () => { // **Updated the component name to follow PascalCase convention**
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -32,7 +32,7 @@ const shopAdmin = () => {
     // Handler to delete a shop
     const handleDeleteShop = async (shopId) => {
         const isConfirmed = window.confirm(
-            'Are you sure you want to delete this shop?',
+            'Are you sure you want to delete this shop?'
         );
 
         if (!isConfirmed) {
@@ -66,7 +66,7 @@ const shopAdmin = () => {
                     className="m-5 p-4 border rounded shadow"
                 >
                     <div className='mt-2 mb-4'>
-                        <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif', fontSize: '30px' }}>
+                        <h2 className="text-lg font-medium" style={{ fontFamily: 'Righteous, sans-serif', fontSize: '30px' }}>
                             {shop.name}
                         </h2>
                     </div>
@@ -79,16 +79,24 @@ const shopAdmin = () => {
                     <p className="text-base text-gray-600">
                         Contact Number: {shop.contactNumber}
                     </p>
+                    {/* Display newly added fields */}
+                    <p className="text-base text-gray-600">
+                        Owner Email: {shop.ownerEmail} {/* **Newly Added Field** */}
+                    </p>
+                    <p className="text-base text-gray-600">
+                        Shop Type: {shop.shopType} {/* **Newly Added Field** */}
+                    </p>
                     <Link
                         to={`/dashboard/updateshop/${shop._id}`}
-                        className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-0"
                     >
-                        Update Shop
+                        <Button className="bg-green hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-0">
+                            Update Shop
+                        </Button>
                     </Link>
 
                     <Button
                         onClick={() => handleDeleteShop(shop._id)}
-                        className="bg-red hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
+                        className="bg-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2 ml-2"
                     >
                         Delete Shop
                     </Button>
@@ -98,4 +106,4 @@ const shopAdmin = () => {
     );
 };
 
-export default shopAdmin;
+export default ShopAdmin; // **Updated to use PascalCase naming convention**

@@ -12,6 +12,8 @@ const UpdateShop = () => {
         location: null,
         openTime: '',
         contactNumber: '',
+        ownerEmail: '', // **Added new field for owner's email**
+        shopType: '', // **Added new field for shop type**
     });
     const [contactError, setContactError] = useState(null);
     const [error, setError] = useState(null);
@@ -52,7 +54,6 @@ const UpdateShop = () => {
             navigate('/dashboard/shopsadmin'); // Redirect after updating
         } catch (err) {
             setError(err.response?.data?.message || 'An error occurred');
-
             toast.error('Error updating shop');
             console.error('Error updating shop:', err);
         }
@@ -88,6 +89,32 @@ const UpdateShop = () => {
                     />
                 </div>
 
+                {/* Shop Type Dropdown - **Newly Added Field** */}
+                <div>
+                    <label htmlFor="shopType" className="block text-sm font-medium text-gray-700">Shop Type</label>
+                    <select
+                        name="shopType"
+                        id="shopType"
+                        value={editingShop.shopType}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                        required
+                    >
+                        <option value="" disabled>Select Shop Type</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="food">Food</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="grocery">Grocery</option>
+                        <option value="cosmetics">Cosmetics</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="sports">Sports Equipment</option>
+                        <option value="books">Books & Magazines</option>
+                        <option value="toys">Toys & Games</option>
+                    </select>
+                </div>
+
                 {/* Open Time Input */}
                 <div>
                     <label htmlFor="openTime" className="block text-sm font-medium text-gray-700">Open Time</label>
@@ -119,6 +146,21 @@ const UpdateShop = () => {
                     {contactError && (
                         <p className="text-red-600 text-sm mt-2">{contactError}</p>
                     )}
+                </div>
+
+                {/* Owner Email Input - **Newly Added Field** */}
+                <div>
+                    <label htmlFor="ownerEmail" className="block text-sm font-medium text-gray-700">Owner Email Address</label>
+                    <input
+                        type="email"
+                        name="ownerEmail"
+                        id="ownerEmail"
+                        placeholder="Enter owner's email address"
+                        value={editingShop.ownerEmail}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                        required
+                    />
                 </div>
 
                 {/* Dropdown for Location */}

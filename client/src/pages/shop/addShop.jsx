@@ -12,32 +12,41 @@ const AddShop = () => {
         location: null, // Set location to null as default
         openTime: '',
         contactNumber: '',
+        ownerEmail: '', // New field for owner's email
         items: [],
+        shopType: '', // Add shopType to state
     });
     const [contactError, setContactError] = useState(null);
     const [error, setError] = useState(null);
-
+    
     // Validate contact number
     const validateContactNumber = (number) => {
         return /^0\d{9}$/.test(number);
     };
 
+    const validateEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Basic email validation regex
+    };
+
     // Handler to create a new shop
     const handleAddShop = async (e) => {
-        // Prevent the default form submission behavior
         e.preventDefault();
 
+        // Validate contact numbers
         if (!validateContactNumber(newShop.contactNumber)) {
-            setContactError(
-                'Contact number must start with 0 and be 10 digits long.',
-            );
-            toast.error('Please provide a valid contact number'); 
+            setContactError('Contact number must start with 0 and be 10 digits long.');
+            toast.error('Please provide a valid contact number');
             return;
         }
+        if (!validateEmail(newShop.ownerEmail)) {
+            setContactError('Please provide a valid email address');
+            toast.error('Invalid email address');
+            return;
+        }
+
         setContactError(null);
 
         try {
-            // Set location to null when creating the shop
             const shopData = {
                 ...newShop,
                 location: null, // Ensure location is null
@@ -46,19 +55,21 @@ const AddShop = () => {
             toast.success('Shop created successfully');
 
             navigate('/dashboard/shopsadmin');
-            
+
             setNewShop({
                 name: '',
-                location: null, // Keep this null as required
+                location: null,
                 openTime: '',
                 contactNumber: '',
+                ownerEmail: '', // Reset ownerEmail to empty
                 items: [],
+                shopType: '', // Reset shopType to empty
             });
             setError(null); // Clear any previous errors
         } catch (err) {
             setError('Error creating shop');
             toast.error('Error creating shop');
-            console.error('Error creating shop:', err); // Log the error for debugging
+            console.error('Error creating shop:', err);
         }
     };
 
@@ -92,6 +103,32 @@ const AddShop = () => {
                     />
                 </div>
 
+                {/* Shop Type Dropdown */}
+                <div>
+                    <label htmlFor="shopType" className="block text-sm font-medium text-gray-700">Shop Type</label>
+                    <select
+                        name="shopType"
+                        id="shopType"
+                        value={newShop.shopType}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                        required
+                    >
+                        <option value="" disabled>Select Shop Type</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="food">Food</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="grocery">Grocery</option>
+                        <option value="cosmetics">Cosmetics</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="sports">Sports Equipment</option>
+                        <option value="books">Books & Magazines</option>
+                        <option value="toys">Toys & Games</option>
+                    </select>
+                </div>
+
                 {/* Open Time Input */}
                 <div>
                     <label htmlFor="openTime" className="block text-sm font-medium text-gray-700">Open Time</label>
@@ -109,7 +146,7 @@ const AddShop = () => {
 
                 {/* Contact Number Input */}
                 <div>
-                    <label htmlFor="contactNumber" className="block text-sm font-medium text-gray-700">Contact Number</label>
+                    <label htmlFor="contactNumber" className="block text-sm font-medium text-gray-700">Shop Contact Number</label>
                     <input
                         type="text"
                         name="contactNumber"
@@ -120,10 +157,23 @@ const AddShop = () => {
                         className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
                         required
                     />
-                    {contactError && (
-                        <p className="text-red-600 text-sm mt-2">{contactError}</p>
-                    )}
                 </div>
+
+                {/* Owner Email Input */}
+                <div>
+                    <label htmlFor="ownerEmail" className="block text-sm font-medium text-gray-700">Owner Email Address</label>
+                    <input
+                        type="email"
+                        name="ownerEmail"
+                        id="ownerEmail"
+                        placeholder="Enter owner's email address"
+                        value={newShop.ownerEmail}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                        required
+                    />
+                </div>
+                
 
                 {/* Submit Button */}
                 <Button
