@@ -8,6 +8,7 @@ import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
+import Products from '@/pages/products/products';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -44,7 +45,9 @@ const MyQueue = lazy(
 
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
-const AdminShop = lazy(() => import('@/pages/shop/shopAdmin'));
+const AdminShop = lazy(
+  () => import('@/pages/shop/shopAdmin'),
+);
 
 // layouts
 const Layout = lazy(() => import('@/layout'));
@@ -118,6 +121,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Shop />
+          </Suspense>
+        ),
+      },
+      {
+        path: ':shopId/products',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Products />
           </Suspense>
         ),
       },
