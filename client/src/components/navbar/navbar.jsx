@@ -31,6 +31,10 @@ const MenuItemsAll = [
     title: 'Shops',
     url: '/shops',
   },
+  {
+    title: 'Offers',
+    url: '/promotions',
+  },
 ];
 
 // Menu Items for authenticated users (role: user)
@@ -50,6 +54,10 @@ const MenuItemsUser = [
   {
     title: 'My Queue',
     url: '/myqueue',
+  },
+  {
+    title: 'Offers',
+    url: '/promotions',
   },
 ];
 

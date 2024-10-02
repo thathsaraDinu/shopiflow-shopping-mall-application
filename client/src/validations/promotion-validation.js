@@ -22,22 +22,6 @@ export const schema2 = z.object({
       message: 'Must be between 1 and 100',
     }), // Ensure it's in the range
 
-  applicableItems: z
-    .array(
-      z.union([
-        z
-          .string()
-          .min(1, { message: 'Please add an Item' }) // Ensures the string is not empty
-          .transform((value) => value.trim()) // Trim whitespace from both ends
-          .refine((value) => value.length > 0, {
-            message: 'Please add an Item',
-          }), // Ensure trimmed string is not empty
-        z.undefined(), // Allow undefined values
-      ]),
-    )
-    .nonempty({ message: 'At least one item is required' }) // Ensures the array is not empty
-    .max(255, { message: 'Too many items' }),
-
   description: z
     .string()
     .min(1, { message: 'Description is required' })
