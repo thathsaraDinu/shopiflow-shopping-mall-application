@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function DiscountAmountCard({ promotion }) {
   const {
     storeName,
@@ -19,15 +21,19 @@ export function DiscountAmountCard({ promotion }) {
   return (
     <div className="flex flex-col gap-2 xl:w-[400px] w-[300px] rounded-md">
       <div>
-        <img
-          className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
-          src={
-            photo
-              ? photo
-              : 'https://placehold.co/600x400/d3ffcc/000000?text=Promotion+Image'
-          }
-          alt="promotion"
-        />
+        <Link
+            to={`/promotiondetails/${'type2'}/${promotion._id}`}
+        >
+          <img
+            className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
+            src={
+              photo
+                ? photo
+                : 'https://placehold.co/600x400/d3ffcc/000000?text=Promotion+Image'
+            }
+            alt="promotion"
+          />
+        </Link>
       </div>
       <div className="flex justify-start text-sm text-gray-600">
         <div>

@@ -18,6 +18,7 @@ router.post(
   validateRequest('createPromotionType2'),
   PromotionController.addpromotiontype2
 );
-
+router.get('/getpromotiontype1/:id', PromotionController.getPromotiontype1ById);
+router.get('/getpromotiontype2/:id', PromotionController.getPromotiontype2ById);
 
 export default router;

@@ -20,6 +20,30 @@ export const getAllPromotions = async () => {
   }
 };
 
+export const getPromotionType1ById = async (id) => {
+  try {
+    const promotion = await DiscountPercentageSchema.findById(id);
+    return promotion;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+}
+
+export const getPromotionType2ById = async (id) => {  
+  try {
+    const promotion = await DiscountAmount.findById(id);
+    return promotion;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+}
+
 // Add a new promotion type percentage discount
 
 export const addPromotionPercentage = async (data) => {

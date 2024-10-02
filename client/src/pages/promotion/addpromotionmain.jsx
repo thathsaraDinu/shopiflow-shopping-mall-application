@@ -25,6 +25,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'; // Import DialogContent, DialogHeader, DialogFooter
 import { Link } from 'react-router-dom';
+import { getShops } from '@/api/shop.api';
 
 export function AddPromotionMain({ refetch }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,16 +41,39 @@ export function AddPromotionMain({ refetch }) {
     description: '',
     photo: [],
   });
-
+const [photo, setPhoto] = useState(null);
   const [theStep, setTheStep] = useState(1);
+  const [shops, setShops] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchShops = async () => {
+    setLoading(true);
+    try {
+      const data = await getShops();
+      setShops(data);
+      setError(null);
+    } catch (err) {
+      setError('Error fetching shops');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch shops when component mounts
+  useEffect(() => {
+    fetchShops();
+  }, []);
 
   const {
     register,
     handleSubmit,
     unregister,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
     setError,
+    trigger,
     control,
   } = useForm({
     resolver:
@@ -102,11 +126,13 @@ export function AddPromotionMain({ refetch }) {
       };
     });
   };
+  
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log('file:', file);
     if (file) {
+      
+
       convertToBase64(file)
         .then((base64) => {
           setFormData((prevData) => ({
@@ -130,6 +156,11 @@ export function AddPromotionMain({ refetch }) {
         setFormData((prevData) => ({
           ...prevData,
           promotionType: parseInt(data.promotionType),
+        }));
+      if (currentStepIndex == 1)
+        setFormData((prevData) => ({
+          ...prevData,
+          storeName: data.storeName,
         }));
 
       setFormData((prevData) => ({ ...prevData, ...data }));
@@ -191,12 +222,17 @@ export function AddPromotionMain({ refetch }) {
       {...formData}
       register={register}
       errors={errors}
+      shops={shops}
+      loading={loading}
     />,
     <AddPromotionStep3
       {...formData}
       register={register}
       errors={errors}
       handleFileChange={handleFileChange}
+      watch={watch}
+      photo={photo}
+      setPhoto={setPhoto}
     />,
   ]);
 
@@ -210,7 +246,7 @@ export function AddPromotionMain({ refetch }) {
 
       <DialogContent>
         <DialogHeader>
-          <div className="text-2xl font-semibold">
+          <div className="text-2xl pb-5 text-grey-700 font-semibold">
             Add Promotion
           </div>
         </DialogHeader>
@@ -220,7 +256,7 @@ export function AddPromotionMain({ refetch }) {
             onSubmit={handleSubmit(onSubmit)}
             className=""
           >
-            <div className="pb-4">{step}</div>
+            <div className="pb-10">{step}</div>
             {errors.root && (
               <p className="text-red-500">
                 {errors.root.message}

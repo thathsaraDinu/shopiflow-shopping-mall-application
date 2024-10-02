@@ -7,15 +7,14 @@ export const addpromotion = async (data) => {
     if (data.promotionType === '1') {
       console.log(
         'Sending request to add promotion type 1:',
-        data
+        data,
       );
       const response = await instance.post(
         '/api/promotions/addpromotiontype1',
-        data
+        data,
       );
       console.log('Response received:', response);
       return response;
-      
     } else {
       console.log(
         'Sending request to add promotion type 2:',
@@ -27,8 +26,6 @@ export const addpromotion = async (data) => {
       );
       return response;
     }
-
-    
   } catch (error) {
     console.error('Error Creating Promotion:', error);
     throw error;
@@ -37,13 +34,47 @@ export const addpromotion = async (data) => {
 
 export const getPromotions = async () => {
   try {
-    const response = await instance.get( 
+    const response = await instance.get(
       '/api/promotions/getpromotions',
     );
     console.log('Promotions retrieved:', response);
     return response;
   } catch (error) {
     console.error('Error Getting Promotions:', error);
+    throw error;
+  }
+};
+
+export const getPromotionById = async (id, type) => {
+  try {
+    let response;
+    if (type == 'type1') {
+       response = await instance.get(
+        `/api/promotions/getpromotiontype1/${id}`,
+      );
+    }
+    else {
+       response = await instance.get(
+        `/api/promotions/getpromotiontype2/${id}`,
+      );
+    }
+    console.log('Promotion retrieved:', response);
+    return response;
+  } catch (error) {
+    console.error('Error Getting Promotion:', error);
+    throw error;
+  }
+};
+
+export const getPromotionType2ById = async (id) => {
+  try {
+    const response = await instance.get(
+      `/api/promotions/getpromotiontype2/${id}`,
+    );
+    console.log('Promotion retrieved:', response);
+    return response;
+  } catch (error) {
+    console.error('Error Getting Promotion:', error);
     throw error;
   }
 };

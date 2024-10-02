@@ -54,50 +54,35 @@ export const schema3 = z.object({
     .max(255),
 });
 
-export const schema4 = z
-  .object({
-    startDate: z
-      .string()
-      .min(1, { message: 'Start date is required' })
-      .refine(
-        (date) => {
-          const today = new Date().setHours(0, 0, 0, 0);
-          const startDate = new Date(date).setHours(
-            0,
-            0,
-            0,
-            0,
-          );
-          return startDate >= today;
-        },
-        {
-          message:
-            'Start date cannot be earlier than today',
-        },
-      ),
+export const schema4 = z.object({
+  startDate: z
+    .string()
+    .min(1, { message: 'Start date is required' })
+    .refine(
+      (date) => {
+        const today = new Date().setHours(0, 0, 0, 0);
+        const startDate = new Date(date).setHours(
+          0,
+          0,
+          0,
+          0,
+        );
+        return startDate >= today;
+      },
+      {
+        message: 'Start date cannot be earlier than today',
+      },
+    ),
 
-    endDate: z
-      .string()
-      .min(1, { message: 'End date is required' }),
-  })
-  .refine(
-    (data) => {
-      const startDate = new Date(data.startDate).setHours(
-        0,
-        0,
-        0,
-        0,
-      );
-      const endDate = new Date(data.endDate).setHours(
-        0,
-        0,
-        0,
-        0,
-      );
-      return endDate >= startDate;
+  endDate: z
+    .string()
+    .min(1, { message: 'Start date is required' }),
+  photo: z.any().refine(
+    (photo) => {
+      return photo != ''; // Check if there is something in the photo field
     },
     {
-      message: 'End date cannot be earlier than start date',
-      path: ['endDate'], // Attach the error to the endDate field
+      message: 'Photo is required',
     },
-  );
+  ),
+});
