@@ -50,6 +50,25 @@ export const updateShop = async (shopId, data) => {
   }
 };
 
+// Get shop by ID
+export const getShopById = async (shopId) => {
+  try {
+    const shop = await ShopSchema.findById(shopId);
+    if (!shop) {
+      throw {
+        status: 404,
+        message: 'Shop not found',
+      };
+    }
+    return shop;
+  } catch (error) {
+    throw {
+      status: error.status || 500,
+      message: error.message,
+    };
+  }
+};
+
 
 // Delete shop
 export const deleteShop = async (shopId) => {

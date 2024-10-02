@@ -48,6 +48,7 @@ const MyQueue = lazy(
 const Shop = lazy(() => import('@/pages/shop/shop'));
 const AdminShop = lazy(() => import('@/pages/shop/shopAdmin'));
 const AddShop = lazy(() => import('@/pages/shop/addShop'));
+const UpdateShop = lazy(() => import('@/pages/shop/updateShop'));
 
 // layouts
 const Layout = lazy(() => import('@/layout'));
@@ -169,12 +170,20 @@ const router = createBrowserRouter([
       {
         path: 'addshop',
         element: (
-            <Suspense fallback={<PageLoader />}>
-                <AddShop />
-            </Suspense>
+          <Suspense fallback={<PageLoader />}>
+            <AddShop />
+          </Suspense>
         ),
-    },
-    
+      },
+      {
+        path: 'updateshop/:shopId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <UpdateShop />
+          </Suspense>
+        ),
+      },
+
       {
         path: 'addpromotion',
         element: (
