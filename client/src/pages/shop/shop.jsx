@@ -47,7 +47,7 @@ const Shop = () => {
           key={shop._id}
           className="m-5 p-4 border rounded shadow"
         >
-          <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif',fontSize:'30px' }}>
+          <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif', fontSize: '30px' }}>
             {shop.name}
           </h2>
           <p className="text-base text-gray-600">

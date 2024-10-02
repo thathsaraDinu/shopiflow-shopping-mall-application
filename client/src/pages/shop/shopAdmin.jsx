@@ -7,6 +7,7 @@ import {
     deleteShop,
 } from '@/api/shop.api';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Shop = () => {
     const navigate = useNavigate();
@@ -119,70 +120,15 @@ const Shop = () => {
             <h1 className='text-center mt-6 mb-6 text-4xl font-medium' style={{ fontFamily: 'Bebas Neue, sans-serif' }}>Available Shops</h1>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
+                <Link
+            to={'/dashboard/addshop'}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-5 mt-2"
+          >
+            Add Shop
+          </Link>
 
-            {/* Add Shop Form */}
-            <div className="p-4 border rounded mb-5">
-                <h2>Add New Shop</h2>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Shop Name"
-                    value={newShop.name}
-                    onChange={handleInputChange}
-                    className="border p-2 m-2"
-                />
-
-                {/* Dropdown for Location */}
-                <select
-                    name="location"
-                    value={newShop.location}
-                    onChange={handleInputChange}
-                    className="border p-2 m-2"
-                >
-                    <option
-                        className="text-sm text-gray-600"
-                        value=""
-                        disabled
-                    >
-                        Select Location
-                    </option>
-                    <option value="1st floor">1st floor</option>
-                    <option value="2nd floor">2nd floor</option>
-                    <option value="3rd floor">3rd floor</option>
-                    <option value="4th floor">4th floor</option>
-                    <option value="6th floor">6th floor</option>
-                    <option value="7th floor">7th floor</option>
-                    <option value="8th floor">8th floor</option>
-                </select>
-
-                <input
-                    type="text"
-                    name="openTime"
-                    placeholder="Open Time"
-                    value={newShop.openTime}
-                    onChange={handleInputChange}
-                    className="border p-2 m-2"
-                />
-
-                <input
-                    type="text"
-                    name="contactNumber"
-                    placeholder="Contact Number"
-                    value={newShop.contactNumber}
-                    onChange={handleInputChange}
-                    className="border p-2 m-2"
-                />
-                {contactError && (
-                    <p className="text-red-600">{contactError}</p>
-                )}
-
-                <Button
-                    onClick={handleAddShop}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
-                >
-                    Add Shop
-                </Button>
-            </div>
+                <div className="flex gap-6">
+        </div>
 
             {/* Display Shops */}
             {shops.map((shop) => (
@@ -206,7 +152,7 @@ const Shop = () => {
                     </p>
                     <Button
                         onClick={() => setEditingShop(shop)}
-                        className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-10"
+                        className="bg-orange hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-0"
                     >
                         Update Shop
                     </Button>

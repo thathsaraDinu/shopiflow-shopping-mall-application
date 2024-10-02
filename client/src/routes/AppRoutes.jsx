@@ -27,6 +27,7 @@ const Inventory = lazy(
 const Home = lazy(() => import('@/pages/home/home'));
 const About = lazy(() => import('@/pages/about/about'));
 
+
 // Auth Pages
 const Register = lazy(
   () => import('@/pages/user/register'),
@@ -45,6 +46,7 @@ const MyQueue = lazy(
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
 const AdminShop = lazy(() => import('@/pages/shop/shopAdmin'));
+const AddShop = lazy(() => import('@/pages/shop/addShop'));
 
 // layouts
 const Layout = lazy(() => import('@/layout'));
@@ -155,6 +157,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: 'addshop',
+        element: (
+            <Suspense fallback={<PageLoader />}>
+                <AddShop />
+            </Suspense>
+        ),
+    },
+    
       {
         path: 'addpromotion',
         element: (
