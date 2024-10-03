@@ -28,7 +28,7 @@ import { Link } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
 import { set } from 'date-fns';
 
-export function AddPromotionMain({ refetch }) {
+export default function AddPromotionMain({ refetch }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [formData, setFormData] = useState({
