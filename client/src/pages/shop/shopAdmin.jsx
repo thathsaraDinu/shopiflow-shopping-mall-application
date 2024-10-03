@@ -5,8 +5,9 @@ import {
 } from '@/api/shop.api';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import jsPDF from 'jspdf';
 
-const ShopAdmin = () => { // **Updated the component name to follow PascalCase convention**
+const ShopAdmin = () => {
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -47,6 +48,55 @@ const ShopAdmin = () => { // **Updated the component name to follow PascalCase c
         }
     };
 
+    // Generate report as PDF
+    const generateReport = () => {
+        const doc = new jsPDF();
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(20);
+        doc.text('Shop Report', 105, 20, null, null, 'center');
+
+        // Group shops by location
+        const shopsByLocation = shops.reduce((acc, shop) => {
+            if (!acc[shop.location]) {
+                acc[shop.location] = [];
+            }
+            acc[shop.location].push(shop);
+            return acc;
+        }, {});
+
+        let y = 40; // Start position for the content
+
+        Object.keys(shopsByLocation).forEach((location) => {
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text(`Location: ${location}`, 10, y);
+            y += 10;
+
+            shopsByLocation[location].forEach((shop) => {
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(12);
+                doc.text(`- Shop Name: ${shop.name}`, 15, y);
+                y += 6;
+                doc.text(`  Contact Number: ${shop.contactNumber}`, 15, y);
+                y += 6;
+                doc.text(`  Open Time: ${shop.openTime}`, 15, y);
+                y += 6;
+                doc.text(`  Owner Email: ${shop.ownerEmail}`, 15, y);
+                y += 6;
+                doc.text(`  Shop Type: ${shop.shopType}`, 15, y);
+                y += 10;
+
+                // Check if y position is close to page bottom
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+        });
+
+        doc.save('Shop_Report.pdf');
+    };
+
     return (
         <div>
             <h1 className='text-center mt-6 mb-6 text-4xl font-medium' style={{ fontFamily: 'Bebas Neue, sans-serif' }}>Available Shops</h1>
@@ -58,6 +108,12 @@ const ShopAdmin = () => { // **Updated the component name to follow PascalCase c
             >
                 Add Shop
             </Link>
+            <Button
+                onClick={generateReport}
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded ml-5 mt-2"
+            >
+                Generate Report
+            </Button>
 
             {/* Display Shops */}
             {shops.map((shop) => (
@@ -81,10 +137,10 @@ const ShopAdmin = () => { // **Updated the component name to follow PascalCase c
                     </p>
                     {/* Display newly added fields */}
                     <p className="text-base text-gray-600">
-                        Owner Email: {shop.ownerEmail} {/* **Newly Added Field** */}
+                        Owner Email: {shop.ownerEmail}
                     </p>
                     <p className="text-base text-gray-600">
-                        Shop Type: {shop.shopType} {/* **Newly Added Field** */}
+                        Shop Type: {shop.shopType}
                     </p>
                     <Link
                         to={`/dashboard/updateshop/${shop._id}`}
@@ -106,4 +162,4 @@ const ShopAdmin = () => { // **Updated the component name to follow PascalCase c
     );
 };
 
-export default ShopAdmin; // **Updated to use PascalCase naming convention**
+export default ShopAdmin; // Updated to use PascalCase naming convention
