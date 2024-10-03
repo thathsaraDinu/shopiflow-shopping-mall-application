@@ -23,11 +23,11 @@ export const getQueues = async (shopID) => {
 export const getNumberOfQueues = async (shopID) => {
   try {
     // Find all queues in the shop
-    const queues = await QueueSchema.find({
+    const queues = await QueueSchema.countDocuments({
       shopID
     });
 
-    return queues.length;
+    return queues;
   } catch (error) {
     throw {
       status: 500,
@@ -148,7 +148,21 @@ export const leaveQueue = async (userID, id) => {
 // Clear all queues in a shop
 export const clearShopQueues = async (shopID) => {
   try {
-    console.log('ID', shopID);
+    if (!shopID) {
+      throw {
+        status: 400,
+        message: 'Invalid shop ID'
+      };
+    }
+
+    const numberOfQueues = await QueueSchema.countDocuments({
+      shopID
+    });
+
+    if (numberOfQueues === 0) {
+      return true;
+    }
+
     // Remove all queues in the shop
     await QueueSchema.deleteMany({
       shopID
