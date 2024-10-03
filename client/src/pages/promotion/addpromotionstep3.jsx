@@ -7,12 +7,9 @@ export function AddPromotionStep3({
   register,
   errors,
   handleFileChange,
+  selectedFile,
   watch,
-  photo,
-  setPhoto,
 }) {
-  
-
   const startDate = watch('startDate');
   const minEndDate = startDate
     ? startDate
@@ -66,34 +63,30 @@ export function AddPromotionStep3({
                 Upload Photo
               </label>
             </div>
-            <input
+            <InputField
               type="file"
               name="photo"
               className="hidden"
-              label={'Photo'}
               id="file-upload"
-              onChange={(e) => {
-                setPhoto(e.target.files[0]); // Save the selected file to state
-                handleFileChange(e); // Call additional logic (e.g., converting to base64, etc.)
-              }}
+              register={(name) =>
+                register(name, {
+                  onChange: handleFileChange, // Handle file input change
+                })
+              }
             />
           </div>
           <div>
             <div className="flex items-center">
               <div className="inline-block border">
-                {photo ? (
-                  <img
-                    src={URL.createObjectURL(photo)}
-                    alt="promotion"
-                    className=" h-40"
-                  />
-                ) : (
-                  <img
-                    src="https://placehold.co/600x400/D3D3D3/000000?text=No+Image+Selected"
-                    alt="promotion"
-                    className="h-40 w-60"
-                  />
-                )}
+                <img
+                  src={
+                    selectedFile
+                      ? URL.createObjectURL(selectedFile)
+                      : ''
+                  }
+                  alt="Selected file"
+                  className="w-20 h-20 object-cover"
+                />
               </div>
               <div
                 onClick={() => setPhoto(null)}
@@ -102,12 +95,12 @@ export function AddPromotionStep3({
                 Clear
               </div>
             </div>
-            {errors.photo && (
-              <div className="mt-2 text-sm text-red-500">
-                {errors.photo.message}
-              </div>
-            )}
           </div>
+          {errors.photo && (
+            <p className="text-red-500 text-sm">
+              {errors.photo.message}
+            </p>
+          )}
         </div>
       </div>
     </div>

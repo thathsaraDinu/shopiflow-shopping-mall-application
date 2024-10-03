@@ -76,13 +76,14 @@ export const schema4 = z.object({
 
   endDate: z
     .string()
-    .min(1, { message: 'Start date is required' }),
-  photo: z.any().refine(
-    (photo) => {
-      return photo != ''; // Check if there is something in the photo field
-    },
-    {
-      message: 'Photo is required',
-    },
-  ),
+    .min(1, { message: 'End date is required' }),
+  photo: z
+    .instanceof(File) // Ensure the input is a File instance
+    .refine(
+      (file) => file.size <= 5000000,
+      'Max file size is 5MB',
+    ) // File size validation (max 5MB)
+    .refine((file) =>
+      ['image/jpeg', 'image/png'].includes(file.type),
+    ),
 });

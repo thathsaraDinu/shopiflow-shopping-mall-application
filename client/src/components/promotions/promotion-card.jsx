@@ -1,5 +1,5 @@
-import { useNavigation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export function PromotionCard({ promotion }) {
   const {
@@ -9,14 +9,20 @@ export function PromotionCard({ promotion }) {
     endDate,
     photo,
   } = promotion;
-
+  function truncateText(text, length) {
+    return text.length > length
+      ? text.substring(0, length) + '...'
+      : text;
+  }
+  const cardcss =
+    'flex flex-col gap-2 xl:w-[350px] w-[300px] min-w-[300px] rounded-md';
   const navigation = useNavigation();
   return (
-    <div className="flex flex-col gap-2  xl:w-[400px] w-[300px] rounded-md">
+    <div className={cardcss}>
       <Link
         to={`/promotiondetails/${'type1'}/${promotion._id}`}
         className="cursor-pointer"
-      > 
+      >
         <img
           className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
           src={
@@ -53,7 +59,7 @@ export function PromotionCard({ promotion }) {
         </div>
 
         <div className="text-sm text-gray-600">
-          {description}
+          {truncateText(description, 80)}
         </div>
       </div>
     </div>
