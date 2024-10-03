@@ -3,7 +3,27 @@ import { getShops, deleteShop } from '@/api/shop.api';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import { Chart } from 'chart.js';
+import {
+  Chart,
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register the necessary Chart.js components
+Chart.register(
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const ShopAdmin = () => {
   const [shops, setShops] = useState([]);
@@ -53,7 +73,7 @@ const ShopAdmin = () => {
     const doc = new jsPDF();
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(20);
-    doc.text('SHOP Report', 105, 20, null, null, 'center');
+    doc.text('SHOP REPORT', 105, 20, null, null, 'center');
 
     // Add chart image to PDF
     doc.addImage(chartImage, 'PNG', 15, 30, 180, 100);
@@ -122,12 +142,12 @@ const ShopAdmin = () => {
 
       // Group shops by floor extracted from location
       const shopsByFloor = shops.reduce((acc, shop) => {
-        const floorMatch = shop.location.match(
-          /(\d+)(st|nd|rd|th) Floor/i,
-        );
-        const floor = floorMatch
-          ? `${floorMatch[1]} Floor`
-          : 'Ground Floor'; // Default to 'Ground Floor' if no match
+        if (!shop.location) {
+          return acc; // Skip shops with no location
+        }
+
+        const floorMatch = shop.location.match(/(\d+)(st|nd|rd|th) Floor/i);
+        const floor = floorMatch ? `${floorMatch[1]} Floor` : 'Ground Floor'; // Default to 'Ground Floor' if no match
 
         if (!acc[floor]) {
           acc[floor] = 0;
@@ -195,14 +215,14 @@ const ShopAdmin = () => {
         },
       });
 
-      // Wait for the chart to be rendered
+      // Wait for the chart to render
+      chart.update();
+
       setTimeout(() => {
-        const chartImage = canvas.toDataURL(
-          'image/png',
-          1.0,
-        ); // High-quality image
+        const chartImage = canvas.toDataURL('image/png', 1.0);
+        chart.destroy(); // Clean up chart instance to avoid memory leak
         resolve(chartImage);
-      }, 500); // Adjust delay as necessary
+      }, 1000);
     });
   };
 
