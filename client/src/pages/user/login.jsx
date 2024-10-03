@@ -51,7 +51,6 @@ export default function Login() {
         userData
           .refetch()
           .then((result) => {
-            console.log(result.data);
             profile(result.data);
             setTimeout(() => {
               window.location.href = '/';
@@ -74,7 +73,7 @@ export default function Login() {
       }
     },
     onError: (error) => {
-      console.log(error);
+      console.error('Error logging in:', error);
       if (error.response.status === 401) {
         toast.error('Invalid credentials');
       }

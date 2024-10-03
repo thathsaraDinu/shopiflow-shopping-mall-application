@@ -2,9 +2,13 @@ import { lazy, Suspense } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate,
 } from 'react-router-dom';
-import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
+import RootRoute from '@/routes/RootRoute';
+import { LoadingSpinner } from '@/components/ui/spinner';
+import { USER_ROLES } from '@/constants';
+
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
@@ -19,17 +23,10 @@ const PageLoader = () => (
   </div>
 );
 
-// dashboard pages
-const DasshboardLayout = lazy(
-  () => import('@/pages/dashboard/layout'),
-);
+// Inventory Related Pages
 const Inventory = lazy(
   () => import('@/pages/dashboard/inventory'),
 );
-
-// Static Pages
-const Home = lazy(() => import('@/pages/home/home'));
-// const About = lazy(() => import('@/pages/about/about'));
 
 // Auth Pages
 const Register = lazy(
@@ -71,18 +68,12 @@ const router = createBrowserRouter([
         path: '/',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <Home />
+            <RootRoute />
           </Suspense>
         ),
       },
-      // {
-      //   path: 'about',
-      //   element: (
-      //     <Suspense fallback={<PageLoader />}>
-      //       <About />
-      //     </Suspense>
-      //   ),
-      // },
+
+      // Auth Routes
       {
         path: 'register',
         element: (
@@ -103,10 +94,15 @@ const router = createBrowserRouter([
         path: 'profile',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <PrivateRoute element={<Profile />} />
+            <PrivateRoute
+              element={<Profile />}
+              roles={[USER_ROLES.ADMIN, USER_ROLES.USER]}
+            />
           </Suspense>
         ),
       },
+
+      // Queue Routes
       {
         path: 'queue/:shopID',
         element: (
@@ -119,73 +115,20 @@ const router = createBrowserRouter([
         path: 'myqueue',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <PrivateRoute element={<MyQueue />} />
+            <PrivateRoute
+              element={<MyQueue />}
+              roles={[USER_ROLES.USER]}
+            />
           </Suspense>
         ),
       },
+
+      // Shop Routes
       {
         path: 'shops',
         element: (
           <Suspense fallback={<PageLoader />}>
             <Shop />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'promotions',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <ShowPromotions />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'promotiondetails/:type/:id',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <PromotionDetails />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'products',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Products />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'wishlist',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Wishlist />
-          </Suspense>
-        ),
-      },
-    ],
-  },
-  {
-    path: 'dashboard',
-    element: (
-      <Suspense fallback={<PageLoader />}>
-        <DasshboardLayout />
-      </Suspense>
-    ),
-    children: [
-      {
-        path: 'inventory',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <Inventory />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'inventory/:id',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <ItemDetails />
           </Suspense>
         ),
       },
@@ -214,6 +157,15 @@ const router = createBrowserRouter([
         ),
       },
 
+      // Promotion Routes
+      {
+        path: 'promotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ShowPromotions />
+          </Suspense>
+        ),
+      },
       {
         path: 'addpromotion',
         element: (
@@ -231,7 +183,59 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: 'promotiondetails/:type/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PromotionDetails />
+          </Suspense>
+        ),
+      },
+
+      // Products Routes
+      {
+        path: 'products',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Products />
+          </Suspense>
+        ),
+      },
+
+      // Inventory Routes
+      {
+        path: 'inventory',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Inventory />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'inventory/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ItemDetails />
+          </Suspense>
+        ),
+      },
+
+      // Wishlist Routes
+      {
+        path: 'wishlist',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Wishlist />
+          </Suspense>
+        ),
+      },
     ],
+  },
+
+  // 404 Not Found Route
+  {
+    path: '*',
+    element: <Navigate to="/" />,
   },
 ]);
 
