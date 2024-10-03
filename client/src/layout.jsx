@@ -19,7 +19,7 @@ const Layout = () => {
       {!isLoggedIn || role === USER_ROLES.USER ? (
         <div>
           <Navbar />
-          <div className="flex-grow">
+          <div className="flex-grow min-h-[calc(100vh-137px)]">
             <Outlet />
           </div>
           <Footer />
