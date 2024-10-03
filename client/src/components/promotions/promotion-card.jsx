@@ -15,7 +15,7 @@ export function PromotionCard({ promotion }) {
       : text;
   }
   const cardcss =
-    'flex flex-col mb-3 gap-2 xl:w-[350px] w-[300px] min-w-[300px] rounded-md';
+    'flex flex-col mb-3 gap-2 xl:w-[400px] w-[320px] min-w-[320px] xl:min-w-[400px] rounded-md';
   const navigation = useNavigation();
   return (
     <div className={cardcss}>
@@ -29,7 +29,7 @@ export function PromotionCard({ promotion }) {
         }}
       >
         <img
-          className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
+          className="object-cover h-64 xl:h-72 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
           src={
             photo
               ? photo

@@ -19,11 +19,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { PromotionReportDownload } from './promotionreport/promotionreportdownload';
-import { AddPromotionMain } from './addpromotionmain';
+import  AddPromotionMain  from './addpromotionmain';
 import { DeleteModal } from '@/components/modals/delete';
 import toast from 'react-hot-toast';
 
-export function AllPromotions() {
+export default function AllPromotions() {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['promotions'],
     queryFn: getPromotions,

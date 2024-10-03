@@ -4,23 +4,49 @@ import {
   RouterProvider,
   Navigate,
 } from 'react-router-dom';
-import PrivateRoute from '@/routes/PrivateRoute';
 import RootRoute from '@/routes/RootRoute';
-import { LoadingSpinner } from '@/components/ui/spinner';
 import { USER_ROLES } from '@/constants';
 
-import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
-import ItemDetails from '@/pages/dashboard/itemDetails';
-import { AllPromotions } from '@/pages/promotion/allpromotions';
-import Products from '@/pages/products/products';
-import { ShowPromotions } from '@/pages/promotion/show-promotions';
-import { PromotionDetails } from '@/pages/promotion/promotion-details';
-import Wishlist from '@/pages/wishlist/wishlist';
+const LoadingSpinner = lazy(() =>
+  import('@/components/ui/spinner').then((module) => ({
+    default: module.LoadingSpinner,
+  })),
+);
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
     <LoadingSpinner className="w-32 h-32" />
   </div>
+);
+
+// Private Route
+const PrivateRoute = lazy(
+  () => import('@/routes/PrivateRoute'),
+);
+
+//Product Pages
+const ItemDetails = lazy(
+  () => import('@/pages/dashboard/itemDetails'),
+);
+const Products = lazy(
+  () => import('@/pages/products/products'),
+);
+const Wishlist = lazy(
+  () => import('@/pages/wishlist/wishlist'),
+);
+
+// Promotion Pages
+const AddPromotionMain = lazy(
+  () => import('@/pages/promotion/addpromotionmain'),
+);
+const AllPromotions = lazy(
+  () => import('@/pages/promotion/allpromotions'),
+);
+const ShowPromotions = lazy(
+  () => import('@/pages/promotion/show-promotions'),
+);
+const PromotionDetails = lazy(
+  () => import('@/pages/promotion/promotion-details'),
 );
 
 // Inventory Related Pages

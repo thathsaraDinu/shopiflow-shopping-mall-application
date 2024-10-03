@@ -19,7 +19,7 @@ export function DiscountAmountCard({ promotion }) {
   }
 
   return (
-    <div className="flex flex-col mb-3 gap-2 xl:w-[350px] w-[300px] min-w-[300px] rounded-md">
+    <div className="flex flex-col mb-3 gap-2 xl:w-[400px] w-[320px] min-w-[320px] xl:min-w-[400px] rounded-md">
       <div>
         <Link
           to={`/promotiondetails/${'type2'}/${promotion._id}`}
@@ -31,7 +31,7 @@ export function DiscountAmountCard({ promotion }) {
           }}
         >
           <img
-            className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
+            className="object-cover h-64 xl:h-72 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio
             src={
               photo
                 ? photo

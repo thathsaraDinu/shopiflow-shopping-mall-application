@@ -4,10 +4,11 @@ import { MapPromotions } from '@/hooks/map-promotions';
 import { PromotionCard } from '@/components/promotions/promotion-card';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import { PromotionsScrollable } from '@/components/promotions/promotions-scrollable';
 
-export function PromotionDetails() {
+export default function PromotionDetails() {
   const { type, id } = useParams();
-  const { discounts, amounts } = MapPromotions();
+  
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['promotions', id],
@@ -18,8 +19,10 @@ export function PromotionDetails() {
     },
   });
 
+  
+
   const promotiondetailscss =
-    'flex flex-col lg:flex-row gap-5 justify-center xl:w-[800px] md:w-[600px] w-[350px] transition-all ease-in-out';
+    'flex flex-col lg:flex-row gap-5 justify-center xl:w-[800px] md:w-[600px] w-[300px] transition-all ease-in-out';
 
   return (
     <div className="mx-20 my-10 flex flex-col gap-16 items-center">
@@ -46,7 +49,7 @@ export function PromotionDetails() {
                 alt={data.data.promotion.storeName}
                 className="w-full h-[500px] object-cover rounded-lg"
               />
-              <div className="flex flex-col gap-5 justify-start lg:mt-5">
+              <div className="flex flex-col lg:gap-5 gap-3 justify-start lg:mt-5">
                 {/* Date Range */}
                 <div className="flex justify-start lg:w-[300px] text-sm text-gray-600">
                   <div>
@@ -71,13 +74,12 @@ export function PromotionDetails() {
                 <hr />
 
                 {/* Store Name and Discounts */}
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2 lg:gap-5">
                   <div className="flex justify-between">
                     <h2 className="text-xl font-semibold text-gray-800">
                       {data.data.promotion.storeName}
                     </h2>
                   </div>
-
                   {/* Conditional Rendering for Discount */}
                   {type === 'type1' ? (
                     <span className="text-gray-700">
@@ -105,13 +107,13 @@ export function PromotionDetails() {
                       </span>{' '}
                       worth of purchase
                     </span>
-                  )}
+                  )}{' '}
+                  <p className="text-gray-600">
+                    {data.data.promotion.description}
+                  </p>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600">
-                  {data.data.promotion.description}
-                </p>
               </div>
 
               {/* Other Promotion Details */}
@@ -123,20 +125,7 @@ export function PromotionDetails() {
         <h1 className="text-2xl font-bold text-center  text-gray-800">
           You May Also Like
         </h1>
-        <div className="flex justify-start gap-5 max-w-[300px] xl:max-w-screen-xl md:max-w-screen-md h-[400px] overflow-x-scroll overflow-y-hidden ">
-          {discounts?.map((promotion) => (
-            <PromotionCard
-              key={promotion._id}
-              promotion={promotion}
-            />
-          ))}
-          {amounts?.map((promotion) => (
-            <DiscountAmountCard
-              key={promotion._id}
-              promotion={promotion}
-            />
-          ))}
-        </div>
+       <PromotionsScrollable/>
       </div>
     </div>
   );
