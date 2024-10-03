@@ -3,9 +3,7 @@ import wishlistService from '../services/wishlist.service.js';
 const WishlistController = {
   getWishlist: async (req, res) => {
     try {
-      console.log('!');
-      const { userId } = req.body;
-
+      const userId = req.user.id;
       const wishlist = await wishlistService.getWishlistWithProductDetails(userId);
 
       res.status(200).json({ success: true, data: wishlist });
@@ -16,7 +14,7 @@ const WishlistController = {
 
   addToWishlist: async (req, res) => {
     try {
-      const { userId } = req.body;
+      const userId = req.user.id;
       const { productId } = req.body;
 
       const wishlist = await wishlistService.addToWishlist(productId, userId);
@@ -29,8 +27,8 @@ const WishlistController = {
 
   removeFromWishlist: async (req, res) => {
     try {
-      const { userId } = req.body;
-      const { productId } = req.body;
+      const userId = req.user.id;
+      const productId = req.params.id;
 
       const wishlist = await wishlistService.removeFromWishlist(productId, userId);
 

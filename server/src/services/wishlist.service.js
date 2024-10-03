@@ -7,7 +7,7 @@ const wishlistService = {
       const wishlist = await Wishlist.findOne({ user: userId })
         .populate({
           path: 'products',
-          select: 'name image buyingPrice category'
+          select: 'name image buyingPrice category supplier'
         })
         .exec();
 

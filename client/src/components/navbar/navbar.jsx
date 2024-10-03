@@ -67,6 +67,10 @@ const MenuItemsUser = [
     title: 'Offers',
     url: '/promotions',
   },
+  {
+    title: 'Wishlist',
+    url: '/wishlist',
+  },
 ];
 
 // Menu Items for authenticated users (role: admin)

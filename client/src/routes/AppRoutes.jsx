@@ -11,6 +11,7 @@ import { AllPromotions } from '@/pages/promotion/allpromotions';
 import Products from '@/pages/products/products';
 import { ShowPromotions } from '@/pages/promotion/show-promotions';
 import { PromotionDetails } from '@/pages/promotion/promotion-details';
+import Wishlist from '@/pages/wishlist/wishlist';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -151,6 +152,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Products />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'wishlist',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Wishlist />
           </Suspense>
         ),
       },
