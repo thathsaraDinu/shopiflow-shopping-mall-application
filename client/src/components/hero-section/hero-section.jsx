@@ -3,11 +3,21 @@ import HeroImg1 from '../../assets/hero/hero1.jpg';
 import HeroImg2 from '../../assets/hero/hero2.jpg';
 import HeroImg3 from '../../assets/hero/hero3.jpg';
 import { Button } from '../ui/button';
+import { useAuthStore } from '@/store/auth-store';
+import { useNavigate } from 'react-router-dom';
 
 export default function HeroSection() {
   const heroImages = [HeroImg1, HeroImg2, HeroImg3];
   const [currentImageIndex, setCurrentImageIndex] =
     useState(0);
+
+  const isLoggedIn = useAuthStore(
+    (state) => state.isLoggedIn,
+  );
+
+  const fullName = useAuthStore((state) => state.fullName);
+
+  const navigate = useNavigate();
 
   // Automatically change the image every 5 seconds
   useEffect(() => {
@@ -25,9 +35,16 @@ export default function HeroSection() {
       {/* Grid */}
       <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
         <div className="lg:col-span-3">
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-            Welcome to ShopiFlow!
-          </h1>
+          {!isLoggedIn && (
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+              Welcome to ShopiFlow!
+            </h1>
+          )}
+          {isLoggedIn && (
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+              Hi {fullName}, Welcome back!
+            </h1>
+          )}
           <p className="mt-3 text-xl text-muted-foreground">
             Get better experience with ShopiFlow
           </p>
@@ -36,7 +53,12 @@ export default function HeroSection() {
             wide range of products for you to choose from.
             Shop now and get the best deals!
           </p>
-          <Button to="/products" className="mt-6">
+          <Button
+            onClick={() => {
+              navigate('/products');
+            }}
+            className="mt-6"
+          >
             Shop Now
           </Button>
         </div>

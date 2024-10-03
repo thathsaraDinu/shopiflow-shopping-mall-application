@@ -12,16 +12,18 @@ import {
   AvatarImage,
   AvatarFallback,
 } from '@/components/ui/avatar';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import AvatarImg from '@/assets/avatar.png';
 import { useAuthStore } from '@/store/auth-store';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function AvatarIcon() {
   const isLoggedIn = useAuthStore(
     (state) => state.isLoggedIn,
   );
+  const fullName = useAuthStore((state) => state.fullName);
+  const navigate = useNavigate();
   const logOut = useAuthStore((state) => state.logOut);
 
   const logOutHandler = () => {
@@ -56,14 +58,17 @@ export default function AvatarIcon() {
         <DropdownMenuContent className="w-56">
           {isLoggedIn ? (
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <span className="font-bold">Name</span>
+              <DropdownMenuItem className="font-bold">
+                <span className="font-bold">
+                  {fullName}
+                </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="#" className="underline">
-                  Profile
-                </Link>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => navigate('/profile')}
+              >
+                Profile
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -77,19 +82,20 @@ export default function AvatarIcon() {
             </DropdownMenuGroup>
           ) : (
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link to="/login" className="w-full h-full">
-                  Login
-                </Link>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => {
+                  navigate('/login');
+                }}
+              >
+                Login
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link
-                  to="/register"
-                  className="w-full h-full"
-                >
-                  Register
-                </Link>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => navigate('/register')}
+              >
+                Register
               </DropdownMenuItem>
             </DropdownMenuGroup>
           )}

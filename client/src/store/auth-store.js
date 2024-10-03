@@ -7,6 +7,7 @@ const initialState = {
   isLoggedIn: false,
   accessToken: null,
   role: null,
+  fullName: null,
 };
 
 // Create the store with the persist middleware
@@ -19,11 +20,13 @@ export const useAuthStore = create(
           isLoggedIn: true,
           accessToken: accessToken,
           role: role,
+          fullName: null,
         });
       },
-      profile: (role) => {
+      profile: (data) => {
         set({
-          role: role,
+          role: data.role,
+          fullName: data.firstName + ' ' + data.lastName,
         });
       },
       logOut: () => {
@@ -32,6 +35,7 @@ export const useAuthStore = create(
           isLoggedIn: false,
           accessToken: null,
           role: null,
+          fullName: null,
         });
         localStorage.clear();
       },
