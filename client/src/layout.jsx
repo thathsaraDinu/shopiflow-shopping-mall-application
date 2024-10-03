@@ -25,12 +25,15 @@ const Layout = () => {
           <Footer />
         </div>
       ) : // Admin Layout
-      isLoggedIn && role === USER_ROLES.ADMIN ? (
-        <div className="flex flex-row min-h-screen">
+      (isLoggedIn && role === USER_ROLES.ADMIN) ||
+        role === USER_ROLES.SUPER_ADMIN ? (
+        <div className="flex h-screen w-screen overflow-hidden">
           <Sidebar />
-          <div className="py-7 px-8 bg-grey-50 grow overflow-hidden">
+          <div className="flex min-h-screen flex-1 flex-col overflow-y-auto">
             <DashboardNavbar />
-            <Outlet />
+            <div className="overflow-y-auto p-4">
+              <Outlet />
+            </div>
           </div>
         </div>
       ) : null}

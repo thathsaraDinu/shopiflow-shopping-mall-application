@@ -1,245 +1,206 @@
+import { useState } from 'react';
+import { RiArrowDropDownLine } from 'react-icons/ri';
+import { RiArrowDropUpLine } from 'react-icons/ri';
 import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/utils/tailwind-merge';
 import { useAuthStore } from '@/store/auth-store';
+import Logo from '@/assets/logo/logo.png';
+import { USER_ROLES } from '@/constants';
+import {
+  MdLogout,
+  MdSpaceDashboard,
+  MdInventory,
+  MdSettings,
+} from 'react-icons/md';
+import { FaShop } from 'react-icons/fa6';
+import {
+  BiSolidOffer,
+  BiSolidReport,
+} from 'react-icons/bi';
 import toast from 'react-hot-toast';
 
-import Logo from '@/assets/logo/logo.png';
+const sideBarItems = [
+  {
+    title: 'Dashboard',
+    icon: <MdSpaceDashboard />,
+    submenu: [],
+    to: '/',
+    roles: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN],
+  },
+  {
+    title: 'Shops',
+    icon: <FaShop />,
+    submenu: [],
+    to: '/shopsadmin',
+    roles: [USER_ROLES.SUPER_ADMIN],
+  },
+  {
+    title: 'Inventory',
+    icon: <MdInventory />,
+    submenu: [],
+    to: '/inventory',
+    roles: [USER_ROLES.ADMIN],
+  },
+  {
+    title: 'Promotions',
+    icon: <BiSolidOffer />,
+    submenu: [],
+    to: '/allpromotions',
+    roles: [USER_ROLES.ADMIN],
+  },
+  {
+    title: 'Reports',
+    icon: <BiSolidReport />,
+    submenu: [],
+    to: '/reports',
+    roles: [USER_ROLES.ADMIN],
+  },
+  {
+    title: 'Settings',
+    icon: <MdSettings />,
+    submenu: [],
+    to: '/settings',
+    roles: [USER_ROLES.ADMIN],
+  },
+];
 
-const Sidebar = () => {
-  const { pathname } = useLocation();
+const SideBar = () => {
   const logOut = useAuthStore((state) => state.logOut);
+  const path = useLocation().pathname;
 
+  const [openSubmenuIndex, setOpenSubmenuIndex] =
+    useState(null);
+  const role = useAuthStore((state) => state.role);
+
+  const handleSubmenuToggle = (index) => {
+    setOpenSubmenuIndex(
+      openSubmenuIndex === index ? null : index,
+    );
+  };
+
+  // Log Out and then toast a message
   const logOutHandler = () => {
     logOut();
     toast.success('Logged out successfully');
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 1000);
   };
 
   return (
-    <>
-      <div className="flex flex-col w-[280px] p-6 bg-white">
-        <div className="flex items-center text-blue-500 text-xl font-semibold m-3 mb-8">
-          <img
-            className="w-[48px] h-[48px] rounded-full"
-            src={Logo}
-            alt="logo"
-          />
-          <h2 className="px-3 mr-10">SHOPIFLOW</h2>
+    <aside className="min-w-52 max-w-60 h-screen z-40">
+      <div className="flex-col flex h-full">
+        <div className="bg-white drop-shadow-sm">
+          <div>
+            <Link
+              to="/"
+              className="flex items-center justify-center mx-5 my-10 text-white gap-2"
+            >
+              <img
+                src={Logo}
+                alt="logo"
+                className="h-12 w-12"
+              />
+              <div className="text-blue-500 text-2xl font-bold">
+                ShopiFlow
+              </div>
+            </Link>
+          </div>
         </div>
-
-        <div className="flex flex-col justify-between px-4 py-2 text-grey-600 font-medium grow">
-          <div>
-            <ul>
-              <li className="py-4 mb-3">
-                <div className="inline-flex group">
-                  <Link
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('overview') && 'text-blue-500'}`}
-                    to="overview"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('overview') && 'text-blue-500'}`}
+        <div className="flex-1 bg-white px-3 py-4 overflow-y-scroll no-scrollbar sidebar-scroll">
+          <ul className="space-y-0 font-semibold">
+            {sideBarItems.map((item, index) => (
+              <li key={index}>
+                {item.roles?.includes(role) && (
+                  <div className="flex flex-col">
+                    <Link
+                      to={item.to}
+                      onClick={(e) => {
+                        if (item.submenu.length > 0) {
+                          e.preventDefault();
+                          handleSubmenuToggle(index);
+                        }
+                      }}
+                      className={cn(
+                        'flex h-16 items-center w-full p-2 text-base text-grey-600 font-medium grow transition duration-75 rounded-lg group hover:bg-blue-200  hover:text-black',
+                        path === item.to
+                          ? ' text-blue-500'
+                          : '',
+                      )}
                     >
-                      <path
-                        d="M10 21H5C3.89543 21 3 20.1046 3 19V12.2969C3 11.7852 3.19615 11.2929 3.54809 10.9215L10.5481 3.53257C11.3369 2.69989 12.663 2.69989 13.4519 3.53257L20.4519 10.9215C20.8038 11.2929 21 11.7852 21 12.2969V19C21 20.1046 20.1046 21 19 21H14M10 21V15.5C10 15.2239 10.2239 15 10.5 15H13.5C13.7761 15 14 15.2239 14 15.5V21M10 21H14"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                    Overview
-                  </Link>
-                </div>
+                      {item.icon}
+                      <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                        {item.title}
+                      </span>
+                      {item.submenu.length > 0 && (
+                        <span className="text-white">
+                          {openSubmenuIndex === index ? (
+                            <RiArrowDropUpLine size={30} />
+                          ) : (
+                            <RiArrowDropDownLine
+                              size={30}
+                            />
+                          )}
+                        </span>
+                      )}
+                    </Link>
+                    {item.submenu.length > 0 && (
+                      <ul
+                        className={`pl-4 ${
+                          openSubmenuIndex === index
+                            ? 'max-h-auto'
+                            : 'max-h-0'
+                        } overflow-hidden transition-all duration-300 ease-in-out`}
+                        style={{
+                          transitionProperty: 'max-height',
+                          transitionDuration: '0.6s',
+                          transitionTimingFunction:
+                            'ease-in-out',
+                        }}
+                      >
+                        {item.submenu.map(
+                          (subItem, subIndex) => (
+                            <li key={subIndex}>
+                              <Link
+                                to={subItem.to}
+                                className={cn(
+                                  'flex h-16 items-center w-full p-2 text-base text-white transition duration-75 rounded-lg group hover:bg-[#fcb308] hover:text-black',
+                                  path === subItem.to
+                                    ? ' text-[#fcb308]'
+                                    : '',
+                                )}
+                              >
+                                <span className="flex-1 ms-3 text-left text-sm rtl:text-right whitespace-nowrap">
+                                  {subItem.title}
+                                </span>
+                              </Link>
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    )}
+                  </div>
+                )}
               </li>
-
-              <li className="py-4 mb-3">
-                <div className="inline-flex group">
-                  <Link
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('shopsadmin') && 'text-blue-500'}`}
-                    to="shopsadmin"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('shopsadmin') && 'text-blue-500'}`}
-                    >
-                      <path
-                        d="M4 7V5C4 3.89543 4.89543 3 6 3H18C19.1046 3 20 3.89543 20 5V7M3 9H21L20.3726 18.4244C20.2984 19.5052 19.4244 20.3455 18.3411 20.3455H5.65894C4.57561 20.3455 3.70161 19.5052 3.62736 18.4244L3 9Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M9 13H10V18H9V13ZM14 13H15V18H14V13Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Shops
-                  </Link>
+            ))}
+            {/* Log Out */}
+            <li>
+              <div className="flex flex-col hover:cursor-pointer">
+                <div
+                  onClick={logOutHandler}
+                  className={cn(
+                    'flex h-16 items-center w-full p-2 text-base text-grey-600 font-medium grow transition duration-75 rounded-lg group hover:bg-blue-200  hover:text-black',
+                  )}
+                >
+                  <MdLogout />
+                  <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                    Log Out
+                  </span>
                 </div>
-              </li>
-
-              <li className="py-4 mb-3">
-                <div className="inline-flex group">
-                  <Link
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('inventory') && 'text-blue-500'}`}
-                    to="inventory"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('inventory') && 'text-blue-500'}`}
-                    >
-                      <path
-                        d="M22.0101 15.5633L22.0109 15.566L22.0108 15.566C22.1775 16.1909 21.8185 16.8696 21.1849 16.992L15.2478 18.5568C15.3215 19.7232 14.569 20.8124 13.4004 21.1165C12.2322 21.4433 11.0181 20.8703 10.5099 19.8297L9.53045 20.0968L9.5294 20.0971C9.32189 20.1488 9.10621 20.0454 9.05186 19.8294C9.05182 19.8292 9.05178 19.829 9.05174 19.8289L5.05577 5.11528L3.15673 5.59013L3.1446 5.54162L3.15673 5.59013C2.66755 5.71244 2.13076 5.41957 1.98422 4.90648M22.0101 15.5633L2.03229 4.89275M22.0101 15.5633L22.0101 15.5631L21.57 13.942C21.57 13.9418 21.5699 13.9416 21.5699 13.9414C21.5155 13.7254 21.2998 13.622 21.0923 13.6738L21.0918 13.6739L19.448 14.1018L17.6072 7.26782C17.6071 7.26768 17.6071 7.26754 17.6071 7.2674C17.5527 7.05134 17.337 6.94784 17.1295 6.99963L17.1287 6.99985L13.5385 7.96027L12.5553 4.3247C12.5553 4.32454 12.5552 4.32438 12.5552 4.32423C12.5009 4.1082 12.2852 4.00472 12.0776 4.05651L12.0771 4.05666L7.44402 5.27226M22.0101 15.5633L7.44402 5.27226M1.98422 4.90648L2.03229 4.89275M1.98422 4.90648C1.98422 4.90648 1.98422 4.90649 1.98422 4.90649L2.03229 4.89275M1.98422 4.90648C1.83689 4.39078 2.1568 3.87821 2.66743 3.73236L2.6691 3.73189L2.66911 3.73192L6.39933 2.80524M2.03229 4.89275C1.89329 4.40618 2.19443 3.91946 2.68117 3.78044L6.41218 2.85356M6.39933 2.80524C6.39904 2.80532 6.39876 2.8054 6.39847 2.80548L6.41218 2.85356M6.39933 2.80524L6.40013 2.80504L6.41218 2.85356M6.39933 2.80524C6.58706 2.75222 6.80087 2.85936 6.85452 3.07282L6.85441 3.07243L6.80612 3.08537M6.41218 2.85356C6.57431 2.80733 6.75973 2.89996 6.80612 3.08537M6.80612 3.08537L6.85462 3.07323M6.80612 3.08537L7.4086 5.33325L6.85462 3.07323M6.85462 3.07323L7.44402 5.27226M6.85462 3.07323L7.44402 5.27226M5.69542 4.57863L5.69549 4.57861L5.6946 4.57593C5.64275 4.42057 5.48727 4.28683 5.32274 4.28683H5.25323V4.28535L5.24134 4.28827L2.97033 4.84449L2.97032 4.84445L2.96849 4.84497C2.90029 4.86444 2.84743 4.85279 2.80872 4.82734C2.76886 4.80114 2.73974 4.75741 2.72642 4.70655C2.69961 4.60417 2.73895 4.49141 2.85673 4.45447L6.21439 3.60938L9.86277 17.0483C9.86281 17.0485 9.86285 17.0487 9.8629 17.0488C9.91723 17.2648 10.1329 17.3683 10.3404 17.3165L10.3409 17.3164L10.8071 17.1955C10.3552 17.7407 10.1772 18.4624 10.272 19.1303L9.69189 19.2704L5.69542 4.57863ZM11.0947 19.2925L11.0947 19.2924C10.8018 18.3462 11.3422 17.3784 12.2878 17.1308L12.2883 17.1306C13.2797 16.8603 14.2478 17.5142 14.4276 18.4132L14.4276 18.4132L14.4278 18.4141C14.63 19.3354 14.0466 20.1691 13.1885 20.4177C12.287 20.6655 11.3645 20.1695 11.0947 19.2925ZM20.9754 16.2927L15.0636 17.8568C14.8148 17.2186 14.2793 16.7014 13.6323 16.4619C14.256 16.2965 14.9237 16.1196 15.6118 15.9374C17.3835 15.4682 19.2904 14.9631 20.93 14.5249L21.2646 15.7743L21.2647 15.7745C21.3272 16.0038 21.2029 16.23 20.9764 16.2924C20.9761 16.2924 20.9759 16.2925 20.9757 16.2926L20.9754 16.2927ZM18.7254 14.3126L10.5026 16.4885L8.74443 10.0267L16.9672 7.85081L18.7254 14.3126ZM7.6553 6.01763L11.9152 4.88463L12.793 8.14825L8.53295 9.28125L7.6553 6.01763Z"
-                        fill="currentColor"
-                        stroke="currentColor"
-                        strokeWidth="0.1"
-                      />
-                    </svg>
-                    Inventory
-                  </Link>
-                </div>
-              </li>
-              <li className="py-4 mb-3">
-                <div className="inline-flex group">
-                  <Link
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('allpromotions') && 'text-blue-500'}`}
-                    to="allpromotions"
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 15 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('allpromotions') && 'text-blue-500'}`}
-                    >
-                      <path
-                        d="M1.20308 1.04312C1.00481 0.954998 0.772341 1.0048 0.627577 1.16641C0.482813 1.32802 0.458794 1.56455 0.568117 1.75196L3.92115 7.50002L0.568117 13.2481C0.458794 13.4355 0.482813 13.672 0.627577 13.8336C0.772341 13.9952 1.00481 14.045 1.20308 13.9569L14.7031 7.95693C14.8836 7.87668 15 7.69762 15 7.50002C15 7.30243 14.8836 7.12337 14.7031 7.04312L1.20308 1.04312ZM4.84553 7.10002L2.21234 2.586L13.2689 7.50002L2.21234 12.414L4.84552 7.90002H9C9.22092 7.90002 9.4 7.72094 9.4 7.50002C9.4 7.27911 9.22092 7.10002 9 7.10002H4.84553Z"
-                        fill="currentColor"
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
-                    Promotions
-                  </Link>
-                </div>
-              </li>
-
-              <li className="py-4">
-                <div className="inline-flex items-center group">
-                  <Link
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('reports') && 'text-blue-500'}`}
-                    to="reports"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('reports') && 'text-blue-500'}`}
-                    >
-                      <path
-                        d="M16.4445 20.8889V12.8039C16.4445 12.5008 16.7022 12.2551 17.0001 12.2551C17.3068 12.2551 17.5556 12.4946 17.5556 12.8039V20.8889H18.675C19.889 20.8889 20.889 19.8918 20.889 18.6749V5.32498C20.889 4.11098 19.8919 3.11099 18.675 3.11099H5.32512C4.11113 3.11099 3.11113 4.10806 3.11113 5.32498V18.6749C3.11113 19.8889 4.1082 20.8889 5.32512 20.8889H6.44454V15.5903C6.44454 15.2776 6.70221 15.0239 7.00007 15.0239C7.30685 15.0239 7.5556 15.2703 7.5556 15.5903V20.8889H9.77784V10.0379C9.77784 9.73333 10.0355 9.48652 10.3334 9.48652C10.6403 9.48652 10.889 9.72424 10.889 10.0379V20.8889H13.1111V5.88611C13.1111 5.58087 13.3689 5.33337 13.6668 5.33337C13.9736 5.33337 14.2223 5.58114 14.2223 5.88611V20.8889H16.4445ZM2 5.32505C2 3.4887 3.5032 2 5.32505 2H18.675C20.5113 2 22 3.5032 22 5.32505V18.675C22 20.5113 20.4968 22 18.675 22H5.32505C3.4887 22 2 20.4968 2 18.675V5.32505Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Reports
-                  </Link>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <ul>
-              <li className="py-4 mb-3">
-                <div className="inline-flex group">
-                  <Link
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('settings') && 'text-blue-500'}`}
-                    to="settings"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('settings') && 'text-blue-500'}`}
-                    >
-                      <g clipPath="url(#clip0_416_297)">
-                        <path
-                          d="M11.9999 14.5C13.3806 14.5 14.4999 13.3808 14.4999 12C14.4999 10.6193 13.3806 9.50004 11.9999 9.50004C10.6192 9.50004 9.49992 10.6193 9.49992 12C9.49992 13.3808 10.6192 14.5 11.9999 14.5Z"
-                          stroke="currentColor"
-                          strokeWidth="1.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M18.1666 14.5C18.0557 14.7514 18.0226 15.0302 18.0716 15.3005C18.1206 15.5709 18.2495 15.8203 18.4416 16.0167L18.4916 16.0667C18.6465 16.2215 18.7695 16.4053 18.8533 16.6076C18.9372 16.81 18.9804 17.0268 18.9804 17.2459C18.9804 17.4649 18.9372 17.6818 18.8533 17.8841C18.7695 18.0864 18.6465 18.2702 18.4916 18.425C18.3368 18.58 18.153 18.7029 17.9507 18.7868C17.7483 18.8707 17.5314 18.9139 17.3124 18.9139C17.0934 18.9139 16.8765 18.8707 16.6742 18.7868C16.4719 18.7029 16.288 18.58 16.1332 18.425L16.0833 18.375C15.8869 18.1829 15.6374 18.0541 15.3671 18.005C15.0967 17.956 14.8179 17.9891 14.5666 18.1C14.3201 18.2057 14.1099 18.3811 13.9618 18.6047C13.8138 18.8282 13.7343 19.0902 13.7333 19.3584V19.5C13.7333 19.9421 13.5577 20.366 13.2451 20.6785C12.9325 20.9911 12.5086 21.1667 12.0666 21.1667C11.6246 21.1667 11.2006 20.9911 10.8881 20.6785C10.5755 20.366 10.3999 19.9421 10.3999 19.5V19.425C10.3935 19.1492 10.3042 18.8817 10.1437 18.6573C9.98317 18.4329 9.75886 18.2619 9.49992 18.1667C9.24857 18.0558 8.96976 18.0227 8.69943 18.0717C8.4291 18.1207 8.17965 18.2496 7.98325 18.4417L7.93325 18.4917C7.77846 18.6467 7.59465 18.7696 7.39232 18.8535C7.18999 18.9373 6.97311 18.9805 6.75408 18.9805C6.53506 18.9805 6.31818 18.9373 6.11585 18.8535C5.91352 18.7696 5.72971 18.6467 5.57492 18.4917C5.41996 18.3369 5.29703 18.1531 5.21315 17.9508C5.12928 17.7484 5.08611 17.5316 5.08611 17.3125C5.08611 17.0935 5.12928 16.8766 5.21315 16.6743C5.29703 16.472 5.41996 16.2882 5.57492 16.1334L5.62492 16.0834C5.81703 15.887 5.94591 15.6375 5.99492 15.3672C6.04394 15.0969 6.01085 14.8181 5.89992 14.5667C5.79428 14.3202 5.61888 14.11 5.39531 13.962C5.17173 13.8139 4.90974 13.7344 4.64159 13.7334H4.49992C4.05789 13.7334 3.63397 13.5578 3.32141 13.2452C3.00885 12.9327 2.83325 12.5087 2.83325 12.0667C2.83325 11.6247 3.00885 11.2008 3.32141 10.8882C3.63397 10.5756 4.05789 10.4 4.49992 10.4H4.57492C4.85075 10.3936 5.11826 10.3043 5.34267 10.1438C5.56708 9.98329 5.73801 9.75899 5.83325 9.50004C5.94418 9.24869 5.97727 8.96988 5.92826 8.69955C5.87924 8.42922 5.75037 8.17977 5.55825 7.98337L5.50825 7.93337C5.35329 7.77858 5.23036 7.59477 5.14649 7.39244C5.06261 7.19011 5.01944 6.97323 5.01944 6.75421C5.01944 6.53518 5.06261 6.3183 5.14649 6.11597C5.23036 5.91364 5.35329 5.72983 5.50825 5.57504C5.66304 5.42008 5.84685 5.29715 6.04918 5.21327C6.25151 5.1294 6.46839 5.08623 6.68742 5.08623C6.90644 5.08623 7.12332 5.1294 7.32565 5.21327C7.52798 5.29715 7.7118 5.42008 7.86658 5.57504L7.91658 5.62504C8.11298 5.81715 8.36243 5.94603 8.63276 5.99504C8.90309 6.04406 9.1819 6.01097 9.43325 5.90004H9.49992C9.74639 5.7944 9.9566 5.619 10.1047 5.39543C10.2527 5.17185 10.3322 4.90986 10.3333 4.64171V4.50004C10.3333 4.05801 10.5088 3.63409 10.8214 3.32153C11.134 3.00897 11.5579 2.83337 11.9999 2.83337C12.4419 2.83337 12.8659 3.00897 13.1784 3.32153C13.491 3.63409 13.6666 4.05801 13.6666 4.50004V4.57504C13.6677 4.8432 13.7471 5.10519 13.8952 5.32876C14.0432 5.55234 14.2534 5.72774 14.4999 5.83337C14.7513 5.9443 15.0301 5.97739 15.3004 5.92838C15.5707 5.87936 15.8202 5.75049 16.0166 5.55837L16.0666 5.50837C16.2214 5.35341 16.4052 5.23048 16.6075 5.14661C16.8098 5.06273 17.0267 5.01956 17.2458 5.01956C17.4648 5.01956 17.6817 5.06273 17.884 5.14661C18.0863 5.23048 18.2701 5.35341 18.4249 5.50837C18.5799 5.66316 18.7028 5.84698 18.7867 6.04931C18.8706 6.25164 18.9137 6.46851 18.9137 6.68754C18.9137 6.90657 18.8706 7.12344 18.7867 7.32577C18.7028 7.5281 18.5799 7.71192 18.4249 7.86671L18.3749 7.91671C18.1828 8.11311 18.0539 8.36255 18.0049 8.63288C17.9559 8.90321 17.989 9.18203 18.0999 9.43337V9.50004C18.2056 9.74651 18.381 9.95672 18.6045 10.1048C18.8281 10.2528 19.0901 10.3323 19.3583 10.3334H19.4999C19.9419 10.3334 20.3659 10.509 20.6784 10.8215C20.991 11.1341 21.1666 11.558 21.1666 12C21.1666 12.4421 20.991 12.866 20.6784 13.1786C20.3659 13.4911 19.9419 13.6667 19.4999 13.6667H19.4249C19.1568 13.6678 18.8948 13.7472 18.6712 13.8953C18.4476 14.0434 18.2722 14.2536 18.1666 14.5Z"
-                          stroke="currentColor"
-                          strokeWidth="1.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_416_297">
-                          <rect
-                            width="20"
-                            height="20"
-                            fill="white"
-                            transform="translate(2 2)"
-                          />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    Settings
-                  </Link>
-                </div>
-              </li>
-              <li className="py-4">
-                <div className="inline-flex items-center group">
-                  <button
-                    className={`inline-flex items-center group-hover:text-blue-500 ${pathname.includes('logout') && 'text-blue-500'}`}
-                    onClick={logOutHandler}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`group-hover:text-blue-500 mr-4 ${pathname.includes('logout') && 'text-blue-500'}`}
-                    >
-                      <path
-                        d="M12.5651 21.6454H5.09465C4.8466 21.6454 4.64516 21.4398 4.64516 21.187V3.11327C4.64516 2.86058 4.84677 2.65484 5.09465 2.65484H12.5651C12.7432 2.65484 12.8877 2.50813 12.8877 2.32742C12.8877 2.14672 12.7432 2 12.5651 2H5.09465C4.49106 2 4 2.49955 4 3.11328V21.187C4 21.8007 4.49106 22.3003 5.09465 22.3003H12.5651C12.7432 22.3003 12.8877 22.1535 12.8877 21.9728C12.8877 21.7921 12.7433 21.6454 12.5651 21.6454V21.6454ZM20.1499 11.9186L15.7247 7.42719C15.5987 7.29929 15.3946 7.29929 15.2684 7.42719C15.1422 7.55509 15.1424 7.76247 15.2684 7.89036L19.1433 11.8227H8.61245C8.43442 11.8227 8.28987 11.9694 8.28987 12.1501C8.28987 12.3308 8.43442 12.4775 8.61245 12.4775H19.1433L15.2684 16.4103C15.1424 16.5382 15.1424 16.7454 15.2684 16.8734C15.3314 16.9374 15.4136 16.9694 15.4964 16.9694C15.5792 16.9694 15.6617 16.9374 15.7245 16.8734L20.1497 12.382C20.21 12.3208 20.2442 12.2375 20.2442 12.1505C20.2444 12.0633 20.2105 11.9802 20.1499 11.9186V11.9186Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Logout
-                  </button>
-                </div>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-    </>
+    </aside>
   );
 };
 
-export default Sidebar;
+export default SideBar;
