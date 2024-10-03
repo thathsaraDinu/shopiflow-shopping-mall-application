@@ -268,6 +268,7 @@ export function AddPromotionMain({ refetch }) {
       watch={watch}
       handleFileChange={handleFileChange}
       selectedFile={selectedFile}
+      setSelectedFile={setSelectedFile}
     />,
   ]);
 

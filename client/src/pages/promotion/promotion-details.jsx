@@ -19,7 +19,7 @@ export function PromotionDetails() {
   });
 
   const promotiondetailscss =
-    'flex flex-col lg:flex-row gap-5 justify-center xl:w-[800px] md:w-[600px] h- w-[350px] transition-all ease-in-out';
+    'flex flex-col lg:flex-row gap-5 justify-center xl:w-[800px] md:w-[600px] w-[350px] transition-all ease-in-out';
 
   return (
     <div className="mx-20 my-10 flex flex-col gap-16 items-center">
@@ -27,166 +27,97 @@ export function PromotionDetails() {
         Promotion Details
       </h1>
       <div className="flex gap-10">
-        {type == 'type1' ? (
-          <>
-            <div className="">
-              {isLoading && (
-                <p className="text-center">Loading...</p>
-              )}
-              {isError && (
-                <p className="text-center text-red-500">
-                  Error
-                </p>
-              )}
-              {data && (
-                <div className={promotiondetailscss}>
-                  {/* Image at the top */}
-                  <img
-                    src={data.data.promotion.photo}
-                    alt={data.data.promotion.storeName}
-                    className="w-full h-[500px] object-cover rounded-lg"
-                  />
-                  <div className="flex flex-col gap-5 justify-start lg:mt-5 ">
-                    <div className="flex justify-start lg:w-[300px] text-sm text-gray-600">
-                      <div>
-                        {new Date(
-                          data.data.promotion.startDate,
-                        ).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </div>
-                      <div className="mx-2">-</div>
-                      <div>
-                        {' '}
-                        {new Date(
-                          data.data.promotion.endDate,
-                        ).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </div>
-                    </div>
-                    <hr></hr>
+        <div className="">
+          {isLoading && (
+            <p className="text-center h-[700px]">
+              Loading...
+            </p>
+          )}
+          {isError && (
+            <p className="text-center text-red-500">
+              Error
+            </p>
+          )}
+          {data && (
+            <div className={promotiondetailscss}>
+              {/* Image at the top */}
+              <img
+                src={data.data.promotion.photo}
+                alt={data.data.promotion.storeName}
+                className="w-full h-[500px] object-cover rounded-lg"
+              />
+              <div className="flex flex-col gap-5 justify-start lg:mt-5">
+                {/* Date Range */}
+                <div className="flex justify-start lg:w-[300px] text-sm text-gray-600">
+                  <div>
+                    {new Date(
+                      data.data.promotion.startDate,
+                    ).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </div>
+                  <div className="mx-2">-</div>
+                  <div>
+                    {new Date(
+                      data.data.promotion.endDate,
+                    ).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </div>
+                </div>
+                <hr />
 
-                    {/* Store name */}
-                    <div className="flex flex-col gap-5">
-                      <div className="flex justify-between">
-                        <h2 className="text-xl font-semibold text-gray-800">
-                          {data.data.promotion.storeName}
-                        </h2>
-                      </div>
-                      <span className="text-gray-700">
-                        <span className="hidden md:inline-block">
-                          Discounts
-                        </span>{' '}
-                        <span>
-                          Upto{' '}
-                          {
-                            data.data.promotion
-                              .discountPercentage
-                          }
-                        </span>
-                        %
-                      </span>
-                    </div>
-                    {/* Description */}
-                    <p className="text-gray-600">
-                      {data.data.promotion.description}
-                    </p>
+                {/* Store Name and Discounts */}
+                <div className="flex flex-col gap-5">
+                  <div className="flex justify-between">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      {data.data.promotion.storeName}
+                    </h2>
                   </div>
 
-                  {/* Other Promotion Details */}
+                  {/* Conditional Rendering for Discount */}
+                  {type === 'type1' ? (
+                    <span className="text-gray-700">
+                      Discounts Upto{' '}
+                      {
+                        data.data.promotion
+                          .discountPercentage
+                      }
+                      %
+                    </span>
+                  ) : (
+                    <span className="text-gray-700">
+                      Discounts Upto{' '}
+                      <span className="text-black font-bold">
+                        {data.data.promotion.discountAmount}{' '}
+                        /=
+                      </span>{' '}
+                      on{' '}
+                      <span className="text-black font-bold">
+                        {
+                          data.data.promotion
+                            .qualifyingPurchaseAmount
+                        }{' '}
+                        /=
+                      </span>{' '}
+                      worth of purchase
+                    </span>
+                  )}
                 </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="">
-              {isLoading && (
-                <p className="text-center">Loading...</p>
-              )}
-              {isError && (
-                <p className="text-center text-red-500">
-                  Error
+
+                {/* Description */}
+                <p className="text-gray-600">
+                  {data.data.promotion.description}
                 </p>
-              )}
-              {data && (
-                <div className={promotiondetailscss}>
-                  {/* Image at the top */}
-                  <img
-                    src={data.data.promotion.photo}
-                    alt={data.data.promotion.storeName}
-                    className="w-full h-[500px] object-cover rounded-lg"
-                  />
-                  <div className="flex flex-col gap-5 justify-start lg:mt-5">
-                    <div className="flex justify-start lg:w-[300px] text-sm text-gray-600">
-                      <div>
-                        {new Date(
-                          data.data.promotion.startDate,
-                        ).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </div>
-                      <div className="mx-2">-</div>
-                      <div>
-                        {' '}
-                        {new Date(
-                          data.data.promotion.endDate,
-                        ).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </div>
-                    </div>
-                    <hr></hr>
-                    <div className="flex flex-col gap-2 ">
-                      <div className="flex justify-between">
-                        <h2 className="text-xl font-semibold text-gray-800">
-                          {data.data.promotion.storeName}
-                        </h2>
-                      </div>
-                      <div className="flex flex-col gap-2 justify-between">
-                        <span className="text-gray-700">
-                          Discounts Upto{' '}
-                          <span className="text-black font-bold">
-                            {
-                              data.data.promotion
-                                .discountAmount
-                            }{' '}
-                            /=
-                          </span>{' '}
-                          on{' '}
-                          <span className="text-black font-bold">
-                            {' '}
-                            {
-                              data.data.promotion
-                                .qualifyingPurchaseAmount
-                            }
-                            /=
-                          </span>{' '}
-                          worth of purchase
-                        </span>
-                        <p className="text-gray-600 ">
-                          {data.data.promotion.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Store name */}
+              </div>
 
-                  {/* Description */}
-
-                  {/* Other Promotion Details */}
-                </div>
-              )}
+              {/* Other Promotion Details */}
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex flex-col mx-10 gap-10 ">
         <h1 className="text-2xl font-bold text-center  text-gray-800">

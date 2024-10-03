@@ -63,7 +63,7 @@ export function ShowPromotions() {
         </button>
       </div> */}
       <div>
-        <div className="flex flex-wrap xl:gap-10 gap-3 justify-center">
+        <div className="flex flex-wrap xl:gap-10 gap-4 justify-center">
           {discounts?.map((promotion) => (
             <PromotionCard
               key={promotion._id}
