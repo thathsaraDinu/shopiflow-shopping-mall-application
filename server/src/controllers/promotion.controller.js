@@ -1,4 +1,10 @@
-import { addPromotionAmount, addPromotionPercentage, getAllPromotions } from '../services/promotion.service.js';
+import {
+  addPromotionAmount,
+  addPromotionPercentage,
+  getAllPromotions,
+  getPromotionType1ById,
+  getPromotionType2ById
+} from '../services/promotion.service.js';
 
 export const PromotionController = {
   async promotions(req, res) {
@@ -18,7 +24,7 @@ export const PromotionController = {
       console.log('test controller');
 
       // Await the result of the addPromotionPercentage function
-      const promotion = await addPromotionPercentage(req.body);
+      const promotion = await addPromotionPercentage(req);
 
       console.log('the test in backend:', promotion);
 
@@ -37,6 +43,30 @@ export const PromotionController = {
   async addpromotiontype2(req, res) {
     try {
       const promotion = await addPromotionAmount(req.body);
+
+      return res.status(200).json({
+        promotion
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async getPromotiontype1ById(req, res) {
+    try {
+      const promotion = await getPromotionType1ById(req.params.id);
+
+      return res.status(200).json({
+        promotion
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async getPromotiontype2ById(req, res) {
+    try {
+      const promotion = await getPromotionType2ById(req.params.id);
 
       return res.status(200).json({
         promotion

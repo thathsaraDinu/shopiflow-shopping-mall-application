@@ -1,19 +1,29 @@
+import { getShops } from '@/api/shop.api';
 import InputField from '@/components/form-field';
 import { Button } from '@/components/ui/button';
 import { CardTitle } from '@/components/ui/card';
+import { Dialog } from '@/components/ui/dialog';
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 export function AddPromotionStep2({
   promotionType,
-  fields,
-  addItem,
-  removeItem,
   register,
   errors,
+  shops,
+  loading,
 }) {
+  const [isOpen, setIsOpen] = useState(false); // State to track dropdown open/close
+
+  const handleToggle = (e) => {
+    setIsOpen(!isOpen);
+    setValue('storeName', e.target.value);
+    console.log('e', e.target.value);
+  };
+
   return (
-    <div className="  transition-all duration-500">
-      <CardTitle className="text-center pb-10">
+    <div className="flex flex-col gap-5 transition-all duration-500 ease-in-out">
+      <CardTitle className="text-center pb-5">
         {promotionType == 1 ? (
           <span>Discount By Percentage</span>
         ) : promotionType == 3 ? (
@@ -21,8 +31,64 @@ export function AddPromotionStep2({
         ) : (
           `No Type Selected ${promotionType}`
         )}
+        {console.log('shops', shops)}
       </CardTitle>
-      <div className="grid pb-4 gap-4">
+      <div className="text-sm flex flex-col gap-2">
+        <label
+          htmlFor="storeSelect"
+          className="text-sm font-medium"
+        >
+          Store Name
+        </label>
+        <div className="relative flex w-full max-w-md transition duration-300 ease-in-out">
+          <div className="h-2 "></div>
+          <select
+            onClick={handleToggle}
+            onBlur={() => setIsOpen(false)}
+            className=" appearance-none focus:outline-none focus:ring-1 focus:border-transparent focus:ring-black border w-full shadow-sm  rounded-md px-4 py-2 bg-white text-sm"
+            id="storeSelect"
+            {...register('storeName', {
+              required: 'Store name is required',
+            })}
+          >
+            <option value="">Select a store</option>
+            {!loading && shops.length > 0 ? (
+              shops.map((shop) => (
+                <option key={shop.name} value={shop.name}>
+                  {shop.name}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>
+                {loading
+                  ? 'Loading stores...'
+                  : 'No stores available'}
+              </option>
+            )}
+          </select>
+          <div
+            className={`absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none transform transition-transform duration-300 ease-in-out ${
+              isOpen ? 'rotate-90' : 'rotate-0'
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="25px"
+              viewBox="0 -960 960 960"
+              width="25px"
+              fill="#808080"
+            >
+              <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+            </svg>
+          </div>
+        </div>
+        {errors.storeName && (
+          <p className="text-red">
+            {errors.storeName.message}
+          </p>
+        )}
+      </div>
+      {/* <div className="">
         <InputField
           label={'Store Name'}
           type="text"
@@ -31,84 +97,22 @@ export function AddPromotionStep2({
           id="inputField"
           errors={errors}
         />
-      </div>
+      </div> */}
 
       {promotionType == 1 ? (
         <div>
-          <div className="grid pb-4 gap-4">
-            <InputField
-              label="Discount Percentage"
-              type="number"
-              register={register}
-              name="discountPercentage"
-              errors={errors}
-
-              // Max is only relevant for discountPercentage
-            />
-          </div>
-          <div className=" pb-4 gap-4">
-            <div className="text-sm font-medium pb-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Applicable Items
-            </div>
-            {fields.map((item, index) => (
-              <div
-                id={`applicableItems.${index}`}
-                className="w-full flex gap-5 items-center"
-                key={index}
-              >
-                <InputField
-                  type="text"
-                  register={register}
-                  name={`applicableItems[${index}]`}
-                />
-
-                {fields.length != 1 ? (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      removeItem(index, 1);
-                    }}
-                    className="inline-block"
-                  >
-                    Remove
-                  </Button>
-                ) : (
-                  ''
-                )}
-
-                <span className="text-sm text-red-500">
-                  {errors.applicableItems ? (
-                    errors.applicableItems[index] ? (
-                      <p>
-                        {
-                          errors.applicableItems[index]
-                            .message
-                        }
-                      </p>
-                    ) : (
-                      ''
-                    )
-                  ) : (
-                    ''
-                  )}
-                </span>
-              </div>
-            ))}
-            <Button
-              className="mt-3 bg-blue-600 text-white hover:bg-blue-500"
-              type="button"
-              size="sm"
-              onClick={() => addItem(1)}
-            >
-              Add Item
-            </Button>
-          </div>
+          <InputField
+            label="Discount Percentage"
+            type="number"
+            register={register}
+            name="discountPercentage"
+            errors={errors}
+            // Max is only relevant for discountPercentage
+          />
         </div>
       ) : (
-        <div>
-          <div className="pb-4">
+        <div className='flex flex-col gap-5'>
+          <div className="">
             <InputField
               label={'Qualifying Purchase Amount'}
               type="number"
@@ -117,7 +121,7 @@ export function AddPromotionStep2({
               errors={errors}
             />
           </div>
-          <div className="pb-4">
+          <div className="">
             <InputField
               label={'Discount Amount'}
               type="number"
@@ -138,7 +142,7 @@ export function AddPromotionStep2({
           errors={errors}
         />
       </div>
-      <div className="h-5"></div>
+      
     </div>
   );
 }

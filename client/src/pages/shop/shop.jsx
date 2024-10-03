@@ -47,16 +47,16 @@ const Shop = () => {
           key={shop._id}
           className="m-5 p-4 border rounded shadow"
         >
-          <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif',fontSize:'30px' }}>
+          <h2 className="text-lg font-medium " style={{ fontFamily: 'Righteous, sans-serif', fontSize: '30px' }}>
             {shop.name}
           </h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-base text-gray-600">
             Location: {shop.location}
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-base text-gray-600">
             Open Time: {shop.openTime}
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-base text-gray-600">
             Contact Number: {shop.contactNumber}
           </p>
           {/* Number of buyers in queue */}

@@ -9,6 +9,8 @@ import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
 import Products from '@/pages/products/products';
+import { ShowPromotions } from '@/pages/promotion/show-promotions';
+import { PromotionDetails } from '@/pages/promotion/promotion-details';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -47,6 +49,10 @@ const MyQueue = lazy(
 const Shop = lazy(() => import('@/pages/shop/shop'));
 const AdminShop = lazy(
   () => import('@/pages/shop/shopAdmin'),
+);
+const AddShop = lazy(() => import('@/pages/shop/addShop'));
+const UpdateShop = lazy(
+  () => import('@/pages/shop/updateShop'),
 );
 
 // layouts
@@ -125,6 +131,22 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: 'promotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ShowPromotions />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'promotiondetails/:type/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PromotionDetails />
+          </Suspense>
+        ),
+      },
+      {
         path: ':shopId/products',
         element: (
           <Suspense fallback={<PageLoader />}>
@@ -166,6 +188,23 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: 'addshop',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AddShop />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'updateshop/:shopId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <UpdateShop />
+          </Suspense>
+        ),
+      },
+
       {
         path: 'addpromotion',
         element: (

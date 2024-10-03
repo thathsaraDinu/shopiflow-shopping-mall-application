@@ -20,6 +20,30 @@ export const getAllPromotions = async () => {
   }
 };
 
+export const getPromotionType1ById = async (id) => {
+  try {
+    const promotion = await DiscountPercentageSchema.findById(id);
+    return promotion;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+}
+
+export const getPromotionType2ById = async (id) => {  
+  try {
+    const promotion = await DiscountAmount.findById(id);
+    return promotion;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+}
+
 // Add a new promotion type percentage discount
 
 export const addPromotionPercentage = async (data) => {
@@ -31,8 +55,10 @@ export const addPromotionPercentage = async (data) => {
       endDate,
       description,
       discountPercentage,
-      applicableItems
-    } = data;
+      photo
+    } = data.body;
+
+    console.log('data photo: ', data.body);
 
     const now = new Date();
     const start = new Date(startDate);
@@ -51,12 +77,13 @@ export const addPromotionPercentage = async (data) => {
       promotionType: 1,
       storeName,
       discountPercentage,
-      applicableItems,
       startDate: start,
       endDate: end,
       description,
-      isActive
+      isActive,
+      photo
     });
+    console.log('new promotion:', newPromotion);
 
     const savedPromotion = await newPromotion.save();
     return savedPromotion;

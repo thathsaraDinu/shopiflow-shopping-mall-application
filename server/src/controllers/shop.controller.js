@@ -1,4 +1,4 @@
-import { addShop, getShops, updateShop, deleteShop } from '../services/shop.service.js';
+import { addShop, getShops, updateShop, getShopById, deleteShop } from '../services/shop.service.js';
 
 const ShopController = {
   // Add shop
@@ -35,6 +35,23 @@ const ShopController = {
       const updatedShop = await updateShop(shopId, data); // Call the update service
 
       return res.status(200).json(updatedShop);
+    } catch (error) {
+      return res.status(error.status || 500).json({
+        message: error.message
+      });
+    }
+  },
+
+  async getShopById(req, res) {
+    try {
+      const shopId = req.params.id; // Extract shop ID from the URL
+      const shop = await getShopById(shopId); // Fetch shop using the service
+
+      if (!shop) {
+        return res.status(404).json({ message: 'Shop not found' });
+      }
+
+      return res.status(200).json(shop);
     } catch (error) {
       return res.status(error.status || 500).json({
         message: error.message

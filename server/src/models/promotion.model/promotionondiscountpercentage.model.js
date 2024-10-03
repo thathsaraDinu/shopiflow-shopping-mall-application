@@ -15,10 +15,6 @@ const DiscountPercentageSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-    applicableItems: {
-      type: [String], // Array of item IDs or categories
-      default: []
-    },
     startDate: {
       type: Date,
       required: true
@@ -33,6 +29,9 @@ const DiscountPercentageSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
+    },
+    photo: {
+      type: String
     }
   },
   {

@@ -20,10 +20,9 @@ export const ShopSchema = new Schema(
       unique: false
     },
     location: {
-      type: String,
-      required: [true, 'Location is required']
+      type: String
     },
-    items: [ItemSchema],  // Array of items sold in the shop
+    items: [ItemSchema], // Array of items sold in the shop
     openTime: {
       type: String,
       required: [true, 'Open time is required']
