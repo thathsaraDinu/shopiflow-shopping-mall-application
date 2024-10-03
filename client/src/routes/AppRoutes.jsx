@@ -36,9 +36,6 @@ const Wishlist = lazy(
 );
 
 // Promotion Pages
-const AddPromotionMain = lazy(
-  () => import('@/pages/promotion/addpromotionmain'),
-);
 const AllPromotions = lazy(
   () => import('@/pages/promotion/allpromotions'),
 );
@@ -193,19 +190,13 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'addpromotion',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <AddPromotionMain />
-          </Suspense>
-        ),
-      },
-
-      {
         path: 'allpromotions',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <AllPromotions />
+            <PrivateRoute
+              element={<AllPromotions />}
+              roles={[USER_ROLES.ADMIN]}
+            />
           </Suspense>
         ),
       },
