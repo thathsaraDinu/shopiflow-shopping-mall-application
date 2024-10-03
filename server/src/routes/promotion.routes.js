@@ -18,6 +18,9 @@ router.post(
   validateRequest('createPromotionType2'),
   PromotionController.addpromotiontype2
 );
-
+router.get('/getpromotiontype1/:id', PromotionController.getPromotiontype1ById);
+router.get('/getpromotiontype2/:id', PromotionController.getPromotiontype2ById);
+router.delete('/deletepromotiontype1/:id', PromotionController.deletePromotionType1);
+router.delete('/deletepromotiontype2/:id', PromotionController.deletePromotionType2);
 
 export default router;

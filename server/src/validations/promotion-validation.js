@@ -9,16 +9,7 @@ export const createPromotionType1Validation = z.object({
     .number()
     .min(1, { message: 'Discount percentage must be at least 1.' })
     .max(100, { message: 'Discount percentage cannot exceed 100.' }),
-  applicableItems: z
-    .array(
-      z.union([
-        z.string().min(1, { message: 'Please add an Item' }),
-
-        z.undefined() // Allow undefined values
-      ])
-    )
-    .min(1)
-    .max(255),
+  
   description: z.string().min(1, { message: 'Description is required' }).max(255)
 });
 

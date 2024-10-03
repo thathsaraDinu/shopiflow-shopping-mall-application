@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import InventoryForm from './inventoryForm';
+import { Link } from 'react-router-dom';
 
-const InventoryTable = () => {
+const InventoryTable = ({ data, refetch }) => {
   return (
     <>
       <div className="mt-5 bg-white rounded-lg pt-5 pb-3">
@@ -11,7 +12,15 @@ const InventoryTable = () => {
             Products
           </h2>
           <div className="flex">
-            <InventoryForm />
+            <InventoryForm
+              refetch={refetch}
+              title="New Product"
+              button={
+                <Button className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
+                  Add Product
+                </Button>
+              }
+            />
             <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all mx-3">
               <svg
                 width="20"
@@ -54,16 +63,34 @@ const InventoryTable = () => {
             </tr>
           </thead>
           <tbody className="text-grey-700 font-medium">
-            <tr className="border-t border-grey-100">
-              <td className="px-4 py-[14px]">Product</td>
-              <td className="px-4 py-[14px]">₹430</td>
-              <td className="px-4 py-[14px]">43 Packets</td>
-              <td className="px-4 py-[14px]">12 Packets</td>
-              <td className="px-4 py-[14px]">43 Packets</td>
-              <td className="px-4 py-[14px] text-green">
-                In- stock
-              </td>
-            </tr>
+            {data.map((item) => (
+              <tr
+                key={item.productID}
+                className="border-t border-grey-100"
+              >
+                <td className="px-4 py-[14px]">
+                  <Link to={item.productID}>
+                    {item.name}
+                  </Link>
+                </td>
+                <td className="px-4 py-[14px]">
+                  Rs.
+                  {parseFloat(item.buyingPrice).toFixed(2)}
+                </td>
+                <td className="px-4 py-[14px]">
+                  {item.quantity}
+                </td>
+                <td className="px-4 py-[14px]">
+                  {item.thresholdValue}
+                </td>
+                <td className="px-4 py-[14px]">
+                  {item.supplier}
+                </td>
+                <td className="px-4 py-[14px] text-green">
+                  In - Stock
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         <div className="flex justify-between items-center my-2 mx-4">

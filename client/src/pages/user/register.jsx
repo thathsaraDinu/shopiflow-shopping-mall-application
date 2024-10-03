@@ -144,7 +144,8 @@ export default function Register() {
   );
 
   // Shop registration form
-  const ShopRegisterForm = () => <div>Shop Register</div>;
+  const ShopRegisterForm = () => <form onSubmit={handleSubmit(onSubmit)}>
+  </form>;
 
   return (
     <div className="flex items-center justify-center h-full">

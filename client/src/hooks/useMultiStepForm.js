@@ -7,6 +7,7 @@ export function useMultistepForm(steps) {
     setCurrentStepIndex((i) => {
       if (i >= steps.length - 1) return i;
       return i + 1;
+      
     });
   }
 
@@ -21,7 +22,7 @@ export function useMultistepForm(steps) {
     setCurrentStepIndex(index);
   }
 
-  return {
+  return { 
     currentStepIndex,
     step: steps[currentStepIndex],
     steps,

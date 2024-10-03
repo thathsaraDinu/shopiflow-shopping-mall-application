@@ -31,6 +31,9 @@ const DiscountAmount = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
+    },
+    photo: {
+      type: String
     }
   },
   {

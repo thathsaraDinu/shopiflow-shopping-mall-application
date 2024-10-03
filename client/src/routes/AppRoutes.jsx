@@ -6,7 +6,10 @@ import {
 import { LoadingSpinner } from '@/components/ui/spinner';
 import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
+import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
+import { ShowPromotions } from '@/pages/promotion/show-promotions';
+import { PromotionDetails } from '@/pages/promotion/promotion-details';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -26,6 +29,7 @@ const Inventory = lazy(
 const Home = lazy(() => import('@/pages/home/home'));
 const About = lazy(() => import('@/pages/about/about'));
 
+
 // Auth Pages
 const Register = lazy(
   () => import('@/pages/user/register'),
@@ -43,6 +47,9 @@ const MyQueue = lazy(
 
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
+const AdminShop = lazy(() => import('@/pages/shop/shopAdmin'));
+const AddShop = lazy(() => import('@/pages/shop/addShop'));
+const UpdateShop = lazy(() => import('@/pages/shop/updateShop'));
 
 // layouts
 const Layout = lazy(() => import('@/layout'));
@@ -119,6 +126,22 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: 'promotions',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ShowPromotions />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'promotiondetails/:type/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PromotionDetails />
+          </Suspense>
+        ),
+      }
     ],
   },
   {
@@ -138,6 +161,39 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: 'inventory/:id',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ItemDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'shopsadmin',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AdminShop />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'addshop',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AddShop />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'updateshop/:shopId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <UpdateShop />
+          </Suspense>
+        ),
+      },
+
+      {
         path: 'addpromotion',
         element: (
           <Suspense fallback={<PageLoader />}>
@@ -145,6 +201,7 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+
       {
         path: 'allpromotions',
         element: (
