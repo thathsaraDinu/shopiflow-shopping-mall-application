@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate, useParams } from 'react-router-dom'; // Import useParams for route parameters
+import { useNavigate, useParams } from 'react-router-dom';
 import { updateShop, getShopById } from '@/api/shop.api';
+import { userLogin } from '@/api/auth.api'; // Import the userLogin function
 import toast from 'react-hot-toast';
 
 const UpdateShop = () => {
@@ -47,6 +48,11 @@ const UpdateShop = () => {
         return /^0\d{9}$/.test(number);
     };
 
+    // Validate email
+    const validateEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
     // Handler to update the shop
     const handleUpdateShop = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -56,9 +62,20 @@ const UpdateShop = () => {
             toast.error('Please provide a valid contact number');
             return;
         }
+        if (!validateEmail(editingShop.ownerEmail)) {
+            setContactError('Please provide a valid email address');
+            toast.error('Invalid email address');
+            return;
+        }
         setContactError(null);
 
+        // Validate user credentials
         try {
+            await userLogin({
+                email: editingShop.ownerEmail,
+                password: editingShop.password, // Ensure to get password from the state
+            });
+
             const shopData = {
                 ...editingShop,
                 openTime: `${editingShop.openTime.opening} to ${editingShop.openTime.closing}`
@@ -67,8 +84,13 @@ const UpdateShop = () => {
             toast.success('Shop updated successfully');
             navigate('/dashboard/shopsadmin'); // Redirect after updating
         } catch (err) {
+            // Handle authentication errors
+            if (err.response?.status === 401) {
+                toast.error('Invalid user credentials, please enter valid user credentials.');
+            } else {
+                toast.error('Invalid Password or Error updating shop');
+            }
             setError(err.response?.data?.message || 'An error occurred');
-            toast.error('Error updating shop');
             console.error('Error updating shop:', err);
         }
     };
@@ -209,33 +231,27 @@ const UpdateShop = () => {
                     />
                 </div>
 
-                {/* Location Dropdown */}
+                {/* Password Input */}
                 <div>
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
-                    <select
-                        name="location"
-                        id="location"
-                        value={editingShop.location}
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="Enter password"
+                        value={editingShop.password} // Make sure this is included in your state
                         onChange={handleInputChange}
                         className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-                    >
-                        <option value="" disabled>Select Location</option>
-                        <option value="1st floor">1st floor</option>
-                        <option value="2nd floor">2nd floor</option>
-                        <option value="3rd floor">3rd floor</option>
-                        <option value="4th floor">4th floor</option>
-                        <option value="6th floor">6th floor</option>
-                        <option value="7th floor">7th floor</option>
-                        <option value="8th floor">8th floor</option>
-                    </select>
+                        required
+                    />
                 </div>
 
-                {/* Submit Button */}
+                {/* Update Button */}
                 <Button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300"
+                    className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
                 >
-                    Save Changes
+                    Update Shop
                 </Button>
             </form>
         </div>
