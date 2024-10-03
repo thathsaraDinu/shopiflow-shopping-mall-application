@@ -101,7 +101,10 @@ const router = createBrowserRouter([
         path: 'register',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <Register />
+            <PrivateRoute
+              element={<Register />}
+              roles={[]}
+            />
           </Suspense>
         ),
       },
@@ -109,7 +112,7 @@ const router = createBrowserRouter([
         path: 'login',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <Login />
+            <PrivateRoute element={<Login />} roles={[]} />
           </Suspense>
         ),
       },
@@ -130,7 +133,10 @@ const router = createBrowserRouter([
         path: 'queue/:shopID',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <ShopQueue />
+            <PrivateRoute
+              element={<ShopQueue />}
+              roles={[USER_ROLES.USER]}
+            />
           </Suspense>
         ),
       },
