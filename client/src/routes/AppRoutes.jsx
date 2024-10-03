@@ -8,8 +8,10 @@ import PrivateRoute from '@/routes/PrivateRoute';
 import { AddPromotionMain } from '@/pages/promotion/addpromotionmain';
 import ItemDetails from '@/pages/dashboard/itemDetails';
 import { AllPromotions } from '@/pages/promotion/allpromotions';
+import Products from '@/pages/products/products';
 import { ShowPromotions } from '@/pages/promotion/show-promotions';
 import { PromotionDetails } from '@/pages/promotion/promotion-details';
+import Wishlist from '@/pages/wishlist/wishlist';
 
 const PageLoader = () => (
   <div className="flex items-center justify-center h-screen">
@@ -29,7 +31,6 @@ const Inventory = lazy(
 const Home = lazy(() => import('@/pages/home/home'));
 const About = lazy(() => import('@/pages/about/about'));
 
-
 // Auth Pages
 const Register = lazy(
   () => import('@/pages/user/register'),
@@ -47,9 +48,13 @@ const MyQueue = lazy(
 
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
-const AdminShop = lazy(() => import('@/pages/shop/shopAdmin'));
+const AdminShop = lazy(
+  () => import('@/pages/shop/shopAdmin'),
+);
 const AddShop = lazy(() => import('@/pages/shop/addShop'));
-const UpdateShop = lazy(() => import('@/pages/shop/updateShop'));
+const UpdateShop = lazy(
+  () => import('@/pages/shop/updateShop'),
+);
 
 // layouts
 const Layout = lazy(() => import('@/layout'));
@@ -141,7 +146,23 @@ const router = createBrowserRouter([
             <PromotionDetails />
           </Suspense>
         ),
-      }
+      },
+      {
+        path: 'products',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Products />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'wishlist',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Wishlist />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
