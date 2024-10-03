@@ -24,7 +24,8 @@ const ProductCard = ({ data }) => {
           )}
         </div>
         <div className="mt-4">
-          <h3 className="font-bold mb-1">{data.name}</h3>
+          <h3 className="font-bold">{data.name}</h3>
+          <p className="text-sm mb-1">{data.supplier}</p>
           <p className="mb-1">{data.category}</p>
           <p>${data.buyingPrice.toFixed(2)}</p>
         </div>

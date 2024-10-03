@@ -32,6 +32,10 @@ const MenuItemsAll = [
     url: '/shops',
   },
   {
+    title: 'Products',
+    url: '/products',
+  },
+  {
     title: 'Offers',
     url: '/promotions',
   },
@@ -50,6 +54,10 @@ const MenuItemsUser = [
   {
     title: 'Shops',
     url: '/shops',
+  },
+  {
+    title: 'Products',
+    url: '/products',
   },
   {
     title: 'My Queue',

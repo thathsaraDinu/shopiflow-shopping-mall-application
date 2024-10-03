@@ -147,7 +147,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: ':shopId/products',
+        path: 'products',
         element: (
           <Suspense fallback={<PageLoader />}>
             <Products />
