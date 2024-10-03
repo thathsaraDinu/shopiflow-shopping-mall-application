@@ -52,9 +52,9 @@ export default function Login() {
           .refetch()
           .then((result) => {
             profile(result.data);
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1000);
+            // setTimeout(() => {
+            //   window.location.href = '/';
+            // }, 1000);
           })
           .catch((error) => {
             // Handle errors from refetch

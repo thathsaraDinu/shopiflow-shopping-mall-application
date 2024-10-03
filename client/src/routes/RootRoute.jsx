@@ -23,6 +23,8 @@ const RootRoute = () => {
     <Home />
   ) : isAuthenticated && role === USER_ROLES.ADMIN ? (
     <Dashboard />
+  ) : isAuthenticated && role === USER_ROLES.SUPER_ADMIN ? (
+    <Dashboard />
   ) : (
     <Home />
   );

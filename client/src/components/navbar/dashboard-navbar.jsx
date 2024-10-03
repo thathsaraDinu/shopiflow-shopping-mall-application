@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 
 const DashboardNavbar = () => {
   return (
-    <div className="flex justify-between">
+    <div className="z-40 flex items-center justify-between w-full h-14 px-4 bg-white shadow-md">
       <div className="relative grow">
         <Input
           id="search"
@@ -43,7 +43,7 @@ const DashboardNavbar = () => {
           </svg>
         </button>
 
-        <button className="mr-2">
+        <button className="mr-2 hidden">
           <svg
             width="28"
             height="28"

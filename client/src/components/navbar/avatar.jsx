@@ -1,4 +1,3 @@
-import { FaRegUserCircle } from 'react-icons/fa';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,10 +9,10 @@ import {
 import {
   Avatar,
   AvatarImage,
-  AvatarFallback,
 } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import AvatarImg from '@/assets/avatar.png';
+import SignedAvatarImg from '@/assets/avatar/logged-in.png';
+import AvatarImg from '@/assets/avatar/avatar.png';
 import { useAuthStore } from '@/store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -29,9 +28,9 @@ export default function AvatarIcon() {
   const logOutHandler = () => {
     logOut();
     toast.success('Logged out successfully');
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 1000);
+    // setTimeout(() => {
+    //   window.location.href = '/';
+    // }, 1000);
   };
 
   return (
@@ -41,13 +40,14 @@ export default function AvatarIcon() {
           <Avatar className="h-9 w-9 hover:cursor-pointer">
             {isLoggedIn ? (
               <AvatarImage
-                src={AvatarImg}
+                src={SignedAvatarImg}
                 alt="User's avatar"
               />
             ) : (
-              <AvatarFallback>
-                <FaRegUserCircle className="h-full w-full text-gray-500 dark:text-gray-400" />
-              </AvatarFallback>
+              <AvatarImage
+                src={AvatarImg}
+                alt="User's avatar"
+              />
             )}
 
             <span className="sr-only">
