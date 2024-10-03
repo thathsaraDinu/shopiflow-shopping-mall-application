@@ -1,4 +1,7 @@
-import { getPromotions } from '@/api/promotion.api';
+import {
+  deletePromotion,
+  getPromotions,
+} from '@/api/promotion.api';
 import {
   useMutation,
   useQuery,
@@ -15,9 +18,10 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { PromotionReportDownload } from './promotionreport/promotionreportdownload';
 import { AddPromotionMain } from './addpromotionmain';
+import { DeleteModal } from '@/components/modals/delete';
+import toast from 'react-hot-toast';
 
 export function AllPromotions() {
   const { data, isLoading, refetch } = useQuery({
@@ -33,6 +37,10 @@ export function AllPromotions() {
   console.log(data);
 
   const [loading, setLoading] = useState(false);
+
+  const editPromotion = async (id) => {
+    console.log('Edit clicked');
+  };
 
   const handleClick = async () => {
     setLoading(true); // Start loading
@@ -58,7 +66,7 @@ export function AllPromotions() {
   };
 
   return (
-    <div className="my-10 mx-3">
+    <div className="my-10 mx-3 ">
       <div className="flex justify-between items-center">
         <h3 className="scroll-m-20 text-2xl m-5 font-semibold tracking-tight">
           All Promotions
@@ -90,7 +98,7 @@ export function AllPromotions() {
           Discount By Amount
         </h4>
       </div>
-      <div>
+      <div className="max-w-[1150px]">
         {promotionType == 1 ? (
           <Table>
             <TableCaption></TableCaption>
@@ -154,37 +162,84 @@ export function AllPromotions() {
                         )}
                       </TableHead>
                       <TableHead className="flex gap-5 items-center">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 15 15"
-                          fill="#5F9EA0"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="cursor-pointer"
-                        >
-                          <path
-                            d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
-                            fill="#0000FF"
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 15 15"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="cursor-pointer"
-                        >
-                          <path
-                            d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
-                            fill="red"
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
+                        <DeleteModal
+                          btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
+                          title={'Delete Promotion'}
+                          description={`Are you sure you want to delete ${promotion.storeName} promotion?`}
+                          onYes={async () => {
+                            try {
+                              // Re-fetch the updated data after deletion
+                            } catch (error) {
+                              toast.error(
+                                'Failed to update promotion',
+                              );
+                              console.error(
+                                'Error updating promotion:',
+                                error,
+                              ); // Log the error for debugging
+                            }
+                          }}
+                          btnText={
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 15 15"
+                              fill="#5F9EA0"
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="cursor-pointer"
+                            >
+                              <path
+                                d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
+                                fill="#0000FF"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          }
+                        ></DeleteModal>
+                        <DeleteModal
+                          btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
+                          title={'Delete Promotion'}
+                          description={`Are you sure you want to delete ${promotion.storeName} promotion?`}
+                          onYes={async () => {
+                            try {
+                              const res =
+                                await deletePromotion(
+                                  promotion._id,
+                                  promotionType,
+                                );
+                              toast.success(
+                                'Promotion deleted successfully',
+                              );
+                              refetch(); // Re-fetch the updated data after deletion
+                            } catch (error) {
+                              toast.error(
+                                'Failed to delete promotion',
+                              );
+                              console.error(
+                                'Error deleting promotion:',
+                                error,
+                              ); // Log the error for debugging
+                            }
+                          }}
+                          btnText={
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 15 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="cursor-pointer"
+                            >
+                              <path
+                                d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
+                                fill="red"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          }
+                        ></DeleteModal>
                       </TableHead>
                     </TableRow>
                   ))
@@ -257,37 +312,84 @@ export function AllPromotions() {
                         )}
                       </TableHead>
                       <TableHead className="flex gap-5 items-center">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 15 15"
-                          fill="#5F9EA0"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="cursor-pointer"
-                        >
-                          <path
-                            d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
-                            fill="#0000FF"
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
+                        <DeleteModal
+                          btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
+                          title={'Delete Promotion'}
+                          description={`Are you sure you want to delete ${promotion.storeName} promotion?`}
+                          onYes={async () => {
+                            try {
+                            } catch (error) {
+                              toast.error(
+                                'Failed to update promotion',
+                              );
+                              console.error(
+                                'Error updating promotion:',
+                                error,
+                              ); // Log the error for debugging
+                            }
+                          }}
+                          btnText={
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 15 15"
+                              fill="#5F9EA0"
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="cursor-pointer"
+                            >
+                              <path
+                                d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
+                                fill="#0000FF"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          }
+                        ></DeleteModal>
 
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 15 15"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="cursor-pointer"
-                        >
-                          <path
-                            d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
-                            fill="red"
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
+                        <DeleteModal
+                          btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
+                          title={'Delete Promotion'}
+                          description={`Are you sure you want to delete ${promotion.storeName} promotion?`}
+                          onYes={async () => {
+                            try {
+                              const res =
+                                await deletePromotion(
+                                  promotion._id,
+                                  promotionType,
+                                );
+                              toast.success(
+                                'Promotion deleted successfully',
+                              );
+                              refetch(); // Re-fetch the updated data after deletion
+                            } catch (error) {
+                              toast.error(
+                                'Failed to delete promotion',
+                              );
+                              console.error(
+                                'Error deleting promotion:',
+                                error,
+                              ); // Log the error for debugging
+                            }
+                          }}
+                          btnText={
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 15 15"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="cursor-pointer"
+                            >
+                              <path
+                                d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z"
+                                fill="red"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          }
+                        ></DeleteModal>
                       </TableHead>
                     </TableRow>
                   ))

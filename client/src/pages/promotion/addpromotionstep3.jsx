@@ -7,12 +7,10 @@ export function AddPromotionStep3({
   register,
   errors,
   handleFileChange,
+  selectedFile,
   watch,
-  photo,
-  setPhoto,
+  setSelectedFile,
 }) {
-  
-
   const startDate = watch('startDate');
   const minEndDate = startDate
     ? startDate
@@ -66,48 +64,44 @@ export function AddPromotionStep3({
                 Upload Photo
               </label>
             </div>
-            <input
+            <InputField
               type="file"
               name="photo"
               className="hidden"
-              label={'Photo'}
               id="file-upload"
-              onChange={(e) => {
-                setPhoto(e.target.files[0]); // Save the selected file to state
-                handleFileChange(e); // Call additional logic (e.g., converting to base64, etc.)
-              }}
+              register={(name) =>
+                register(name, {
+                  onChange: handleFileChange, // Handle file input change
+                })
+              }
             />
           </div>
           <div>
             <div className="flex items-center">
-              <div className="inline-block border">
-                {photo ? (
-                  <img
-                    src={URL.createObjectURL(photo)}
-                    alt="promotion"
-                    className=" h-40"
-                  />
-                ) : (
-                  <img
-                    src="https://placehold.co/600x400/D3D3D3/000000?text=No+Image+Selected"
-                    alt="promotion"
-                    className="h-40 w-60"
-                  />
-                )}
+              <div className="inline-block border ">
+                <img
+                  src={
+                    selectedFile
+                      ? URL.createObjectURL(selectedFile)
+                      : 'https://placehold.co/600x400/C0C0C0/000000?text=No+Image+Added'
+                  }
+                  alt="Selected file"
+                  className=" h-[150px] w-[250px] object-cover border"
+                />
               </div>
               <div
-                onClick={() => setPhoto(null)}
+                onClick={() => setSelectedFile(null)}
                 className=" ml-10 py-1 px-3  border-red border-2 rounded-md inline-block cursor-pointer text-sm text-red"
               >
                 Clear
               </div>
             </div>
-            {errors.photo && (
-              <div className="mt-2 text-sm text-red-500">
-                {errors.photo.message}
-              </div>
-            )}
           </div>
+          {errors.photo && (
+            <p className="text-red-500 text-sm">
+              {errors.photo.message}
+            </p>
+          )}
         </div>
       </div>
     </div>

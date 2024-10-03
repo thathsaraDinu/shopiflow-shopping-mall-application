@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/dialog'; // Import DialogContent, DialogHeader, DialogFooter
 import { Link } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
+import { set } from 'date-fns';
 
 export function AddPromotionMain({ refetch }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +40,9 @@ export function AddPromotionMain({ refetch }) {
     startDate: '',
     endDate: '',
     description: '',
-    photo: [],
+    photo: '',
   });
-const [photo, setPhoto] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [theStep, setTheStep] = useState(1);
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -95,6 +96,7 @@ const [photo, setPhoto] = useState(null);
       reset();
       back();
       back();
+      setSelectedFile(null);
       setTheStep(1);
       setIsOpen(false);
     },
@@ -126,20 +128,39 @@ const [photo, setPhoto] = useState(null);
       };
     });
   };
-  
+  const handleFileConversion = async (file) => {
+    if (!file) return null;
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64 = reader.result; // Get the Base64 string
+        setFormData((prevData) => ({
+          ...prevData,
+          photo: base64, // Update the formData with the Base64 string
+        }));
+        resolve(base64); // Resolve the promise with the Base64 string
+      };
+      reader.onerror = (error) => {
+        console.error(
+          'Error converting file to Base64:',
+          error,
+        );
+        reject(error); // Reject the promise if an error occurs
+      };
+    });
+  };
+
+  const convertToString = async (file) => {
     if (file) {
-      
-
-      convertToBase64(file)
+      const base64 = await convertToBase64(file)
         .then((base64) => {
+          console.log('Base64:', base64);
           setFormData((prevData) => ({
             ...prevData,
             photo: base64,
           }));
-          console.log('Base64:', base64);
         })
         .catch((error) => {
           console.error(
@@ -166,6 +187,12 @@ const [photo, setPhoto] = useState(null);
       setFormData((prevData) => ({ ...prevData, ...data }));
 
       if (currentStepIndex == 2) {
+        console.log('photo:', data.photo);
+        const convertedPhoto = await handleFileConversion(
+          data.photo,
+        );
+
+        console.log('Converted Photo:', convertedPhoto);
         const formData3 = {
           promotionType: formData.promotionType,
           storeName: formData.storeName,
@@ -176,7 +203,7 @@ const [photo, setPhoto] = useState(null);
           startDate: data.startDate,
           endDate: data.endDate,
           description: formData.description,
-          photo: formData.photo,
+          photo: convertedPhoto,
         };
         await new Promise((resolve) =>
           setTimeout(resolve, 1000),
@@ -185,6 +212,15 @@ const [photo, setPhoto] = useState(null);
       }
       next();
     } catch (error) {}
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the first selected file
+    setValue('photo', file);
+    if (file) {
+      setSelectedFile(file); // Store the selected file in state
+      console.log('File selected:', file.name);
+    }
   };
 
   useEffect(() => {
@@ -229,10 +265,10 @@ const [photo, setPhoto] = useState(null);
       {...formData}
       register={register}
       errors={errors}
-      handleFileChange={handleFileChange}
       watch={watch}
-      photo={photo}
-      setPhoto={setPhoto}
+      handleFileChange={handleFileChange}
+      selectedFile={selectedFile}
+      setSelectedFile={setSelectedFile}
     />,
   ]);
 

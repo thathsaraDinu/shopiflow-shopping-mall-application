@@ -59,6 +59,13 @@ const Shop = () => {
           <p className="text-base text-gray-600">
             Contact Number: {shop.contactNumber}
           </p>
+          {/* Display newly added fields */}
+          <p className="text-base text-gray-600">
+            Owner Email: {shop.ownerEmail} {/* **Newly Added Field** */}
+          </p>
+          <p className="text-base text-gray-600">
+            Shop Type: {shop.shopType} {/* **Newly Added Field** */}
+          </p>
           {/* Number of buyers in queue */}
           <div>
             <span

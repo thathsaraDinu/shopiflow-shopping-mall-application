@@ -1,5 +1,6 @@
 import {
   getQueues,
+  getNumberOfQueues,
   getUserShopQueue,
   getUserQueues,
   joinQueue,
@@ -19,6 +20,25 @@ const QueueController = {
       const queues = await getQueues(shopID);
 
       return res.status(200).json(queues);
+    } catch (error) {
+      return res.status(error.status || 500).json({
+        message: error.message
+      });
+    }
+  },
+
+  // Get count of all queues in a shop by shop ID
+  async getNumberOfQueues(req, res) {
+    try {
+      // Get the shop ID from the request
+      const shopID = req.params.shopID;
+
+      // Get the number of queues in the shop
+      const numberOfQueues = await getNumberOfQueues(shopID);
+
+      return res.status(200).json({
+        numberOfQueues
+      });
     } catch (error) {
       return res.status(error.status || 500).json({
         message: error.message

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export function DiscountAmountCard({ promotion }) {
   const {
@@ -19,10 +19,16 @@ export function DiscountAmountCard({ promotion }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 xl:w-[400px] w-[300px] rounded-md">
+    <div className="flex flex-col mb-3 gap-2 xl:w-[350px] w-[300px] min-w-[300px] rounded-md">
       <div>
         <Link
-            to={`/promotiondetails/${'type2'}/${promotion._id}`}
+          to={`/promotiondetails/${'type2'}/${promotion._id}`}
+          onClick={() => {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth', // Smooth scrolling effect
+            });
+          }}
         >
           <img
             className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio

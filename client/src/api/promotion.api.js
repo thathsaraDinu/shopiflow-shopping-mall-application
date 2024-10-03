@@ -49,12 +49,11 @@ export const getPromotionById = async (id, type) => {
   try {
     let response;
     if (type == 'type1') {
-       response = await instance.get(
+      response = await instance.get(
         `/api/promotions/getpromotiontype1/${id}`,
       );
-    }
-    else {
-       response = await instance.get(
+    } else {
+      response = await instance.get(
         `/api/promotions/getpromotiontype2/${id}`,
       );
     }
@@ -66,15 +65,25 @@ export const getPromotionById = async (id, type) => {
   }
 };
 
-export const getPromotionType2ById = async (id) => {
+export const deletePromotion = async (
+  id,
+  promotiontype,
+) => {
   try {
-    const response = await instance.get(
-      `/api/promotions/getpromotiontype2/${id}`,
-    );
-    console.log('Promotion retrieved:', response);
+    let response;
+    if (promotiontype == '1') {
+      response = await instance.delete(
+        `/api/promotions/deletepromotiontype1/${id}`,
+      );
+    } else {
+      response = await instance.delete(
+        `/api/promotions/deletepromotiontype2/${id}`,
+      );
+    }
+    console.log('Promotion deleted:', response);
     return response;
   } catch (error) {
-    console.error('Error Getting Promotion:', error);
+    console.error('Error Deleting Promotion:', error);
     throw error;
   }
 };
