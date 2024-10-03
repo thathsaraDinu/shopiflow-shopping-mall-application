@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
+import { Chart } from 'chart.js';
 
 const ShopAdmin = () => {
     const [shops, setShops] = useState([]);
@@ -49,11 +50,16 @@ const ShopAdmin = () => {
     };
 
     // Generate report as PDF
-    const generateReport = () => {
+    const generateReport = async () => {
+        const chartImage = await createChart();
+
         const doc = new jsPDF();
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(20);
-        doc.text('Shop Report', 105, 20, null, null, 'center');
+        doc.text('SHOP Report', 105, 20, null, null, 'center');
+
+        // Add chart image to PDF
+        doc.addImage(chartImage, 'PNG', 15, 30, 180, 100);
 
         // Group shops by location
         const shopsByLocation = shops.reduce((acc, shop) => {
@@ -64,7 +70,7 @@ const ShopAdmin = () => {
             return acc;
         }, {});
 
-        let y = 40; // Start position for the content
+        let y = 140; // Start position for the content
 
         Object.keys(shopsByLocation).forEach((location) => {
             doc.setFont('helvetica', 'bold');
@@ -95,6 +101,95 @@ const ShopAdmin = () => {
         });
 
         doc.save('Shop_Report.pdf');
+    };
+
+    // Function to create a chart and return its image data
+    const createChart = () => {
+        return new Promise((resolve) => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set a larger size for the canvas
+            const width = 800; // Desired width
+            const height = 400; // Desired height
+            canvas.width = width;
+            canvas.height = height;
+
+            // Group shops by floor extracted from location
+            const shopsByFloor = shops.reduce((acc, shop) => {
+                const floorMatch = shop.location.match(/(\d+)(st|nd|rd|th) Floor/i);
+                const floor = floorMatch ? `${floorMatch[1]} Floor` : 'Ground Floor'; // Default to 'Ground Floor' if no match
+
+                if (!acc[floor]) {
+                    acc[floor] = 0;
+                }
+                acc[floor]++;
+                return acc;
+            }, {});
+
+            // Prepare data for the chart
+            const data = {
+                labels: Object.keys(shopsByFloor),
+                datasets: [{
+                    label: 'Number of Shops per Floor',
+                    data: Object.values(shopsByFloor),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            };
+
+            // Create the chart
+            const chart = new Chart(ctx, {
+                type: 'bar', // Change type as needed
+                data: data,
+                options: {
+                    responsive: false,
+                    maintainAspectRatio: false, // Disable maintaining aspect ratio
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1, // Ensure increments of 1 on the y-axis
+                                precision: 0, // Ensure only integer values are displayed
+                            },
+                            title: {
+                                display: true,
+                                text: 'Number of Shops',
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Floor Number',
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 14, // Increase font size for legend
+                                },
+                            },
+                        },
+                        title: {
+                            display: true,
+                            text: 'Shop Distribution by Floor',
+                            font: {
+                                size: 18, // Increase font size for title
+                            },
+                        },
+                    },
+                },
+            });
+
+            // Wait for the chart to be rendered
+            setTimeout(() => {
+                const chartImage = canvas.toDataURL('image/png', 1.0); // High-quality image
+                resolve(chartImage);
+            }, 500); // Adjust delay as necessary
+        });
     };
 
     return (
@@ -162,4 +257,4 @@ const ShopAdmin = () => {
     );
 };
 
-export default ShopAdmin; // Updated to use PascalCase naming convention
+export default ShopAdmin;

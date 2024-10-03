@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'; // Import useParams for route parameters
 import { updateShop, getShopById } from '@/api/shop.api';
-import { userLogin } from '@/api/auth.api'; // Import the userLogin function
 import toast from 'react-hot-toast';
 
 const UpdateShop = () => {
@@ -48,11 +47,6 @@ const UpdateShop = () => {
         return /^0\d{9}$/.test(number);
     };
 
-    // Validate email
-    const validateEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
-
     // Handler to update the shop
     const handleUpdateShop = async (e) => {
         e.preventDefault(); // Prevent default form submission
@@ -62,20 +56,9 @@ const UpdateShop = () => {
             toast.error('Please provide a valid contact number');
             return;
         }
-        if (!validateEmail(editingShop.ownerEmail)) {
-            setContactError('Please provide a valid email address');
-            toast.error('Invalid email address');
-            return;
-        }
         setContactError(null);
 
-        // Validate user credentials
         try {
-            await userLogin({
-                email: editingShop.ownerEmail,
-                password: editingShop.password, // Ensure to get password from the state
-            });
-
             const shopData = {
                 ...editingShop,
                 openTime: `${editingShop.openTime.opening} to ${editingShop.openTime.closing}`
@@ -84,13 +67,8 @@ const UpdateShop = () => {
             toast.success('Shop updated successfully');
             navigate('/dashboard/shopsadmin'); // Redirect after updating
         } catch (err) {
-            // Handle authentication errors
-            if (err.response?.status === 401) {
-                toast.error('Invalid user credentials, please enter valid user credentials.');
-            } else {
-                toast.error('Invalid Password or Error updating shop');
-            }
             setError(err.response?.data?.message || 'An error occurred');
+            toast.error('Error updating shop');
             console.error('Error updating shop:', err);
         }
     };
@@ -216,6 +194,21 @@ const UpdateShop = () => {
                     )}
                 </div>
 
+                {/* Owner Email Input */}
+                <div>
+                    <label htmlFor="ownerEmail" className="block text-sm font-medium text-gray-700">Owner Email Address</label>
+                    <input
+                        type="email"
+                        name="ownerEmail"
+                        id="ownerEmail"
+                        placeholder="Enter owner's email address"
+                        value={editingShop.ownerEmail}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                        required
+                    />
+                </div>
+
                 {/* Location Dropdown */}
                 <div>
                     <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
@@ -237,42 +230,12 @@ const UpdateShop = () => {
                     </select>
                 </div>
 
-                {/* Owner Email Input */}
-                <div>
-                    <label htmlFor="ownerEmail" className="block text-sm font-medium text-gray-700">Owner Email Address</label>
-                    <input
-                        type="email"
-                        name="ownerEmail"
-                        id="ownerEmail"
-                        placeholder="Enter owner's email address"
-                        value={editingShop.ownerEmail}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-                        required
-                    />
-                </div>
-
-                {/* Password Input */}
-                <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="Enter password"
-                        value={editingShop.password} // Make sure this is included in your state
-                        onChange={handleInputChange}
-                        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-                        required
-                    />
-                </div>
-
-                {/* Update Button */}
+                {/* Submit Button */}
                 <Button
                     type="submit"
-                    className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300"
                 >
-                    Update Shop
+                    Save Changes
                 </Button>
             </form>
         </div>

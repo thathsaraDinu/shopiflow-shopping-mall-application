@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createShop } from '@/api/shop.api';
+import { userLogin } from '@/api/auth.api'; // Import the userLogin function
 import toast from 'react-hot-toast';
 
 const AddShop = () => {
@@ -16,6 +17,7 @@ const AddShop = () => {
         },
         contactNumber: '',
         ownerEmail: '',
+        password: '', // Add password to newShop state
         items: [],
         shopType: '',
     });
@@ -48,7 +50,14 @@ const AddShop = () => {
 
         setContactError(null);
 
+        // Validate user credentials
         try {
+            await userLogin({
+                email: newShop.ownerEmail,
+                password: newShop.password,
+            });
+
+            // If login is successful, create the shop
             const shopData = {
                 ...newShop,
                 openTime: `${newShop.openTime.opening} to ${newShop.openTime.closing}`,
@@ -66,14 +75,20 @@ const AddShop = () => {
                 },
                 contactNumber: '',
                 ownerEmail: '',
+                password: '', // Reset password after successful shop creation
                 items: [],
                 shopType: '',
             });
             setError(null);
         } catch (err) {
-            setError('Error creating shop');
-            toast.error('Error creating shop');
-            console.error('Error creating shop:', err);
+            // Handle authentication errors
+            if (err.response?.status === 401) {
+                toast.error('Invalid user credentials, please enter valid user credentials.');
+            } else {
+                toast.error('Invalid Password or Error creating shop');
+            }
+            setError(err.response?.data?.message || 'An error occurred');
+            console.error('Error:', err);
         }
     };
 
@@ -208,6 +223,7 @@ const AddShop = () => {
                     />
                 </div>
 
+                {/* Owner Password Input */}
                 <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                     <input
@@ -215,20 +231,15 @@ const AddShop = () => {
                         name="password"
                         id="password"
                         placeholder="Enter owner's password"
-                        value={newShop.ownerEmail}
+                        value={newShop.password}
                         onChange={handleInputChange}
                         className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
                         required
                     />
                 </div>
 
-                {/* Submit Button */}
-                <Button
-                    type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300"
-                >
-                    Add Shop
-                </Button>
+                {/* Add Shop Button */}
+                <Button type="submit" className="w-full mt-6 bg-blue-600 text-white hover:bg-blue-700">Add Shop</Button>
             </form>
         </div>
     );
