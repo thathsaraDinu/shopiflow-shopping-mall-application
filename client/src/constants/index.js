@@ -5,5 +5,4 @@ export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const USER_ROLES = {
   USER: 'user',
   ADMIN: 'admin',
-  SHOP_OWNER: 'shopOwner',
 };

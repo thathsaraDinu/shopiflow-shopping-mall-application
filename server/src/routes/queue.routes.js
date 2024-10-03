@@ -7,10 +7,11 @@ const router = Router();
 
 // All routes are prefixed with /api/queue
 // Public routes
-router.get('/:shopID', QueueController.getQueues);
+router.get('/:shopID/count', QueueController.getNumberOfQueues);
 
 // Protected routes - user only
 router.get('/', verifyAuth([USER_ROLES.USER]), QueueController.getUserQueues);
+router.get('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.getQueues);
 router.post('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.joinQueue);
 router.put('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.changeQueuePosition);
 router.delete('/:id', verifyAuth([USER_ROLES.USER]), QueueController.leaveQueue);
