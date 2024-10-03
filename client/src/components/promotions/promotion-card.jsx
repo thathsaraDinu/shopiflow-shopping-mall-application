@@ -15,13 +15,18 @@ export function PromotionCard({ promotion }) {
       : text;
   }
   const cardcss =
-    'flex flex-col gap-2 xl:w-[350px] w-[300px] min-w-[300px] rounded-md';
+    'flex flex-col mb-3 gap-2 xl:w-[350px] w-[300px] min-w-[300px] rounded-md';
   const navigation = useNavigation();
   return (
     <div className={cardcss}>
       <Link
         to={`/promotiondetails/${'type1'}/${promotion._id}`}
-        className="cursor-pointer"
+        onClick={()=> {
+           window.scrollTo({
+             top: 0,
+             behavior: 'smooth', // Smooth scrolling effect
+           });
+        }}
       >
         <img
           className="object-cover h-60 w-full" // Use 'object-cover' for cropping while maintaining aspect ratio

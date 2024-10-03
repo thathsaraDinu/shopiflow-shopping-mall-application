@@ -1,7 +1,0 @@
-{
-	"dependencies": {
-		"@tailwindcss/line-clamp": "^0.4.4",
-		"chart.js": "^4.4.4",
-		"html2canvas": "^1.4.1"
-	}
-}

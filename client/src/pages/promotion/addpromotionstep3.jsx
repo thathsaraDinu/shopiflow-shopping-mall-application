@@ -9,6 +9,7 @@ export function AddPromotionStep3({
   handleFileChange,
   selectedFile,
   watch,
+  setSelectedFile,
 }) {
   const startDate = watch('startDate');
   const minEndDate = startDate
@@ -77,19 +78,19 @@ export function AddPromotionStep3({
           </div>
           <div>
             <div className="flex items-center">
-              <div className="inline-block border">
+              <div className="inline-block border ">
                 <img
                   src={
                     selectedFile
                       ? URL.createObjectURL(selectedFile)
-                      : ''
+                      : 'https://placehold.co/600x400/C0C0C0/000000?text=No+Image+Added'
                   }
                   alt="Selected file"
-                  className="w-20 h-20 object-cover"
+                  className=" h-[150px] w-[250px] object-cover border"
                 />
               </div>
               <div
-                onClick={() => setPhoto(null)}
+                onClick={() => setSelectedFile(null)}
                 className=" ml-10 py-1 px-3  border-red border-2 rounded-md inline-block cursor-pointer text-sm text-red"
               >
                 Clear
