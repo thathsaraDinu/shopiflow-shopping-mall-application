@@ -26,7 +26,7 @@ const Sidebar = () => {
             src={Logo}
             alt="logo"
           />
-          <h2 className="px-3">SHOPIFLOW</h2>
+          <h2 className="px-3 mr-10">SHOPIFLOW</h2>
         </div>
 
         <div className="flex flex-col justify-between px-4 py-2 text-grey-600 font-medium grow">

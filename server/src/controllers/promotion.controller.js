@@ -1,6 +1,8 @@
 import {
   addPromotionAmount,
   addPromotionPercentage,
+  deletePromotionType1,
+  deletePromotionType2,
   getAllPromotions,
   getPromotionType1ById,
   getPromotionType2ById
@@ -67,6 +69,30 @@ export const PromotionController = {
   async getPromotiontype2ById(req, res) {
     try {
       const promotion = await getPromotionType2ById(req.params.id);
+
+      return res.status(200).json({
+        promotion
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async deletePromotionType1(req, res) {
+    try {
+      const promotion = await deletePromotionType1(req.params.id);
+
+      return res.status(200).json({
+        promotion
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async deletePromotionType2(req, res) {
+    try {
+      const promotion = await deletePromotionType2(req.params.id);
 
       return res.status(200).json({
         promotion
