@@ -29,7 +29,7 @@ const Inventory = lazy(
 
 // Static Pages
 const Home = lazy(() => import('@/pages/home/home'));
-const About = lazy(() => import('@/pages/about/about'));
+// const About = lazy(() => import('@/pages/about/about'));
 
 // Auth Pages
 const Register = lazy(
@@ -75,14 +75,14 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: 'about',
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <About />
-          </Suspense>
-        ),
-      },
+      // {
+      //   path: 'about',
+      //   element: (
+      //     <Suspense fallback={<PageLoader />}>
+      //       <About />
+      //     </Suspense>
+      //   ),
+      // },
       {
         path: 'register',
         element: (

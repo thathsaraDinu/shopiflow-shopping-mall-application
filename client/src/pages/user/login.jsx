@@ -51,7 +51,8 @@ export default function Login() {
         userData
           .refetch()
           .then((result) => {
-            profile(result.data.role);
+            console.log(result.data);
+            profile(result.data);
             setTimeout(() => {
               window.location.href = '/';
             }, 1000);
