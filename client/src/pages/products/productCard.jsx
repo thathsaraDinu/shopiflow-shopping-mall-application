@@ -22,7 +22,7 @@ const ProductCard = ({ data }) => {
       <div
         onMouseEnter={() => setShowAddToWhishlist(true)}
         onMouseLeave={() => setShowAddToWhishlist(false)}
-        className="w-[260px] h-[440px] mx-auto"
+        className="w-[260px] h-[440px]"
       >
         <div className="relative flex items-center h-[330px] bg-gray-100">
           <img
