@@ -19,6 +19,23 @@ export const getQueues = async (shopID) => {
   }
 };
 
+// Get count of all queues in a shop by shop ID
+export const getNumberOfQueues = async (shopID) => {
+  try {
+    // Find all queues in the shop
+    const queues = await QueueSchema.find({
+      shopID
+    });
+
+    return queues.length;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+};
+
 // Get a user's queue in a shop
 export const getUserShopQueue = async (userID, shopID) => {
   try {
