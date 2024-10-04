@@ -24,6 +24,22 @@ export const getUserQueues = async () => {
   }
 };
 
+// Get number of queues by shop ID
+export const getNumberOfQueues = async (shopID) => {
+  try {
+    const response = await instance.get(
+      `/api/queue/${shopID}/count`,
+    );
+    return response.data.numberOfQueues;
+  } catch (error) {
+    console.error(
+      'Error fetching number of queues:',
+      error,
+    );
+    throw error;
+  }
+};
+
 // Join queue
 export const joinQueue = async (shopID) => {
   try {

@@ -23,13 +23,17 @@ const MenuItemsAll = [
     title: 'Home',
     url: '/',
   },
-  {
-    title: 'About',
-    url: '/about',
-  },
+  // {
+  //   title: 'About',
+  //   url: '/about',
+  // },
   {
     title: 'Shops',
     url: '/shops',
+  },
+  {
+    title: 'Products',
+    url: '/products',
   },
   {
     title: 'Offers',
@@ -43,13 +47,17 @@ const MenuItemsUser = [
     title: 'Home',
     url: '/',
   },
-  {
-    title: 'About',
-    url: '/about',
-  },
+  // {
+  //   title: 'About',
+  //   url: '/about',
+  // },
   {
     title: 'Shops',
     url: '/shops',
+  },
+  {
+    title: 'Products',
+    url: '/products',
   },
   {
     title: 'My Queue',
@@ -58,6 +66,10 @@ const MenuItemsUser = [
   {
     title: 'Offers',
     url: '/promotions',
+  },
+  {
+    title: 'Wishlist',
+    url: '/wishlist',
   },
 ];
 

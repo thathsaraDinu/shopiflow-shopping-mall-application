@@ -19,10 +19,15 @@ import InputField from '@/components/form-field';
 import { userLogin } from '@/api/auth.api';
 import { useAuthStore } from '@/store/auth-store';
 import { getProfileData } from '@/api/user.api';
+import { useShopStore } from '@/store/shop-store';
+import { USER_ROLES } from '@/constants';
 
 export default function Login() {
   const login = useAuthStore((state) => state.login);
   const profile = useAuthStore((state) => state.profile);
+  const setShopData = useShopStore(
+    (state) => state.setShopData,
+  );
 
   const {
     register,
@@ -51,10 +56,14 @@ export default function Login() {
         userData
           .refetch()
           .then((result) => {
-            profile(result.data.role);
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1000);
+            profile(result.data);
+            // If user is an admin
+            if (result.data.role === USER_ROLES.ADMIN) {
+              setShopData({ shopId: result.data.shop });
+            }
+            // setTimeout(() => {
+            //   window.location.href = '/';
+            // }, 1000);
           })
           .catch((error) => {
             // Handle errors from refetch
@@ -73,7 +82,7 @@ export default function Login() {
       }
     },
     onError: (error) => {
-      console.log(error);
+      console.error('Error logging in:', error);
       if (error.response.status === 401) {
         toast.error('Invalid credentials');
       }
