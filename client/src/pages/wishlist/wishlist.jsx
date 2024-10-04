@@ -1,6 +1,5 @@
 import { removeFromWishlist } from '@/api/wishlist.api';
 import useWishlist from '@/hooks/useWishlist';
-import React from 'react';
 
 const Wishlist = () => {
   const { data, refetch } = useWishlist();
@@ -32,7 +31,7 @@ const Wishlist = () => {
         </thead>
         <tbody>
           {data &&
-            data.products.map((item) => (
+            data.products?.map((item) => (
               <tr key={item.name}>
                 <td className="flex items-center pt-5">
                   <img

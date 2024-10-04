@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MdMenu } from 'react-icons/md';
+import { MdMenu, MdFavorite } from 'react-icons/md';
 import { FiSearch } from 'react-icons/fi';
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import {
 import Logo from '@/assets/logo/logo.png';
 import AvatarIcon from '@/components/navbar/avatar';
 import { useAuthStore } from '@/store/auth-store';
+import { useWishlitStore } from '@/store/wishlist-store';
 
 // Menu Items for all users (public)
 const MenuItemsAll = [
@@ -60,17 +61,17 @@ const MenuItemsUser = [
     url: '/products',
   },
   {
-    title: 'My Queue',
+    title: 'Queues',
     url: '/myqueue',
   },
   {
     title: 'Offers',
     url: '/promotions',
   },
-  {
-    title: 'Wishlist',
-    url: '/wishlist',
-  },
+  // {
+  //   title: 'Wishlist',
+  //   url: '/wishlist',
+  // },
 ];
 
 // Menu Items for authenticated users (role: admin)
@@ -95,6 +96,9 @@ export default function Navbar() {
     (state) => state.isLoggedIn,
   );
   const role = useAuthStore((state) => state.role);
+  const wishlistCount = useWishlitStore(
+    (state) => state.count,
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
@@ -179,6 +183,24 @@ export default function Navbar() {
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          {/* Wishlist Icon */}
+          <Link to="/wishlist" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+            >
+              <MdFavorite className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              <span className="sr-only">Wishlist</span>
+            </Button>
+            {wishlistCount > 0 && (
+              <span className="absolute -top-2 -right-2 inline-flex items-center justify-center h-4 w-4 rounded-full bg-red-500 text-xs text-white">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
+
           <AvatarIcon />
           <Sheet>
             <SheetTrigger asChild>

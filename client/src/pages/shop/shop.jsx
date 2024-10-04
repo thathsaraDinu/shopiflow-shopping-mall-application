@@ -2,12 +2,16 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
 import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/store/auth-store';
 
 const Shop = () => {
   const navigate = useNavigate();
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const isLoggedIn = useAuthStore(
+    (state) => state.isLoggedIn,
+  );
 
   // Fetch the shops data
   const fetchShops = async () => {
@@ -103,14 +107,24 @@ const Shop = () => {
           </div>
 
           <div className="text-right mt-2">
-            <Button
-              onClick={() =>
-                joinQueueHandler(shop._id, shop.name)
-              }
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
-            >
-              Join Queue
-            </Button>
+            {isLoggedIn && (
+              <Button
+                onClick={() =>
+                  joinQueueHandler(shop._id, shop.name)
+                }
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
+              >
+                Join Queue
+              </Button>
+            )}
+            {!isLoggedIn && (
+              <Button
+                onClick={() => navigate('/login')}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded"
+              >
+                Login to Join Queue
+              </Button>
+            )}
           </div>
         </div>
       ))}
