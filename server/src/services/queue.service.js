@@ -1,12 +1,20 @@
 import QueueSchema from '../models/queue.model.js';
 
 // Get all queues in a shop by shop ID
-export const getQueues = async (shopID) => {
+export const getQueues = async (shopID, status) => {
   try {
-    // Find all queues in the shop
-    const queues = await QueueSchema.find({
-      shopID
-    })
+    // Find all queues in the shop and sort by position
+    const queues = await QueueSchema.find(
+      status
+        ? {
+            shopID,
+            status
+          }
+        : {
+            shopID
+          }
+    )
+      .sort({ position: 1 })
       .populate('userID')
       .populate('shopID');
 
@@ -97,7 +105,7 @@ export const joinQueue = async (data) => {
     // Create a new queue object
     const queue = new QueueSchema({
       ...data,
-      position: lastQueue ? lastQueue.position + 100 : 100,
+      position: lastQueue ? lastQueue.position + 1 : 1,
       status: 'waiting'
     });
 

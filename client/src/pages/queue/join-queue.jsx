@@ -24,7 +24,11 @@ import propTypes from 'prop-types';
 import { useState } from 'react';
 import { getProfileData } from '@/api/user.api';
 
-const AddQueueModal = ({ shopID, onSuccess, queueIds }) => {
+const JoinQueueModal = ({
+  shopID,
+  onSuccess,
+  queueIds,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const isAuthenticated = useAuthStore(
     (state) => state.isLoggedIn,
@@ -65,8 +69,8 @@ const AddQueueModal = ({ shopID, onSuccess, queueIds }) => {
     mutationFn: joinQueue,
     onSuccess: () => {
       setIsOpen(false),
-        toast.success('Joined queue successfully'),
-        onSuccess();
+        toast.success('Successfully joined the queue');
+      onSuccess();
     },
     onError: (error) => {
       if (error.response?.status === 400) {
@@ -81,7 +85,6 @@ const AddQueueModal = ({ shopID, onSuccess, queueIds }) => {
 
   const onSubmit = () => {
     joinQueueQuery.mutate(shopID);
-    navigate('/myqueue');
   };
 
   return (
@@ -159,10 +162,10 @@ const AddQueueModal = ({ shopID, onSuccess, queueIds }) => {
   );
 };
 
-export default AddQueueModal;
+export default JoinQueueModal;
 
 // Prop Validations
-AddQueueModal.propTypes = {
+JoinQueueModal.propTypes = {
   shopID: propTypes.string.isRequired,
   onSuccess: propTypes.func.isRequired,
   queueIds: propTypes.array.isRequired,

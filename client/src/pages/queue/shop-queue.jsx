@@ -2,7 +2,7 @@ import { getQueues } from '@/api/queue.api';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import AddQueueModal from './join-queue';
+import JoinQueueModal from './join-queue';
 import QueueCard from '@/components/queue-card/queue-card';
 import { LoadingSpinner } from '@/components/ui/spinner';
 
@@ -32,7 +32,7 @@ const ShopQueue = () => {
           <h2 className="text-2xl font-bold">
             Queue of {shopName}
           </h2>
-          <AddQueueModal
+          <JoinQueueModal
             shopID={shopID}
             onSuccess={refetch}
             queueIds={
