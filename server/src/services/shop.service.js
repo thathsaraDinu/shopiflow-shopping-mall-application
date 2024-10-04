@@ -24,6 +24,27 @@ export const getShops = async () => {
   }
 };
 
+// Get shop by Owner ID
+export const getShopByOwnerId = async (ownerId) => {
+  try {
+    const shop = await ShopSchema.findOne({ ownerId });
+
+    if (!shop) {
+      throw {
+        status: 404,
+        message: 'Shop not found'
+      };
+    }
+
+    return shop;
+  } catch (error) {
+    throw {
+      status: error.status || 500,
+      message: error.message
+    };
+  }
+};
+
 // Add shop
 export const addShop = async (data) => {
   try {

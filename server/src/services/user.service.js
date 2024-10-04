@@ -1,5 +1,7 @@
 import UserSchema from '../models/user.model.js';
 import bcrypt from 'bcrypt';
+import { USER_ROLES } from '../constants/constants.js';
+import { getShopByOwnerId } from './shop.service.js';
 
 // Register a new user
 export const register = async (data) => {
@@ -48,6 +50,25 @@ export const getProfile = async (id) => {
       throw {
         status: 404,
         message: 'User not found'
+      };
+    }
+
+    // If user is admin, get shop details by user id
+    if (user.role === USER_ROLES.ADMIN) {
+      const shop = await getShopByOwnerId(user._id);
+      user.shop = shop._id;
+      console.log('user.shop', user.shop);
+
+      // Return only the necessary user details
+      return {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+        gender: user.gender,
+        mobile: user.mobile,
+        shop: user.shop
       };
     }
 

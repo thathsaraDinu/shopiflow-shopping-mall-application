@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserSchema from '../models/user.model.js';
-import { JWT_CONFIG } from '../constants/constants.js';
+import { JWT_CONFIG, USER_ROLES } from '../constants/constants.js';
+import { getShopByOwnerId } from './shop.service.js';
 
 // Login user (Create and return access token and refresh token)
 const userLogin = async ({ email, password }) => {
@@ -23,12 +24,20 @@ const userLogin = async ({ email, password }) => {
     throw new Error('Invalid credentials');
   }
 
+  // If user is admin, get shop details by user id
+  if (user.role === USER_ROLES.ADMIN) {
+    const shop = await getShopByOwnerId(user._id);
+    user.shop = shop._id;
+    console.log('user.shop', user.shop);
+  }
+
   // Create access token
   const accessToken = jwt.sign(
     {
       UserInfo: {
         id: user._id,
-        role: user.role
+        role: user.role,
+        shop: user.shop
       }
     },
     JWT_CONFIG.accessTokenSecret,
