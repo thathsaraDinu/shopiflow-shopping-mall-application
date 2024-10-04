@@ -141,7 +141,7 @@ export const deleteShop = async (shopId) => {
 
     const deletedShop = await ShopSchema.findByIdAndDelete(shopId);
     const deletedShopQueues = await clearShopQueues(shopId);
-    const deleteShopOwner = await deleteUser(deletedShop.ownerId);
+    const updateUserRoleToUser = await updateUserRole(deletedShop.ownerId, USER_ROLES.USER);
 
     if (!deletedShop) {
       throw {
@@ -157,10 +157,10 @@ export const deleteShop = async (shopId) => {
       };
     }
 
-    if (!deleteShopOwner) {
+    if (!updateUserRoleToUser) {
       throw {
         status: 500,
-        message: 'Error deleting shop owner'
+        message: 'Error updating owner role'
       };
     }
 
