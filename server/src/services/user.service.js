@@ -184,3 +184,33 @@ export const updateUserRole = async (id, role) => {
     };
   }
 };
+
+// Delete user by ID
+export const deleteUser = async (id) => {
+  try {
+    // Find the user by ID and delete
+    const user = await UserSchema.findByIdAndDelete(id);
+
+    // If the user is not found, throw an error
+    if (!user) {
+      throw {
+        status: 404,
+        message: 'User not found'
+      };
+    }
+
+    // Return only the necessary user details
+    return {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role
+    };
+  } catch (error) {
+    throw {
+      status: error.status || 500,
+      message: error.message
+    };
+  }
+};

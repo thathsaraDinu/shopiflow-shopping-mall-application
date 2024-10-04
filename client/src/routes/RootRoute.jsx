@@ -2,6 +2,7 @@ import { useAuthStore } from '@/store/auth-store';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import { USER_ROLES } from '@/constants';
 import { lazy } from 'react';
+import SuperDashboard from '@/pages/dashboard/super-dashboard';
 
 // Home page
 const Home = lazy(() => import('@/pages/home/home'));
@@ -24,7 +25,7 @@ const RootRoute = () => {
   ) : isAuthenticated && role === USER_ROLES.ADMIN ? (
     <Dashboard />
   ) : isAuthenticated && role === USER_ROLES.SUPER_ADMIN ? (
-    <Dashboard />
+    <SuperDashboard />
   ) : (
     <Home />
   );
