@@ -11,7 +11,7 @@ router.get('/:shopID/count', QueueController.getNumberOfQueues);
 
 // Protected routes - user only
 router.get('/', verifyAuth([USER_ROLES.USER]), QueueController.getUserQueues);
-router.get('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.getQueues);
+router.get('/:shopID', verifyAuth([USER_ROLES.USER, USER_ROLES.ADMIN]), QueueController.getQueues);
 router.post('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.joinQueue);
 router.put('/:shopID', verifyAuth([USER_ROLES.USER]), QueueController.changeQueuePosition);
 router.delete('/:id', verifyAuth([USER_ROLES.USER]), QueueController.leaveQueue);

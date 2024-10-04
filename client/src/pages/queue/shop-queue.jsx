@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import AddQueueModal from './join-queue';
 import QueueCard from '@/components/queue-card/queue-card';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 const ShopQueue = () => {
   const { shopID } = useParams();
@@ -24,7 +25,7 @@ const ShopQueue = () => {
 
   return (
     <div>
-      {queuesLoading && <p>Loading...</p>}
+      {queuesLoading && <LoadingSpinner />}
       {queuesError && <p>Error fetching queues</p>}
       <div className="p-5">
         <div className="flex flex-row justify-between">
@@ -34,6 +35,11 @@ const ShopQueue = () => {
           <AddQueueModal
             shopID={shopID}
             onSuccess={refetch}
+            queueIds={
+              queuesLoading
+                ? []
+                : queues.map((queue) => queue.userID?._id)
+            }
           />
         </div>
         {queues && (

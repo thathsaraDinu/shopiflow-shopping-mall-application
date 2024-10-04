@@ -97,7 +97,7 @@ export const joinQueue = async (data) => {
     // Create a new queue object
     const queue = new QueueSchema({
       ...data,
-      position: lastQueue ? lastQueue.position + 1 : 1,
+      position: lastQueue ? lastQueue.position + 100 : 100,
       status: 'waiting'
     });
 

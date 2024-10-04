@@ -28,6 +28,7 @@ export default function AvatarIcon() {
   const logOutHandler = () => {
     logOut();
     toast.success('Logged out successfully');
+    navigate('/');
     // setTimeout(() => {
     //   window.location.href = '/';
     // }, 1000);
