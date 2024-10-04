@@ -2,11 +2,23 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createShop } from '@/api/shop.api';
-import { userLogin } from '@/api/auth.api'; // Import the userLogin function
 import toast from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query';
+import { getUsers } from '@/api/user.api';
 
 const AddShop = () => {
   const navigate = useNavigate();
+
+  // Fetch Users
+  const {
+    data: users,
+    isLoading: usersLoading,
+    error: usersError,
+    refetch: refetchUsers,
+  } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => getUsers('user'),
+  });
 
   const [newShop, setNewShop] = useState({
     name: '',
@@ -17,7 +29,7 @@ const AddShop = () => {
     },
     contactNumber: '',
     ownerEmail: '',
-    password: '', // Add password to newShop state
+    // password: '', // Add password to newShop state
     items: [],
     shopType: '',
   });
@@ -56,10 +68,10 @@ const AddShop = () => {
 
     // Validate user credentials
     try {
-      await userLogin({
-        email: newShop.ownerEmail,
-        password: newShop.password,
-      });
+      // await userLogin({
+      //   email: newShop.ownerEmail,
+      //   password: newShop.password,
+      // });
 
       // If login is successful, create the shop
       const shopData = {
@@ -67,8 +79,10 @@ const AddShop = () => {
         openTime: `${newShop.openTime.opening} to ${newShop.openTime.closing}`,
         location: null,
       };
+
       await createShop(shopData);
       toast.success('Shop created successfully');
+      refetchUsers();
       navigate('/shopsadmin');
       setNewShop({
         name: '',
@@ -79,7 +93,7 @@ const AddShop = () => {
         },
         contactNumber: '',
         ownerEmail: '',
-        password: '', // Reset password after successful shop creation
+        // password: '', // Reset password after successful shop creation
         items: [],
         shopType: '',
       });
@@ -87,13 +101,9 @@ const AddShop = () => {
     } catch (err) {
       // Handle authentication errors
       if (err.response?.status === 401) {
-        toast.error(
-          'Invalid user credentials, please enter valid user credentials.',
-        );
+        toast.error('Please enter valid data.');
       } else {
-        toast.error(
-          'Invalid Password or Error creating shop',
-        );
+        toast.error('Error creating shop');
       }
       setError(
         err.response?.data?.message || 'An error occurred',
@@ -272,20 +282,33 @@ const AddShop = () => {
           >
             Owner Email Address
           </label>
-          <input
-            type="email"
+          {/* User Selection drop down with searching */}
+          <select
             name="ownerEmail"
             id="ownerEmail"
-            placeholder="Enter owner's email address"
             value={newShop.ownerEmail}
             onChange={handleInputChange}
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
             required
-          />
+          >
+            <option value="" disabled>
+              {usersLoading && 'Loading Users...'}
+              {usersError && 'Loading Error'}
+              {!usersLoading &&
+                !usersError &&
+                'Select Owner'}
+            </option>
+            {users?.map((user) => (
+              <option key={user.email} value={user.email}>
+                {user.firstName} {user.lastName} -{' '}
+                {user.email}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Owner Password Input */}
-        <div>
+        {/* <div>
           <label
             htmlFor="password"
             className="block text-sm font-medium text-gray-700"
@@ -302,7 +325,7 @@ const AddShop = () => {
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
             required
           />
-        </div>
+        </div> */}
 
         {/* Add Shop Button */}
         <Button

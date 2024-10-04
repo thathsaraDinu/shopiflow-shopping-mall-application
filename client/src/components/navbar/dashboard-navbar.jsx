@@ -1,8 +1,19 @@
 import { Input } from '@/components/ui/input';
+import { useLocation } from 'react-router-dom';
 
 const DashboardNavbar = () => {
+  const path = useLocation().pathname;
+
   return (
     <div className="z-40 flex items-center justify-between w-full h-14 px-4 bg-white shadow-md">
+      <div className="flex items-center w-72">
+        <h1 className="text-2xl font-bold text-gray-800">
+          {path === '/allpromotions'
+            ? 'PROMOTIONS'
+            : path.replace('/', '').toUpperCase() ||
+              'DASHBOARD'}
+        </h1>
+      </div>
       <div className="relative grow">
         <Input
           id="search"

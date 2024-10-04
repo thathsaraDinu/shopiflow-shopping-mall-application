@@ -68,3 +68,98 @@ export const getProfile = async (id) => {
     };
   }
 };
+
+// Get profile by email
+export const getUserByEmail = async (email) => {
+  try {
+    // Find the user by email
+    const user = await UserSchema.findOne({
+      email
+    });
+
+    // If the user is not found, throw an error
+    if (!user) {
+      throw {
+        status: 404,
+        message: 'User not found'
+      };
+    }
+
+    // Return only the necessary user details
+    return {
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role
+    };
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+};
+
+// Get all users with query params
+export const getUsers = async (role) => {
+  try {
+    // Find all users with the specified role
+    const users = await UserSchema.find({
+      role
+    });
+
+    // Return only the necessary user details
+    return users.map((user) => ({
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role
+    }));
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+};
+
+// Update user role
+export const updateUserRole = async (id, role) => {
+  try {
+    // Find the user by ID and update the role
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      id,
+      {
+        role
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    // If the user is not found, throw an error
+    if (!updatedUser) {
+      throw {
+        status: 404,
+        message: 'User not found'
+      };
+    }
+
+    // Return only the necessary user details
+    return {
+      id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      role: updatedUser.role
+    };
+  } catch (error) {
+    throw {
+      status: error.status || 500,
+      message: error.message
+    };
+  }
+};
