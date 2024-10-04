@@ -23,10 +23,10 @@ const MenuItemsAll = [
     title: 'Home',
     url: '/',
   },
-  {
-    title: 'About',
-    url: '/about',
-  },
+  // {
+  //   title: 'About',
+  //   url: '/about',
+  // },
   {
     title: 'Shops',
     url: '/shops',
@@ -47,10 +47,10 @@ const MenuItemsUser = [
     title: 'Home',
     url: '/',
   },
-  {
-    title: 'About',
-    url: '/about',
-  },
+  // {
+  //   title: 'About',
+  //   url: '/about',
+  // },
   {
     title: 'Shops',
     url: '/shops',

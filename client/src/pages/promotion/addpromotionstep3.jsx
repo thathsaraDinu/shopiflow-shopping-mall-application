@@ -1,5 +1,6 @@
 import InputField from '@/components/form-field';
 import { CardTitle } from '@/components/ui/card';
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 export function AddPromotionStep3({
@@ -10,15 +11,41 @@ export function AddPromotionStep3({
   selectedFile,
   watch,
   setSelectedFile,
+  promotion,
+  setValue,
 }) {
+  console.log('promotion start date', promotion.startDate);
+
   const startDate = watch('startDate');
   const minEndDate = startDate
     ? startDate
     : new Date().toISOString().split('T')[0];
 
+  function base64ToFile(base64String, fileName) {
+    const byteString = atob(base64String.split(',')[1]); // Remove the `data:image/png;base64,` part if exists
+    const mimeType = base64String
+      .split(',')[0]
+      .match(/:(.*?);/)[1];
+
+    const byteNumbers = new Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      byteNumbers[i] = byteString.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+
+    return new File([blob], fileName, { type: mimeType });
+  }
+
+  if (promotion) {
+    const file = base64ToFile(promotion.photo, 'photo');
+    setValue('photo', file);
+  }
+
   return (
-    <div className="transition-all duration-500">
-      <CardTitle className="text-center pb-10">
+    <div className="transition-all duration-500 flex flex-col gap-10">
+      <CardTitle className="text-base font-semibold text-gray-800 text-center">
         {promotionType == 1 ? (
           <span>Discount By Percentage</span>
         ) : promotionType == 3 ? (
@@ -31,6 +58,13 @@ export function AddPromotionStep3({
         <div className="flex justify-between">
           <div className=" inline-block">
             <InputField
+              defaultValue={
+                promotion
+                  ? new Date(promotion.startDate)
+                      .toISOString()
+                      .split('T')[0]
+                  : ''
+              }
               type="date"
               name="startDate"
               min={new Date().toISOString().split('T')[0]}
@@ -42,6 +76,13 @@ export function AddPromotionStep3({
 
           <div className=" inline-block">
             <InputField
+              defaultValue={
+                promotion
+                  ? new Date(promotion.endDate)
+                      .toISOString()
+                      .split('T')[0]
+                  : ''
+              }
               disabled={startDate == '' ? true : false}
               type="date"
               name="endDate"
@@ -83,17 +124,13 @@ export function AddPromotionStep3({
                   src={
                     selectedFile
                       ? URL.createObjectURL(selectedFile)
-                      : 'https://placehold.co/600x400/C0C0C0/000000?text=No+Image+Added'
+                      : promotion
+                        ? promotion.photo
+                        : ''
                   }
                   alt="Selected file"
                   className=" h-[150px] w-[250px] object-cover border"
                 />
-              </div>
-              <div
-                onClick={() => setSelectedFile(null)}
-                className=" ml-10 py-1 px-3  border-red border-2 rounded-md inline-block cursor-pointer text-sm text-red"
-              >
-                Clear
               </div>
             </div>
           </div>

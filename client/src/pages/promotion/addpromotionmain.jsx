@@ -13,7 +13,10 @@ import {
 } from '../../validations/promotion-validation';
 import { useMutation } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
-import { addpromotion } from '@/api/promotion.api';
+import {
+  addpromotion,
+  updatePromotion,
+} from '@/api/promotion.api';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import {
@@ -28,7 +31,11 @@ import { Link } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
 import { set } from 'date-fns';
 
-export function AddPromotionMain({ refetch }) {
+export default function AddPromotionMain({
+  refetch,
+  isUpdate,
+  promotion,
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -92,6 +99,34 @@ export function AddPromotionMain({ refetch }) {
     onSuccess: () => {
       console.log('Promotion Created Successfully');
       toast.success('Promotion Created Successfully');
+      refetch();
+      reset();
+      back();
+      back();
+      setSelectedFile(null);
+      setTheStep(1);
+      setIsOpen(false);
+    },
+    onError: (error) => {
+      console.log('the formdata: ', formData);
+      console.log('the error: ', error);
+      console.log(error.response?.status);
+      if (error.response.status === 400) {
+        toast.error('Promotion already exists');
+      } else if (error.response?.status !== 500) {
+        toast.error('Something went wrong');
+      }
+    },
+    onSettled: () => {
+      console.log('Settled');
+    },
+  });
+
+  const updatepromotion = useMutation({
+    mutationFn: updatePromotion,
+    onSuccess: (e) => {
+      console.log('Promotion Updated Successfully', e);
+      toast.success('Promotion Updated Successfully');
       refetch();
       reset();
       back();
@@ -208,7 +243,12 @@ export function AddPromotionMain({ refetch }) {
         await new Promise((resolve) =>
           setTimeout(resolve, 1000),
         );
-        addPromotion.mutate(formData3);
+        if (isUpdate) {
+          updatepromotion.mutate({
+            id: promotion._id,
+            data: formData3,
+          });
+        } else addPromotion.mutate(formData3);
       }
       next();
     } catch (error) {}
@@ -253,6 +293,7 @@ export function AddPromotionMain({ refetch }) {
       {...formData}
       register={register}
       errors={errors}
+      promotion={promotion}
     />,
     <AddPromotionStep2
       {...formData}
@@ -260,6 +301,7 @@ export function AddPromotionMain({ refetch }) {
       errors={errors}
       shops={shops}
       loading={loading}
+      promotion={promotion}
     />,
     <AddPromotionStep3
       {...formData}
@@ -269,21 +311,50 @@ export function AddPromotionMain({ refetch }) {
       handleFileChange={handleFileChange}
       selectedFile={selectedFile}
       setSelectedFile={setSelectedFile}
+      promotion={promotion}
+      setValue={setValue}
     />,
   ]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-blue-500 text-white text-sm px-5 py-5 rounded-lg hover:bg-blue-600 transition">
-          Add Promotion
+        <Button
+          className={
+            isUpdate
+              ? 'w-8 mt-0 p-1 h-8 bg-white border-none'
+              : 'bg-blue-500 text-white hover:bg-blue-600 hover:text-white transition py-5 px-5 rounded-md'
+          }
+          variant="outline"
+        >
+          {isUpdate ? (
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 15 15"
+              fill="#5F9EA0"
+              xmlns="http://www.w3.org/2000/svg"
+              className="cursor-pointer"
+            >
+              <path
+                d="M11.8536 1.14645C11.6583 0.951184 11.3417 0.951184 11.1465 1.14645L3.71455 8.57836C3.62459 8.66832 3.55263 8.77461 3.50251 8.89155L2.04044 12.303C1.9599 12.491 2.00189 12.709 2.14646 12.8536C2.29103 12.9981 2.50905 13.0401 2.69697 12.9596L6.10847 11.4975C6.2254 11.4474 6.3317 11.3754 6.42166 11.2855L13.8536 3.85355C14.0488 3.65829 14.0488 3.34171 13.8536 3.14645L11.8536 1.14645ZM4.42166 9.28547L11.5 2.20711L12.7929 3.5L5.71455 10.5784L4.21924 11.2192L3.78081 10.7808L4.42166 9.28547Z"
+                fill="#0000FF"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          ) : (
+            'Add Promotion'
+          )}
         </Button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogHeader>
-          <div className="text-2xl pb-5 text-grey-700 font-semibold">
-            Add Promotion
+        <DialogHeader className={'pb-8'}>
+          <div className="text-lg font-semibold leading-none tracking-tight">
+            {isUpdate
+              ? 'Update Promotion'
+              : 'Add Promotion'}
           </div>
         </DialogHeader>
 
@@ -305,7 +376,7 @@ export function AddPromotionMain({ refetch }) {
                   <Button
                     onClick={back}
                     type="button"
-                    className="bg-blue-600 text-white hover:bg-blue-500 transition"
+                    className="hover:bg-gray-200 bg-white border border-gray-400 text-black transition"
                   >
                     Previous
                   </Button>
@@ -314,7 +385,7 @@ export function AddPromotionMain({ refetch }) {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-green-600 text-white hover:bg-green-500 transition"
+                  className="bg-green-500 text-white hover:bg-green-600 transition"
                 >
                   {isSubmitting
                     ? 'Submitting...'

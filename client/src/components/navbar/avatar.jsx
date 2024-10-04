@@ -1,4 +1,3 @@
-import { FaRegUserCircle } from 'react-icons/fa';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,26 +9,28 @@ import {
 import {
   Avatar,
   AvatarImage,
-  AvatarFallback,
 } from '@/components/ui/avatar';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import AvatarImg from '@/assets/avatar.png';
+import SignedAvatarImg from '@/assets/avatar/logged-in.png';
+import AvatarImg from '@/assets/avatar/avatar.png';
 import { useAuthStore } from '@/store/auth-store';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function AvatarIcon() {
   const isLoggedIn = useAuthStore(
     (state) => state.isLoggedIn,
   );
+  const fullName = useAuthStore((state) => state.fullName);
+  const navigate = useNavigate();
   const logOut = useAuthStore((state) => state.logOut);
 
   const logOutHandler = () => {
     logOut();
     toast.success('Logged out successfully');
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 1000);
+    // setTimeout(() => {
+    //   window.location.href = '/';
+    // }, 1000);
   };
 
   return (
@@ -39,13 +40,14 @@ export default function AvatarIcon() {
           <Avatar className="h-9 w-9 hover:cursor-pointer">
             {isLoggedIn ? (
               <AvatarImage
-                src={AvatarImg}
+                src={SignedAvatarImg}
                 alt="User's avatar"
               />
             ) : (
-              <AvatarFallback>
-                <FaRegUserCircle className="h-full w-full text-gray-500 dark:text-gray-400" />
-              </AvatarFallback>
+              <AvatarImage
+                src={AvatarImg}
+                alt="User's avatar"
+              />
             )}
 
             <span className="sr-only">
@@ -56,14 +58,17 @@ export default function AvatarIcon() {
         <DropdownMenuContent className="w-56">
           {isLoggedIn ? (
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <span className="font-bold">Name</span>
+              <DropdownMenuItem className="font-bold">
+                <span className="font-bold">
+                  {fullName}
+                </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="#" className="underline">
-                  Profile
-                </Link>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => navigate('/profile')}
+              >
+                Profile
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
@@ -77,19 +82,20 @@ export default function AvatarIcon() {
             </DropdownMenuGroup>
           ) : (
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link to="/login" className="w-full h-full">
-                  Login
-                </Link>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => {
+                  navigate('/login');
+                }}
+              >
+                Login
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link
-                  to="/register"
-                  className="w-full h-full"
-                >
-                  Register
-                </Link>
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => navigate('/register')}
+              >
+                Register
               </DropdownMenuItem>
             </DropdownMenuGroup>
           )}

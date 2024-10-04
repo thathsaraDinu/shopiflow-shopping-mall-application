@@ -65,6 +65,27 @@ export const getPromotionById = async (id, type) => {
   }
 };
 
+export const updatePromotion = async (data) => {
+  try {
+    let response;
+    if (data.data.promotionType == '1') {
+      response = await instance.put(
+        `/api/promotions/updatepromotiontype1/${data.id}`,
+        data.data,
+      );
+    } else {
+      response = await instance.put(
+        `/api/promotions/updatepromotiontype2/${data.id}`,
+        data.data,
+      );
+    }
+    return response;
+  } catch (error) {
+    console.error('Error Updating Promotion:', error);
+    throw error;
+  }
+};
+
 export const deletePromotion = async (
   id,
   promotiontype,

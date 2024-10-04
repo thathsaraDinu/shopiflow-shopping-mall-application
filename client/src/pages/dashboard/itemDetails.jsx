@@ -29,7 +29,7 @@ const ItemDetails = () => {
 
   const handleDelete = async () => {
     await deleteProductById(id);
-    navigate('/dashboard/inventory');
+    navigate('/inventory');
   };
 
   const handleDownloadPDF = () => {

@@ -11,6 +11,13 @@ const router = Router();
 router.post('/', validateRequest('createUser'), UserController.register);
 
 // User only routes
-router.get('/profile', verifyAuth([USER_ROLES.ADMIN, USER_ROLES.USER]), UserController.profile);
+router.get(
+  '/profile',
+  verifyAuth([USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN, USER_ROLES.USER]),
+  UserController.profile
+);
+
+// Admin only routes
+router.get('/users', verifyAuth([USER_ROLES.SUPER_ADMIN]), UserController.getUsers);
 
 export default router;

@@ -20,7 +20,7 @@ export const UserSchema = new Schema(
     role: {
       type: String,
       default: 'user',
-      enum: ['admin', 'owner', 'user'],
+      enum: ['super_admin', 'admin', 'user'],
       required: [true, 'User Role is required'],
       unique: false
     },

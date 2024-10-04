@@ -68,6 +68,34 @@ export const deletePromotionType2 = async (id) => {
   }
 };
 
+export const updatePromotionType1 = async (id, data) => {
+  try {
+    const promotion = await DiscountPercentageSchema.findByIdAndUpdate(id, data );
+    console.log('promotionbackend:', promotion);
+    return promotion;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+}
+
+export const updatePromotionType2 = async (id, data) => {
+  try {
+    const promotion = await DiscountAmount.findByIdAndUpdate(id, data, {
+      new: true
+    });
+    return promotion;
+  }
+  catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+}
+
 // Add a new promotion type percentage discount
 
 export const addPromotionPercentage = async (data) => {
