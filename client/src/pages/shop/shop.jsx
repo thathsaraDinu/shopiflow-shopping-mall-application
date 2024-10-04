@@ -2,12 +2,16 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
 import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/store/auth-store';
 
 const Shop = () => {
   const navigate = useNavigate();
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const isLoggedIn = useAuthStore(
+    (state) => state.isLoggedIn,
+  );
 
   // Fetch the shops data
   const fetchShops = async () => {
@@ -89,28 +93,39 @@ const Shop = () => {
             </p>
           </div>
 
-          {/* Number of buyers in queue */}
-          <div className="text-right">
-            <span
-              className={`${
-                shop.numberOfQueues > 10
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-green-100 text-green-800'
-              } text-xs font-medium px-2.5 py-0.5 rounded`}
-            >
-              {shop.numberOfQueues} buyers in queue
-            </span>
-          </div>
+          <div className="flex justify-between items-center mt-4">
+            {/* Number of buyers in queue */}
+            <div className="text-right">
+              <span
+                className={`${
+                  shop.numberOfQueues > 10
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-green-100 text-green-800'
+                } text-sm font-medium px-2.5 py-1 rounded`}
+              >
+                {shop.numberOfQueues} buyers in the queue
+              </span>
+            </div>
 
-          <div className="text-right mt-2">
-            <Button
-              onClick={() =>
-                joinQueueHandler(shop._id, shop.name)
-              }
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
-            >
-              Join Queue
-            </Button>
+            <div className="text-right">
+              {isLoggedIn ? (
+                <Button
+                  onClick={() =>
+                    joinQueueHandler(shop._id, shop.name)
+                  }
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
+                >
+                  View Queue
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => navigate('/login')}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded"
+                >
+                  Login to Join Queue
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       ))}

@@ -42,11 +42,11 @@ export default function Register() {
       }, 1000);
     },
     onError: (error) => {
-      if (error.response.status === 400) {
+      if (error.response.status === 500) {
         toast.error('User already exists');
       }
 
-      if (error.response?.status !== 400) {
+      if (error.response?.status === 400) {
         toast.error('Something went wrong');
       }
     },
@@ -144,8 +144,9 @@ export default function Register() {
   );
 
   // Shop registration form
-  const ShopRegisterForm = () => <form onSubmit={handleSubmit(onSubmit)}>
-  </form>;
+  const ShopRegisterForm = () => (
+    <form onSubmit={handleSubmit(onSubmit)}></form>
+  );
 
   return (
     <div className="flex items-center justify-center h-full">

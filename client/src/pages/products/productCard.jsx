@@ -1,10 +1,14 @@
 import React from 'react';
 import { addToWishlist } from '@/api/wishlist.api';
 import { useState } from 'react';
+import { useWishlitStore } from '@/store/wishlist-store';
 
 const ProductCard = ({ data }) => {
   const [showAddToWhishlist, setShowAddToWhishlist] =
     useState(false);
+  const setWishlistData = useWishlitStore(
+    (state) => state.setWishlistData,
+  );
 
   const addItemToWishlist = async () => {
     try {
@@ -12,7 +16,7 @@ const ProductCard = ({ data }) => {
         productId: data._id,
       });
 
-      console.log(response);
+      setWishlistData(response.data.products.length);
     } catch (error) {
       console.log(error);
     }

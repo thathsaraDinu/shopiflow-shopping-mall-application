@@ -68,6 +68,7 @@ const ShopQueue = lazy(
 const MyQueue = lazy(
   () => import('@/pages/queue/my-queue'),
 );
+const History = lazy(() => import('@/pages/queue/history'));
 
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
@@ -165,6 +166,17 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: 'history',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute
+              element={<History />}
+              roles={[USER_ROLES.ADMIN]}
+            />
+          </Suspense>
+        ),
+      },
 
       // Shop Routes
       {
@@ -187,7 +199,10 @@ const router = createBrowserRouter([
         path: 'addshop',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <AddShop />
+            <PrivateRoute
+              element={<AddShop />}
+              roles={[USER_ROLES.SUPER_ADMIN]}
+            />
           </Suspense>
         ),
       },

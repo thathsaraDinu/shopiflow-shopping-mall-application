@@ -12,23 +12,47 @@ import { useAuthStore } from '@/store/auth-store';
 import { USER_ROLES } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 import { joinQueue } from '@/api/queue.api';
-import { useMutation } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { joinQueueValidation } from '@/validations/queue-validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import propTypes from 'prop-types';
 import { useState } from 'react';
+import { getProfileData } from '@/api/user.api';
 
-const AddQueueModal = ({ shopID, onSuccess }) => {
+const JoinQueueModal = ({
+  shopID,
+  onSuccess,
+  queueIds,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const isAuthenticated = useAuthStore(
     (state) => state.isLoggedIn,
   );
-
+  const setProfile = useAuthStore((state) => state.profile);
   const role = useAuthStore((state) => state.role);
+  const fullName = useAuthStore((state) => state.fullName);
 
   const navigate = useNavigate();
+
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    isError: profileError,
+    isSuccess: profileSuccess,
+  } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfileData,
+  });
+
+  // If profileSuccess is true, set the profile data
+  if (profileSuccess) {
+    setProfile(profile);
+  }
 
   const {
     register,
@@ -45,17 +69,21 @@ const AddQueueModal = ({ shopID, onSuccess }) => {
     mutationFn: joinQueue,
     onSuccess: () => {
       setIsOpen(false),
-        toast.success('Joined queue successfully'),
-        onSuccess();
+        toast.success('Successfully joined the queue');
+      onSuccess();
     },
     onError: (error) => {
-      console.error(error);
-      toast.error('Error joining queue');
+      if (error.response?.status === 400) {
+        toast.error('Already in the queue');
+      }
+
+      if (error.response?.status !== 400) {
+        toast.error('Something went wrong');
+      }
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = () => {
     joinQueueQuery.mutate(shopID);
   };
 
@@ -66,7 +94,14 @@ const AddQueueModal = ({ shopID, onSuccess }) => {
           variant="outline"
           onClick={() => setIsOpen(true)}
         >
-          Join to Queue
+          {profileLoading
+            ? 'Loading...'
+            : profileError
+              ? 'Error'
+              : profile?.id &&
+                  queueIds?.includes(profile.id)
+                ? 'Leave Queue'
+                : 'Join Queue'}
         </Button>
       </DialogTrigger>
       {isAuthenticated && role === USER_ROLES.USER && (
@@ -74,22 +109,22 @@ const AddQueueModal = ({ shopID, onSuccess }) => {
           <DialogHeader>
             <DialogTitle>Join to the Queue</DialogTitle>
             <DialogDescription>
-              Join the queue to get served. Click join when
-              you&apos;re ready.
+              Hi, {fullName}! Join the queue to get served.
+              Click join when you&apos;re ready.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-group form-check">
+            <div className="form-group form-check hover:cursor-pointer w-fit">
               <input
                 name="acceptTerms"
                 type="checkbox"
                 {...register('acceptTerms')}
                 id="acceptTerms"
-                className={`form-check-input ${errors.acceptTerms ? 'is-invalid' : ''}`}
+                className={`hover:cursor-pointer form-check-input ${errors.acceptTerms ? 'is-invalid' : ''}`}
               />
               <label
                 htmlFor="acceptTerms"
-                className="form-check-label"
+                className="form-check-label ms-2 hover:cursor-pointer"
               >
                 I&apos;m ready to join the queue
               </label>
@@ -127,10 +162,11 @@ const AddQueueModal = ({ shopID, onSuccess }) => {
   );
 };
 
-export default AddQueueModal;
+export default JoinQueueModal;
 
 // Prop Validations
-AddQueueModal.propTypes = {
+JoinQueueModal.propTypes = {
   shopID: propTypes.string.isRequired,
   onSuccess: propTypes.func.isRequired,
+  queueIds: propTypes.array.isRequired,
 };

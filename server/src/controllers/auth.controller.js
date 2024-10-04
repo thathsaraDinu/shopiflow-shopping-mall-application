@@ -25,12 +25,17 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
 
   // Check if refresh token exists
-  if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorizeds' });
+  if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' });
 
   const refreshToken = cookies.jwt;
 
   try {
     const accessToken = await verifyRefreshToken(refreshToken);
+
+    // If failed to verify refresh token
+    if (!accessToken) return res.status(403).json({ message: 'Unauthorized' });
+
+    // Send new access token
     res.json({ accessToken });
   } catch (error) {
     res.status(403).json({ message: error.message });
