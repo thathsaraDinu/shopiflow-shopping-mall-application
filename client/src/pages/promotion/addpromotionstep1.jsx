@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CardTitle } from '@/components/ui/card';
 
-export function AddPromotionStep1({ register, errors }) {
+export function AddPromotionStep1({ register, errors, promotion }) {
   const [isOpen, setIsOpen] = useState(false); // State to track dropdown open/close
 
   // Toggle dropdown state
@@ -15,12 +15,13 @@ export function AddPromotionStep1({ register, errors }) {
       className="transition-all duration-500 px-3 mb-6 mx-10 "
     >
       <div className="mt-5 mb-10 flex pt-5 items-center flex-col gap-4">
-        <CardTitle className="text-lg font-semibold text-gray-800">
+        <CardTitle className="text-base font-semibold text-gray-800">
           Select a Promotion Type
         </CardTitle>
 
         <div className="relative w-full">
           <select
+          defaultValue={promotion ? promotion.promotionType : -1}
             name="promotionType"
             className="block w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out"
             {...register('promotionType', {

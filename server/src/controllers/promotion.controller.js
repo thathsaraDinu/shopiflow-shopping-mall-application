@@ -5,12 +5,15 @@ import {
   deletePromotionType2,
   getAllPromotions,
   getPromotionType1ById,
-  getPromotionType2ById
+  getPromotionType2ById,
+  updatePromotionType1,
+  updatePromotionType2
 } from '../services/promotion.service.js';
 
 export const PromotionController = {
   async promotions(req, res) {
     try {
+      console.log('test get all');
       const promotions = await getAllPromotions();
 
       return res.status(200).json({
@@ -69,6 +72,30 @@ export const PromotionController = {
   async getPromotiontype2ById(req, res) {
     try {
       const promotion = await getPromotionType2ById(req.params.id);
+
+      return res.status(200).json({
+        promotion
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async updatePromotionType1(req, res) {
+    try {
+      const promotion = await updatePromotionType1(req.params.id, req.body);
+
+      return res.status(200).json({
+        promotion
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async updatePromotionType2(req, res) {
+    try {
+      const promotion = await updatePromotionType2(req.params.id, req.body);
 
       return res.status(200).json({
         promotion
