@@ -22,7 +22,7 @@ const ProductCard = ({ data }) => {
       <div
         onMouseEnter={() => setShowAddToWhishlist(true)}
         onMouseLeave={() => setShowAddToWhishlist(false)}
-        className="w-[260px] h-[440px]"
+        className="w-[260px] h-[450px] border border-grey-100 rounded-lg overflow-hidden"
       >
         <div className="relative flex items-center h-[330px] bg-gray-100">
           <img
@@ -39,7 +39,7 @@ const ProductCard = ({ data }) => {
             </button>
           )}
         </div>
-        <div className="mt-4">
+        <div className="mt-2 px-2">
           <h3 className="font-bold">{data.name}</h3>
           <p className="text-sm mb-1">{data.supplier}</p>
           <p className="mb-1">{data.category}</p>
