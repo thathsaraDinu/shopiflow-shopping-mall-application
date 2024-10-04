@@ -185,21 +185,23 @@ export default function Navbar() {
           </DropdownMenu>
 
           {/* Wishlist Icon */}
-          <Link to="/wishlist" className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full"
-            >
-              <MdFavorite className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-              <span className="sr-only">Wishlist</span>
-            </Button>
-            {wishlistCount > 0 && (
-              <span className="absolute -top-2 -right-2 inline-flex items-center justify-center h-4 w-4 rounded-full bg-red-500 text-xs text-white">
-                {wishlistCount}
-              </span>
-            )}
-          </Link>
+          {isAuthenticated && (
+            <Link to="/wishlist" className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+              >
+                <MdFavorite className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                <span className="sr-only">Wishlist</span>
+              </Button>
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 inline-flex items-center justify-center h-4 w-4 rounded-full bg-red-500 text-xs text-white">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+          )}
 
           <AvatarIcon />
           <Sheet>

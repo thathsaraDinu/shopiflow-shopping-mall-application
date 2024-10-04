@@ -6,37 +6,89 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, differenceInMinutes } from 'date-fns';
 import propTypes from 'prop-types';
 
 const QueueCard = ({ queue, index }) => {
+  // Calculate the waiting time
+  const waitingTime = differenceInMinutes(
+    new Date(),
+    new Date(queue.createdAt),
+  );
+
+  // Estimate time to serve the customer
+  const estimatedTime = index * 2;
+
   return (
     <Card
       key={queue._id}
       className={cn(
-        'w-full p-1 flex flex-row',
-        'hover:shadow-md',
+        'w-full p-4 flex flex-row items-center',
+        'hover:shadow-lg transition-shadow',
       )}
     >
-      <div className="p-2">{index + 1}</div>
-      <div>
-        <CardHeader>
-          <CardTitle>
-            {queue.userID.firstName +
-              ' ' +
-              queue.userID.lastName}
-          </CardTitle>
-          <CardDescription>
-            {format(
-              new Date(queue.createdAt),
-              'MM/dd/yyyy',
-            )}
-            {' at '}
-            {format(new Date(queue.createdAt), 'hh:mm a')}
-          </CardDescription>
+      {/* Large Queue Index */}
+      <div className="bg-gray-100 text-gray-800 flex items-center justify-center rounded-md w-16 h-16 font-bold text-3xl">
+        {index + 1}
+      </div>
+
+      <div className="ml-4 w-full">
+        <CardHeader className="flex justify-between items-center">
+          <div>
+            <CardTitle className="text-xl font-semibold">
+              {queue.userID.firstName +
+                ' ' +
+                queue.userID.lastName}{' '}
+              {/* Token number shows with 5 digits */}
+              (Token Number: #
+              {queue.position.toString().padStart(5, '0')})
+            </CardTitle>
+            <CardDescription className="text-gray-500">
+              Joined:{' '}
+              {format(
+                new Date(queue.createdAt),
+                'MM/dd/yyyy',
+              )}{' '}
+              at{' '}
+              {format(new Date(queue.createdAt), 'hh:mm a')}
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent className="text-sm">
-          {queue._id}
+
+        <CardContent className="text-sm mt-2">
+          {/* Queue Status */}
+          {queue.status === 'completed' ? (
+            <p className="text-green-500 font-medium">
+              Completed
+            </p>
+          ) : (
+            <p className="text-red-500 font-medium">
+              Pending
+            </p>
+          )}
+
+          {/* Estimated Waiting Time */}
+          <div className="mt-2">
+            <p className="text-gray-700">
+              <span className="font-medium">
+                Waiting Time:
+              </span>{' '}
+              {waitingTime} minutes
+            </p>
+            <p className="text-gray-700">
+              <span className="font-medium">
+                Estimated Time:
+              </span>{' '}
+              {estimatedTime} minutes
+            </p>
+          </div>
+
+          {/* Token Number if Completed */}
+          {queue.status === 'completed' && (
+            <p className="mt-2 text-gray-600 font-medium">
+              Token Number: {queue.position}
+            </p>
+          )}
         </CardContent>
       </div>
     </Card>

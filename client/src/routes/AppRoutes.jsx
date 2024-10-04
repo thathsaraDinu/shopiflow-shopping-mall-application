@@ -68,6 +68,7 @@ const ShopQueue = lazy(
 const MyQueue = lazy(
   () => import('@/pages/queue/my-queue'),
 );
+const History = lazy(() => import('@/pages/queue/history'));
 
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
@@ -161,6 +162,17 @@ const router = createBrowserRouter([
             <PrivateRoute
               element={<MyQueue />}
               roles={[USER_ROLES.USER]}
+            />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'history',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute
+              element={<History />}
+              roles={[USER_ROLES.ADMIN]}
             />
           </Suspense>
         ),
