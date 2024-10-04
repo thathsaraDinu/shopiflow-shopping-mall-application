@@ -187,7 +187,10 @@ const router = createBrowserRouter([
         path: 'addshop',
         element: (
           <Suspense fallback={<PageLoader />}>
-            <AddShop />
+            <PrivateRoute
+              element={<AddShop />}
+              roles={[USER_ROLES.SUPER_ADMIN]}
+            />
           </Suspense>
         ),
       },

@@ -14,7 +14,7 @@ const MyQueue = () => {
     isError: queuesError,
     refetch,
   } = useQuery({
-    queryKey: ['queues'],
+    queryKey: ['myqueues'],
     queryFn: () => getUserQueues(),
   });
 
@@ -40,7 +40,7 @@ const MyQueue = () => {
       <div className="p-5">
         <div className="flex flex-row justify-between">
           <h2 className="text-2xl font-bold">
-            Joined Queue List ({queues?.length})
+            Joined Queues ({queues?.length})
           </h2>
         </div>
         {queues && (

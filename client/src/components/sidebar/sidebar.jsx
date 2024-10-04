@@ -19,6 +19,7 @@ import {
 } from 'react-icons/bi';
 import { TbReorder } from 'react-icons/tb';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const sideBarItems = [
   {
@@ -76,6 +77,8 @@ const SideBar = () => {
   const logOut = useAuthStore((state) => state.logOut);
   const path = useLocation().pathname;
 
+  const navigate = useNavigate();
+
   const [openSubmenuIndex, setOpenSubmenuIndex] =
     useState(null);
   const role = useAuthStore((state) => state.role);
@@ -90,6 +93,7 @@ const SideBar = () => {
   const logOutHandler = () => {
     logOut();
     toast.success('Logged out successfully');
+    navigate('/');
   };
 
   return (

@@ -6,12 +6,41 @@ import { useAuthStore } from './store/auth-store';
 import { USER_ROLES } from './constants';
 import Sidebar from './components/sidebar/sidebar';
 import DashboardNavbar from './components/navbar/dashboard-navbar';
+import { useQuery } from '@tanstack/react-query';
+import { getProfileData } from './api/user.api';
+import { LoadingSpinner } from './components/ui/spinner';
 
 const Layout = () => {
   const isLoggedIn = useAuthStore(
     (state) => state.isLoggedIn,
   );
   const role = useAuthStore((state) => state.role);
+  const setProfile = useAuthStore((state) => state.profile);
+  const logout = useAuthStore((state) => state.logOut);
+
+  // If user is logged in, fetch the profile data
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    isError: profileError,
+    isSuccess: profileSuccess,
+  } = useQuery({
+    queryKey: ['profile', isLoggedIn],
+    queryFn: getProfileData,
+    enabled: isLoggedIn,
+  });
+
+  if (profileSuccess) {
+    setProfile(profile);
+  }
+
+  if (profileLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (profileError) {
+    logout();
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

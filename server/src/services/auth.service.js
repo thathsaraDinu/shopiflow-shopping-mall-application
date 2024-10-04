@@ -28,7 +28,6 @@ const userLogin = async ({ email, password }) => {
   if (user.role === USER_ROLES.ADMIN) {
     const shop = await getShopByOwnerId(user._id);
     user.shop = shop._id;
-    console.log('user.shop', user.shop);
   }
 
   // Create access token
@@ -59,7 +58,7 @@ const verifyRefreshToken = async (refreshToken) => {
       if (err) return reject(new Error('Unauthorized'));
 
       // Check if user exists in db
-      const user = await UserSchema.findOne({ id: decoded.id }).exec();
+      const user = await UserSchema.findOne({ _id: decoded.id }).exec();
 
       if (!user) return reject(new Error('Unauthorized'));
 
