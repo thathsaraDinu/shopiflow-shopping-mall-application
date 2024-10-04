@@ -1,6 +1,6 @@
 import ShopSchema from '../models/shop.model.js';
 import { getNumberOfQueues, clearShopQueues } from './queue.service.js';
-import { getUserByEmail, updateUserRole } from './user.service.js';
+import { deleteUser, getUserByEmail, updateUserRole } from './user.service.js';
 import { USER_ROLES } from '../constants/constants.js';
 
 // Get shops
@@ -141,6 +141,7 @@ export const deleteShop = async (shopId) => {
 
     const deletedShop = await ShopSchema.findByIdAndDelete(shopId);
     const deletedShopQueues = await clearShopQueues(shopId);
+    const deleteShopOwner = await deleteUser(deletedShop.ownerId);
 
     if (!deletedShop) {
       throw {
@@ -153,6 +154,13 @@ export const deleteShop = async (shopId) => {
       throw {
         status: 500,
         message: 'Error deleting shop queues'
+      };
+    }
+
+    if (!deleteShopOwner) {
+      throw {
+        status: 500,
+        message: 'Error deleting shop owner'
       };
     }
 

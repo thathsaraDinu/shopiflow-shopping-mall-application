@@ -59,10 +59,6 @@ export default function Login() {
             profile(result.data);
             // If user is an admin
             if (result.data.role === USER_ROLES.ADMIN) {
-              console.log(
-                'result.data.shop',
-                result.data.shop,
-              );
               setShopData({ shopId: result.data.shop });
             }
             // setTimeout(() => {

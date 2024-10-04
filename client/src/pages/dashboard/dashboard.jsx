@@ -24,9 +24,14 @@ function Dashboard() {
         <div>Error: {shopIsError.message}</div>
       )}
       <h2>Shop Details</h2>
-      <div>Shop Name: {shopData.name}</div>
-      <div>Open Time: {shopData.openTime}</div>
-      <div>Shop Phone: {shopData.contactNumber}</div>
+      {!shopData && <div>No shop data found</div>}
+      {shopData && (
+        <div>
+          <div>Shop Name: {shopData?.name}</div>
+          <div>Open Time: {shopData?.openTime}</div>
+          <div>Shop Phone: {shopData?.contactNumber}</div>
+        </div>
+      )}
       <h2>Owner Details</h2>
       <div>Owner: {fullName}</div>
     </>
