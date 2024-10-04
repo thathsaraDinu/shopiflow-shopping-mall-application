@@ -213,9 +213,7 @@ const ItemDetails = () => {
               <li className="px-2 mr-10 border-b-2 border-blue-500 pb-3">
                 Overview
               </li>
-              <li className="px-2 mr-10">Purchases</li>
               <li className="px-2 mr-10">Adjustments</li>
-              <li className="px-2 mr-10">History</li>
             </ul>
           </div>
           <div ref={detailsRef} className="flex">

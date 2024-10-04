@@ -17,6 +17,7 @@ const ProductCard = ({ data }) => {
       console.log(error);
     }
   };
+
   return (
     <>
       <div
@@ -40,7 +41,14 @@ const ProductCard = ({ data }) => {
           )}
         </div>
         <div className="mt-2 px-2">
-          <h3 className="font-bold">{data.name}</h3>
+          <div className="flex justify-between">
+            <h3 className="font-bold">{data.name}</h3>
+            <p>
+              {data.quantity > data.thresholdValue
+                ? data.thresholdValue
+                : data.quantity}
+            </p>
+          </div>
           <p className="text-sm mb-1">{data.supplier}</p>
           <p className="mb-1">{data.category}</p>
           <p>${data.buyingPrice.toFixed(2)}</p>

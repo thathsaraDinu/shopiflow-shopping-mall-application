@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div>
       <HeroSection />
-      <div className="">
+      <div>
         <h2 className="max-w-screen-xl mx-auto font-bold text-3xl">
           Featured Porudcts
         </h2>
