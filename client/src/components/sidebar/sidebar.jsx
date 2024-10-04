@@ -17,6 +17,7 @@ import {
   BiSolidOffer,
   BiSolidReport,
 } from 'react-icons/bi';
+import { TbReorder } from 'react-icons/tb';
 import toast from 'react-hot-toast';
 
 const sideBarItems = [
@@ -26,6 +27,13 @@ const sideBarItems = [
     submenu: [],
     to: '/',
     roles: [USER_ROLES.ADMIN, USER_ROLES.SUPER_ADMIN],
+  },
+  {
+    title: 'Queue',
+    icon: <TbReorder />,
+    submenu: [],
+    to: '/queue',
+    roles: [USER_ROLES.ADMIN],
   },
   {
     title: 'Shops',

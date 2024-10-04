@@ -42,6 +42,11 @@ export const ShopSchema = new Schema(
         message: (props) => `${props.value} is not a valid email address!`
       }
     },
+    ownerId: {
+      // New field for owner's ID
+      type: Schema.Types.ObjectId,
+      required: [true, 'Owner ID is required']
+    },
     shopType: {
       // New field for shop type
       type: String,

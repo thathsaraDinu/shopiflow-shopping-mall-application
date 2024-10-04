@@ -16,3 +16,18 @@ export const getProfileData = async () => {
     throw error;
   }
 };
+
+// Get all users with query params
+export const getUsers = async (role) => {
+  try {
+    const response = await instance.get('/api/user/users', {
+      params: {
+        role,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};

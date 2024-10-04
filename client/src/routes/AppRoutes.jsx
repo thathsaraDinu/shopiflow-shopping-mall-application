@@ -59,6 +59,9 @@ const Login = lazy(() => import('@/pages/user/login'));
 const Profile = lazy(() => import('@/pages/user/profile'));
 
 // Queue Related Pages
+const ManageQueue = lazy(
+  () => import('@/pages/queue/index'),
+);
 const ShopQueue = lazy(
   () => import('@/pages/queue/shop-queue'),
 );
@@ -129,6 +132,17 @@ const router = createBrowserRouter([
       },
 
       // Queue Routes
+      {
+        path: 'queue',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute
+              element={<ManageQueue />}
+              roles={[USER_ROLES.ADMIN]}
+            />
+          </Suspense>
+        ),
+      },
       {
         path: 'queue/:shopID',
         element: (

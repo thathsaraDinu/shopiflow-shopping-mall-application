@@ -17,4 +17,7 @@ router.get(
   UserController.profile
 );
 
+// Admin only routes
+router.get('/users', verifyAuth([USER_ROLES.SUPER_ADMIN]), UserController.getUsers);
+
 export default router;

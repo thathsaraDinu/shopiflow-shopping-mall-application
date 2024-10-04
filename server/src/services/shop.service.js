@@ -1,5 +1,7 @@
 import ShopSchema from '../models/shop.model.js';
 import { getNumberOfQueues, clearShopQueues } from './queue.service.js';
+import { getUserByEmail, updateUserRole } from './user.service.js';
+import { USER_ROLES } from '../constants/constants.js';
 
 // Get shops
 export const getShops = async () => {
@@ -26,7 +28,34 @@ export const getShops = async () => {
 export const addShop = async (data) => {
   try {
     const shop = new ShopSchema(data);
+
+    // Find owner id from email
+    const ownerId = await getUserByEmail(data.ownerEmail);
+
+    if (!ownerId) {
+      throw {
+        status: 404,
+        message: 'Owner not found'
+      };
+    }
+
+    // Update owner's role to admin
+    if (ownerId.role !== USER_ROLES.ADMIN && ownerId.role !== USER_ROLES.SUPER_ADMIN) {
+      const updatedOwner = await updateUserRole(ownerId.id, USER_ROLES.ADMIN);
+
+      if (!updatedOwner) {
+        throw {
+          status: 500,
+          message: 'Error updating owner role'
+        };
+      }
+    }
+
+    // Assign owner id to shop
+    shop.ownerId = ownerId.id;
+
     await shop.save();
+
     return shop;
   } catch (error) {
     throw {
