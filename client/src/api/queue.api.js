@@ -1,13 +1,13 @@
 import { instance } from '@/hooks/use-axios';
 
 // Get queues by shop ID and Query Params
-export const getQueues = async (shopID, status) => {
+export const getQueues = async (shopID, statuses) => {
   try {
     const response = await instance.get(
       `/api/queue/${shopID}`,
       {
         params: {
-          status,
+          status: statuses,
         },
       },
     );
