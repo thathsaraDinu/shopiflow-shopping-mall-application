@@ -14,7 +14,6 @@ export default function PromotionDetails() {
     queryFn: () => getPromotionById(id, type),
     enabled: true,
     onSuccess: (data) => {
-      console.log('Query successful, data:', data);
     },
   });
 

@@ -3,7 +3,7 @@ import { useMultistepForm } from '../../hooks/useMultiStepForm';
 import { AddPromotionStep1 } from './addpromotionstep1';
 import { AddPromotionStep2 } from './addpromotionstep2';
 import { AddPromotionStep3 } from './addpromotionstep3';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   schema1,
@@ -13,12 +13,9 @@ import {
 } from '../../validations/promotion-validation';
 import {
   useMutation,
-  useQuery,
 } from '@tanstack/react-query';
-import { Card } from '@/components/ui/card';
 import {
   addpromotion,
-  getPromotionsByShopId,
   updatePromotion,
 } from '@/api/promotion.api';
 import { Button } from '@/components/ui/button';
@@ -29,21 +26,17 @@ import {
   DialogContent,
   DialogHeader,
   DialogFooter,
-  DialogClose,
 } from '@/components/ui/dialog'; // Import DialogContent, DialogHeader, DialogFooter
-import { Link } from 'react-router-dom';
-import { getShops } from '@/api/shop.api';
-import { set } from 'date-fns';
-import { useShopStore } from '@/store/shop-store';
 
 export default function AddPromotionMain({
   refetch,
   isUpdate,
   promotion,
   loggedInShopId,
+  shopName,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [shopId, setShopId] = useState('');
+  const [shopId, setShopId] = useState(loggedInShopId ? loggedInShopId : '');
   const [formData, setFormData] = useState({
     promotionType: -1,
     storeName: '',
@@ -58,38 +51,14 @@ export default function AddPromotionMain({
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [theStep, setTheStep] = useState(1);
-  const [shops, setShops] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchShops = async () => {
-    setLoading(true);
-    try {
-      const data = await getShops();
-      setShops(data);
-      setError(null);
-    } catch (err) {
-      setError('Error fetching shops');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch shops when component mounts
-  useEffect(() => {
-    fetchShops();
-  }, []);
 
   const {
     register,
     handleSubmit,
-    unregister,
     reset,
     watch,
     setValue,
     formState: { errors, isSubmitting },
-    setError,
-    trigger,
-    control,
   } = useForm({
     resolver:
       theStep == 1
@@ -104,7 +73,6 @@ export default function AddPromotionMain({
   const addPromotion = useMutation({
     mutationFn: addpromotion,
     onSuccess: () => {
-      console.log('Promotion Created Successfully');
       toast.success('Promotion Created Successfully');
       refetch();
       reset();
@@ -115,9 +83,7 @@ export default function AddPromotionMain({
       setIsOpen(false);
     },
     onError: (error) => {
-      console.log('the formdata: ', formData);
       console.log('the error: ', error);
-      console.log(error.response?.status);
       if (error.response.status === 400) {
         toast.error('Promotion already exists');
       } else if (error.response?.status !== 500) {
@@ -125,14 +91,12 @@ export default function AddPromotionMain({
       }
     },
     onSettled: () => {
-      console.log('Settled');
     },
   });
 
   const updatepromotion = useMutation({
     mutationFn: updatePromotion,
     onSuccess: (e) => {
-      console.log('Promotion Updated Successfully', e);
       toast.success('Promotion Updated Successfully');
       refetch();
       reset();
@@ -143,9 +107,8 @@ export default function AddPromotionMain({
       setIsOpen(false);
     },
     onError: (error) => {
-      console.log('the formdata: ', formData);
+      
       console.log('the error: ', error);
-      console.log(error.response?.status);
       if (error.response.status === 400) {
         toast.error('Promotion already exists');
       } else if (error.response?.status !== 500) {
@@ -153,7 +116,6 @@ export default function AddPromotionMain({
       }
     },
     onSettled: () => {
-      console.log('Settled');
     },
   });
 
@@ -191,18 +153,14 @@ export default function AddPromotionMain({
       setFormData((prevData) => ({ ...prevData, ...data }));
 
       if (currentStepIndex == 2) {
-        console.log('photo:', data.photo);
         const convertedPhoto = await handleFileConversion(
           data.photo,
         );
 
-        console.log('formData:', formData);
-
-        console.log('Converted Photo:', convertedPhoto);
         const formData3 = {
           promotionType: formData.promotionType,
           promoTitle: formData.promoTitle,
-          storeName: formData.storeName,
+          storeName: shopName,
           shopId: shopId,
           discountAmount: formData.discountAmount,
           discountPercentage: formData.discountPercentage,
@@ -210,14 +168,12 @@ export default function AddPromotionMain({
             formData.qualifyingPurchaseAmount,
           startDate: data.startDate,
           endDate: data.endDate,
-          loggedInShopId: loggedInShopId,
           description: formData.description,
           photo: convertedPhoto,
         };
         await new Promise((resolve) =>
           setTimeout(resolve, 1000),
         );
-        console.log('Form Data:', formData3.shopId);
         if (isUpdate) {
           updatepromotion.mutate({
             id: promotion._id,
@@ -234,7 +190,6 @@ export default function AddPromotionMain({
     setValue('photo', file);
     if (file) {
       setSelectedFile(file); // Store the selected file in state
-      console.log('File selected:', file.name);
     }
   };
 
@@ -254,11 +209,9 @@ export default function AddPromotionMain({
   });
 
   const {
-    steps,
     currentStepIndex,
     step,
     isFirstStep,
-    isSecondStep,
     isComplete,
     next,
     back,
@@ -274,12 +227,7 @@ export default function AddPromotionMain({
       {...formData}
       register={register}
       errors={errors}
-      shops={shops}
-      loading={loading}
-      loggedInShopId={loggedInShopId}
       promotion={promotion}
-      setShopId={setShopId}
-      setValue={setValue}
     />,
     <AddPromotionStep3
       {...formData}
@@ -288,7 +236,6 @@ export default function AddPromotionMain({
       watch={watch}
       handleFileChange={handleFileChange}
       selectedFile={selectedFile}
-      setSelectedFile={setSelectedFile}
       promotion={promotion}
       setValue={setValue}
     />,

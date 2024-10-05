@@ -6,7 +6,6 @@ export const getAllPromotions = async (req) => {
     // Find all promotions
     const discountPercentage = await DiscountPercentageSchema.find();
     const discountAmount = await DiscountAmount.find();
-    console.log('test controller');
 
     return {
       discountPercentage,
@@ -22,11 +21,8 @@ export const getAllPromotions = async (req) => {
 
 export const getPromotionsByShopId = async (shopId) => {
   try {
-    console.log('shopId: in service', shopId);
     const discountPercentage = await DiscountPercentageSchema.find({ shopId });
     const discountAmount = await DiscountAmount.find({ shopId });
-    console.log('discountPercentage:', discountPercentage);
-    console.log('discountAmount:', discountAmount);
     return {
       discountPercentage,
       discountAmount
@@ -90,7 +86,6 @@ export const deletePromotionType2 = async (id) => {
 export const updatePromotionType1 = async (id, data) => {
   try {
     const promotion = await DiscountPercentageSchema.findByIdAndUpdate(id, data);
-    console.log('promotionbackend:', promotion);
     return promotion;
   } catch (error) {
     throw {
@@ -129,8 +124,6 @@ export const addPromotionPercentage = async (data) => {
       discountPercentage,
       photo
     } = data.body;
-    console.log('loggedIn', data.body.loggedInShopId);
-    console.log('data photo: ', data.body);
 
     const now = new Date();
     const start = new Date(startDate);
@@ -157,7 +150,6 @@ export const addPromotionPercentage = async (data) => {
       shopId,
       photo
     });
-    console.log('new promotion:', newPromotion);
 
     const savedPromotion = await newPromotion.save();
     return savedPromotion;

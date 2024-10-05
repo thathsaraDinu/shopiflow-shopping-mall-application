@@ -26,9 +26,7 @@ export const PromotionController = {
   },
 
   async getpromotionsbyshopid(req, res) {
-    
     try {
-      console.log('test controller get promotions by shop id', req.params.id);
       const promotions = await getPromotionsByShopId(req.params.id);
 
       return res.status(200).json({
@@ -41,13 +39,8 @@ export const PromotionController = {
 
   async addpromotiontype1(req, res) {
     try {
-      console.log('test controller');
-
       // Await the result of the addPromotionPercentage function
       const promotion = await addPromotionPercentage(req);
-
-      console.log('the test in backend:', promotion);
-
       // Send a success response with the promotion data
       return res.status(200).json({
         promotion

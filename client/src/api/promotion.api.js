@@ -2,25 +2,17 @@ import { instance } from '@/hooks/use-axios';
 
 export const addpromotion = async (data) => {
   try {
-    console.log(data.promotionType);
 
     if (data.promotionType === '1') {
-      console.log(
-        'Sending request to add promotion type 1:',
-        data,
-      );
+     
       const response = await instance.post(
         '/api/promotions/addpromotiontype1',
         data,
         {withCredentials: true,}
       );
-      console.log('Response received:', response);
       return response;
     } else {
-      console.log(
-        'Sending request to add promotion type 2:',
-        data,
-      );
+      
       const response = await instance.post(
         '/api/promotions/addpromotiontype2',
         data,
@@ -41,7 +33,6 @@ export const getPromotionsByShopId = async (id) => {
       `/api/promotions/getpromotionsbyshopid/${id}`,
       { withCredentials: true },
     );
-    console.log('Promotions retrieved in shop id:', response);
     return response;
     
   } catch (error) {
@@ -56,7 +47,6 @@ export const getPromotions = async () => {
       '/api/promotions/getpromotions',
       { withCredentials: true },
     );
-    console.log('Promotions retrieved:', response);
     return response;
   } catch (error) {
     console.error('Error Getting Promotions:', error);
@@ -76,7 +66,6 @@ export const getPromotionById = async (id, type) => {
         `/api/promotions/getpromotiontype2/${id}`,
       );
     }
-    console.log('Promotion retrieved:', response);
     return response;
   } catch (error) {
     console.error('Error Getting Promotion:', error);
@@ -124,7 +113,6 @@ export const deletePromotion = async (
         { withCredentials: true },
       );
     }
-    console.log('Promotion deleted:', response);
     return response;
   } catch (error) {
     console.error('Error Deleting Promotion:', error);

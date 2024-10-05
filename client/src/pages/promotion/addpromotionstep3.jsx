@@ -10,7 +10,6 @@ export function AddPromotionStep3({
   handleFileChange,
   selectedFile,
   watch,
-  setSelectedFile,
   promotion,
   setValue,
 }) {
@@ -120,7 +119,7 @@ export function AddPromotionStep3({
           </div>
           <div>
             <div className="flex items-center">
-              <div className="inline-block border w-full h-[250px]">
+              <div className="  flex flex-col w-full h-[250px]">
                 <img
                   src={
                     selectedFile
@@ -132,14 +131,14 @@ export function AddPromotionStep3({
                   alt="Selected file"
                   className=" h-full w-full object-cover border"
                 />
+                {errors.photo && (
+                  <p className="text-red-500 text-sm">
+                    {errors.photo.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
-          {errors.photo && (
-            <p className="text-red-500 text-sm">
-              {errors.photo.message}
-            </p>
-          )}
         </div>
       </div>
     </div>
