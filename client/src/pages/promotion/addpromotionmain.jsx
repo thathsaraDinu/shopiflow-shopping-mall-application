@@ -11,10 +11,14 @@ import {
   schema3,
   schema4,
 } from '../../validations/promotion-validation';
-import { useMutation } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import {
   addpromotion,
+  getPromotionsByShopId,
   updatePromotion,
 } from '@/api/promotion.api';
 import { Button } from '@/components/ui/button';
@@ -30,17 +34,20 @@ import {
 import { Link } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
 import { set } from 'date-fns';
+import { useShopStore } from '@/store/shop-store';
 
 export default function AddPromotionMain({
   refetch,
   isUpdate,
   promotion,
+  loggedInShopId,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [shopId, setShopId] = useState('');
   const [formData, setFormData] = useState({
     promotionType: -1,
     storeName: '',
+    promoTitle: '',
     discountAmount: 0,
     discountPercentage: 0,
     qualifyingPurchaseAmount: 0,
@@ -150,22 +157,8 @@ export default function AddPromotionMain({
     },
   });
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        // This will return a Base64 string
-        resolve(reader.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
   const handleFileConversion = async (file) => {
     if (!file) return null;
-
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -187,36 +180,12 @@ export default function AddPromotionMain({
     });
   };
 
-  const convertToString = async (file) => {
-    if (file) {
-      const base64 = await convertToBase64(file)
-        .then((base64) => {
-          console.log('Base64:', base64);
-          setFormData((prevData) => ({
-            ...prevData,
-            photo: base64,
-          }));
-        })
-        .catch((error) => {
-          console.error(
-            'Error converting file to Base64:',
-            error,
-          );
-        });
-    }
-  };
-
   const onSubmit = async (data) => {
     try {
       if (currentStepIndex == 0)
         setFormData((prevData) => ({
           ...prevData,
           promotionType: parseInt(data.promotionType),
-        }));
-      if (currentStepIndex == 1)
-        setFormData((prevData) => ({
-          ...prevData,
-          storeName: data.storeName,
         }));
 
       setFormData((prevData) => ({ ...prevData, ...data }));
@@ -227,22 +196,28 @@ export default function AddPromotionMain({
           data.photo,
         );
 
+        console.log('formData:', formData);
+
         console.log('Converted Photo:', convertedPhoto);
         const formData3 = {
           promotionType: formData.promotionType,
+          promoTitle: formData.promoTitle,
           storeName: formData.storeName,
+          shopId: shopId,
           discountAmount: formData.discountAmount,
           discountPercentage: formData.discountPercentage,
           qualifyingPurchaseAmount:
             formData.qualifyingPurchaseAmount,
           startDate: data.startDate,
           endDate: data.endDate,
+          loggedInShopId: loggedInShopId,
           description: formData.description,
           photo: convertedPhoto,
         };
         await new Promise((resolve) =>
           setTimeout(resolve, 1000),
         );
+        console.log('Form Data:', formData3.shopId);
         if (isUpdate) {
           updatepromotion.mutate({
             id: promotion._id,
@@ -301,7 +276,10 @@ export default function AddPromotionMain({
       errors={errors}
       shops={shops}
       loading={loading}
+      loggedInShopId={loggedInShopId}
       promotion={promotion}
+      setShopId={setShopId}
+      setValue={setValue}
     />,
     <AddPromotionStep3
       {...formData}
@@ -358,7 +336,7 @@ export default function AddPromotionMain({
           </div>
         </DialogHeader>
 
-        <div className=" mx-auto w-[400px]">
+        <div className=" mx-5 ">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className=""
@@ -389,9 +367,11 @@ export default function AddPromotionMain({
                 >
                   {isSubmitting
                     ? 'Submitting...'
-                    : isLastStep
+                    : isLastStep && !isUpdate // If last step and not updating, show 'Submit'
                       ? 'Submit'
-                      : 'Next'}
+                      : isLastStep && isUpdate // If last step and updating, show 'Update'
+                        ? 'Update'
+                        : 'Next'}
                 </Button>
               </div>
             )}

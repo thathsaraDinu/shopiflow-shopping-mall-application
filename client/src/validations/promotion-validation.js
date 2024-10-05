@@ -7,6 +7,11 @@ export const schema1 = z.object({
 });
 
 export const schema2 = z.object({
+  promoTitle: z
+    .string()
+    .min(1, { message: 'Promotion title is required' })
+    .max(255),  
+
   storeName: z
     .string()
     .min(1, { message: 'Store name is required' })
@@ -29,6 +34,10 @@ export const schema2 = z.object({
 });
 
 export const schema3 = z.object({
+  promoTitle: z
+    .string()
+    .min(1, { message: 'Promotion title is required' })
+    .max(255),  
   storeName: z
     .string()
     .min(1, { message: 'Store name is required' })
