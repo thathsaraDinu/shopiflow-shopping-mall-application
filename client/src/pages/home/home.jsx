@@ -1,6 +1,7 @@
 import useProducts from '@/hooks/useProducts';
 import ProductCard from '../products/productCard';
 import HeroSection from '@/components/hero-section/hero-section';
+import { PromotionsScrollable } from '@/components/promotions/promotions-scrollable';
 
 const Home = () => {
   const { data } = useProducts();
@@ -10,7 +11,7 @@ const Home = () => {
       <HeroSection />
       <div>
         <h2 className="max-w-screen-xl mx-auto font-bold text-3xl">
-          Featured Porudcts
+          Featured Products
         </h2>
         <div className="max-w-screen-xl mx-auto grid place-items-center grid-cols-3 gap-4 mt-10 mb-[100px]">
           {data &&
@@ -21,6 +22,12 @@ const Home = () => {
               ))}
         </div>
       </div>
+      {/* <div className=" my-10 flex flex-col gap-16 items-center">
+        <div className="flex flex-col mx-10 gap-10">
+          <h2 className="  self-start font-bold text-3xl">Discover Events & Offers</h2>
+          <PromotionsScrollable></PromotionsScrollable>
+        </div>
+      </div> */}
     </div>
   );
 };

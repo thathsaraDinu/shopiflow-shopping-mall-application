@@ -58,7 +58,7 @@ export function PromotionCard({ promotion }) {
       <hr></hr>
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
-          <div className="text-lg font-medium">
+          <div className="text-lg font-medium" style={{ fontFamily: 'Georgia, serif'}}>
             {storeName}
           </div>
         </div>

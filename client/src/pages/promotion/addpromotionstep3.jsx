@@ -1,19 +1,17 @@
 import InputField from '@/components/form-field';
 import { CardTitle } from '@/components/ui/card';
 import { useEffect } from 'react';
-import { useState } from 'react';
 
 export function AddPromotionStep3({
   promotionType,
   register,
   errors,
-  handleFileChange,
   selectedFile,
+  setSelectedFile,
   watch,
   promotion,
   setValue,
 }) {
-
   const startDate = watch('startDate');
   const minEndDate = startDate
     ? startDate
@@ -36,10 +34,21 @@ export function AddPromotionStep3({
     return new File([blob], fileName, { type: mimeType });
   }
 
-  if (promotion) {
-    const file = base64ToFile(promotion.photo, 'photo');
-    setValue('photo', file);
-  }
+  useEffect(() => {
+    if (promotion) {
+      const file = base64ToFile(promotion.photo, 'photo');
+      setValue('photo', file); // Set the photo when promotion is loaded
+      setSelectedFile(file); // Also update the selectedFile state
+    }
+  }, [promotion, setValue, setSelectedFile]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the first selected file
+    setValue('photo', file); // Set the value of the form field manually
+    if (file) {
+      setSelectedFile(file); // Store the selected file in state
+    }
+  };
 
   return (
     <div className="transition-all duration-500 flex flex-col gap-10">
@@ -105,16 +114,12 @@ export function AddPromotionStep3({
                 Upload Image
               </label>
             </div>
-            <InputField
+            <input
               type="file"
               name="photo"
               className="hidden"
               id="file-upload"
-              register={(name) =>
-                register(name, {
-                  onChange: handleFileChange, // Handle file input change
-                })
-              }
+              onChange={handleFileChange} // Use handleFileChange here directly
             />
           </div>
           <div>
