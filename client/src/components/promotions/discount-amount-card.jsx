@@ -63,12 +63,23 @@ export function DiscountAmountCard({ promotion }) {
         <div className="text-lg font-medium">
           {truncateText(storeName, 30)}
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-start">
           <p className="text-sm font-medium">
             Upto {discountAmount}/= Discounts{' '}
           </p>
-
-          <p className="text-sm">Find out more</p>
+          <Link
+            to={`/promotiondetails/${'type2'}/${promotion._id}`}
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth', // Smooth scrolling effect
+              });
+            }}
+          >
+            <p className="text-sm hover:text-blue-700 text-blue-600">
+              Find out more
+            </p>
+          </Link>
         </div>
       </div>
     </div>

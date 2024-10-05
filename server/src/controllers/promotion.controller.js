@@ -4,6 +4,7 @@ import {
   deletePromotionType1,
   deletePromotionType2,
   getAllPromotions,
+  getPromotionsByShopId,
   getPromotionType1ById,
   getPromotionType2ById,
   updatePromotionType1,
@@ -13,8 +14,22 @@ import {
 export const PromotionController = {
   async promotions(req, res) {
     try {
-      console.log('test get all');
+      
       const promotions = await getAllPromotions();
+
+      return res.status(200).json({
+        promotions
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async getpromotionsbyshopid(req, res) {
+    
+    try {
+      console.log('test controller get promotions by shop id', req.params.id);
+      const promotions = await getPromotionsByShopId(req.params.id);
 
       return res.status(200).json({
         promotions

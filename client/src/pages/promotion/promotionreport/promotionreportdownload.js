@@ -43,8 +43,8 @@ export const PromotionReportDownload = async (
   const chartData = {
     labels:
       promotionType === '1'
-        ? promotions.map((promotion) => promotion.storeName) // Changed to store names only
-        : promotions.map((p) => p.storeName),
+        ? promotions.map((promotion) => promotion.promoTitle) // Changed to store names only
+        : promotions.map((p) => p.promoTitle),
     datasets:
       promotionType === '1'
         ? [

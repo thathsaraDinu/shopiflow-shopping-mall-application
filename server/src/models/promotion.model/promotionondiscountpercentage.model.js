@@ -6,7 +6,14 @@ const DiscountPercentageSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-
+    shopId: {
+      type: String,
+      required: true
+    },
+    promoTitle: {
+      type: String,
+      required: true
+    },
     storeName: {
       type: String,
       required: true
@@ -35,7 +42,7 @@ const DiscountPercentageSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true
+    timestamps: { currentTime: () => Date.now() + 5.5 * 60 * 60 * 1000 }
   }
 );
 

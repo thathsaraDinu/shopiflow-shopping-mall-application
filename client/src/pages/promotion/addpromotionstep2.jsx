@@ -13,14 +13,18 @@ export function AddPromotionStep2({
   shops,
   loading,
   promotion,
+  setShopId,
+  setValue,
+  loggedInShopId,
 }) {
   const [isOpen, setIsOpen] = useState(false); // State to track dropdown open/close
+  setValue(
+    'storeName',
+    shops.find((shop) => shop._id === loggedInShopId).name,
+  );
+  setShopId(loggedInShopId ? loggedInShopId : '');
 
-  const handleToggle = (e) => {
-    setIsOpen(!isOpen);
-    setValue('storeName', e.target.value);
-    console.log('e', e.target.value);
-  };
+  
 
   return (
     <div className="flex flex-col gap-10 transition-all duration-500 ease-in-out">
@@ -35,75 +39,23 @@ export function AddPromotionStep2({
         {console.log('shops', shops)}
       </CardTitle>
       <div className='flex flex-col gap-5 transition-all duration-500 ease-in-out"'>
-        <div className="text-sm flex flex-col gap-2">
-          <label
-            htmlFor="storeSelect"
-            className="text-sm font-medium"
-          >
-            Store Name
-          </label>
-          <div className="relative flex w-full max-w-md transition duration-300 ease-in-out">
-            <div className="h-2 "></div>
-            <select
-              defaultValue={
-                promotion ? promotion.storeName : ''
-              }
-              onClick={handleToggle}
-              onBlur={() => setIsOpen(false)}
-              className=" appearance-none focus:outline-none focus:ring-1 focus:border-transparent focus:ring-black border w-full shadow-sm  rounded-md px-4 py-2 bg-white text-sm"
-              id="storeSelect"
-              {...register('storeName', {
-                required: 'Store name is required',
-              })}
-            >
-              <option value="">Select a store</option>
-              {!loading && shops.length > 0 ? (
-                shops.map((shop) => (
-                  <option key={shop.name} value={shop.name}>
-                    {shop.name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  {loading
-                    ? 'Loading stores...'
-                    : 'No stores available'}
-                </option>
-              )}
-            </select>
-            <div
-              className={`absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none transform transition-transform duration-300 ease-in-out ${
-                isOpen ? 'rotate-90' : 'rotate-0'
-              }`}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="25px"
-                viewBox="0 -960 960 960"
-                width="25px"
-                fill="#808080"
-              >
-                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-              </svg>
-            </div>
-          </div>
-          {errors.storeName && (
-            <p className="text-red">
-              {errors.storeName.message}
-            </p>
-          )}
+        <div className="  w-full  transition duration-300 ease-in-out">
+          <InputField
+            defaultValue={
+              promotion ? promotion.promoTitle : ''
+            }
+            type="text"
+            name="promoTitle"
+            label={'Promotion Title'}
+            errors={errors}
+            register={register}
+          />
         </div>
-        {/* <div className="">
-            <InputField
-              label={'Store Name'}
-              type="text"
-              name="storeName"
-              register={register}
-              id="inputField"
-              errors={errors}
-            />
-          </div> */}
-
+        {errors.promoName && (
+          <p className="text-red">
+            {errors.promoTitle.message}
+          </p>
+        )}
         {promotionType == 1 ? (
           <div>
             <InputField
