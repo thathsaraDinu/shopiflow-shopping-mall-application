@@ -12,20 +12,20 @@ import { LoadingSpinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
+import { differenceInMinutes, format } from 'date-fns';
 import { QUEUE_STATUS } from '@/constants';
 import toast from 'react-hot-toast';
+import { MdAccessTimeFilled } from 'react-icons/md';
 
 const ManageQueue = () => {
-  // Update date time every second
   const [currentDateTime, setCurrentDateTime] = useState(
     new Date().toLocaleString(),
   );
+  const [remainingTime, setRemainingTime] = useState({});
 
   const shopId = useShopStore((state) => state.shopId);
   const navigate = useNavigate();
 
-  // Fetch the queue data
   const {
     data: queues,
     isLoading: queuesLoading,
@@ -40,21 +40,18 @@ const ManageQueue = () => {
         QUEUE_STATUS.HOLD,
       ]),
     select: (data) => {
-      // Sort queues so HOLD queues are at the bottom
       return data.sort((a, b) => {
         if (
           a.status === QUEUE_STATUS.HOLD &&
           b.status !== QUEUE_STATUS.HOLD
-        ) {
-          return 1; // Move HOLD queues down
-        }
+        )
+          return 1;
         if (
           a.status !== QUEUE_STATUS.HOLD &&
           b.status === QUEUE_STATUS.HOLD
-        ) {
-          return -1; // Move other queues up
-        }
-        return 0; // Keep order otherwise
+        )
+          return -1;
+        return 0;
       });
     },
   });
@@ -62,13 +59,31 @@ const ManageQueue = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentDateTime(new Date().toLocaleString());
+
+      // Update remaining time for each queue
+      if (queues && queues.length > 0) {
+        const updatedRemainingTime = {};
+        queues.forEach((queue) => {
+          if (queue.status === QUEUE_STATUS.HOLD) {
+            const timeElapsed =
+              new Date() - new Date(queue.updatedAt);
+            const timeLeft = 120000 - timeElapsed; // 2 minutes in milliseconds
+            updatedRemainingTime[queue._id] = Math.max(
+              0,
+              timeLeft,
+            );
+          }
+        });
+        setRemainingTime(updatedRemainingTime);
+      }
     }, 1000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [queues]);
 
   const holdQueueMutation = useMutation({
     mutationFn: updateQueueStatus,
-    onSuccess: async () => {
+    onSuccess: () => {
       refetchQueues();
       toast.success('Queue held successfully');
     },
@@ -80,7 +95,7 @@ const ManageQueue = () => {
 
   const unHoldQueueMutation = useMutation({
     mutationFn: updateQueueStatus,
-    onSuccess: async () => {
+    onSuccess: () => {
       refetchQueues();
       toast.success('Queue unheld successfully');
     },
@@ -90,7 +105,6 @@ const ManageQueue = () => {
     },
   });
 
-  // Hold the queue window pop up
   const holdHandler = () => {
     holdQueueMutation.mutate({
       queueID: queues[0]._id,
@@ -98,12 +112,31 @@ const ManageQueue = () => {
     });
   };
 
-  const unHoldHandler = () => {
+  const unHoldHandler = (id) => {
     unHoldQueueMutation.mutate({
-      queueID: queues[0]._id,
+      queueID: id,
       status: QUEUE_STATUS.PENDING,
     });
   };
+
+  useEffect(() => {
+    // Auto cancel queue if time is up
+    const cancelQueue = (id) => {
+      unHoldQueueMutation.mutate({
+        queueID: id,
+        status: QUEUE_STATUS.CANCELLED,
+      });
+    };
+
+    const timers = Object.keys(remainingTime).map((id) => {
+      if (remainingTime[id] <= 0) {
+        cancelQueue(id);
+      }
+    });
+
+    return () =>
+      timers.forEach((timer) => clearTimeout(timer));
+  }, [remainingTime, unHoldQueueMutation]);
 
   return (
     <div>
@@ -112,17 +145,13 @@ const ManageQueue = () => {
         <h1 className="text-2xl font-bold text-gray-600">
           Pending Queues ( {queues?.length || 0} )
         </h1>
-
         <div className="flex items-center gap-5">
-          {/* Current Date and Time */}
           <div className="text-gray-600 text-xl font-semibold">
             {format(new Date(currentDateTime), 'PPPP')}
           </div>
           <div className="text-gray-600 text-xl font-semibold w-20">
             {format(new Date(currentDateTime), 'HH:mm:ss')}
           </div>
-
-          {/* All History */}
           <Button
             onClick={() => navigate('/history')}
             variant="secondary"
@@ -152,7 +181,6 @@ const ManageQueue = () => {
                   <h1 className="text-2xl font-bold text-gray-600 col-start-1 col-end-7">
                     {queues[0].shopID.name}
                   </h1>
-                  {/* Line */}
                   <div className="border-b-2 border-gray-200 col-span-6 my-2"></div>
                   <img
                     src={`https://api.dicebear.com/9.x/micah/svg?seed=${queues[0].userID.firstName}`}
@@ -172,7 +200,6 @@ const ManageQueue = () => {
                           .padStart(5, '0')}
                       </span>
                     </div>
-                    {/* Line */}
                     <div className="border-b-2 border-transparent my-2"></div>
                     <p className="text-gray-600">
                       {queues[0].userID.mobile}
@@ -189,10 +216,29 @@ const ManageQueue = () => {
                     <div className="text-green-500 font-medium">
                       In Progress
                     </div>
+                    {/* Countdown Timer */}
+                    {queues[0].status ===
+                      QUEUE_STATUS.HOLD && (
+                      <div className="text-red-500 font-bold">
+                        Time Remaining:{' '}
+                        {Math.ceil(
+                          remainingTime[queues[0]._id] /
+                            1000,
+                        )}{' '}
+                        seconds
+                      </div>
+                    )}
                   </div>
                 </div>
-                {/* Line */}
                 <div className="border-b-2 border-gray-200 my-6"></div>
+                <div className="text-gray-600 text-xl font-semibold flex items-center gap-2">
+                  <MdAccessTimeFilled className="text-gray-500 h-10 w-10" />
+                  {differenceInMinutes(
+                    new Date(),
+                    new Date(queues[0].createdAt),
+                  )}{' '}
+                  mins waiting in queue
+                </div>
                 <div className="border-b-2 border-gray-200 my-6"></div>
                 <div className="flex justify-between items-center gap-5">
                   <Button
@@ -215,7 +261,7 @@ const ManageQueue = () => {
                     className="w-full py-2 bg-red-500 hover:bg-red-600 text-white"
                     onClick={
                       queues[0].status === QUEUE_STATUS.HOLD
-                        ? unHoldHandler
+                        ? () => unHoldHandler(queues[0]._id)
                         : holdHandler
                     }
                   >
@@ -237,6 +283,7 @@ const ManageQueue = () => {
                   queue={queue}
                   index={index + 1}
                   unHold={unHoldHandler}
+                  remainingTime={remainingTime[queue._id]}
                 />
               ))}
             </div>

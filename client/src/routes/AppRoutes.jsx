@@ -72,6 +72,9 @@ const History = lazy(() => import('@/pages/queue/history'));
 
 // Order Related Pages
 const FinalizeOrder = lazy(() => import('@/pages/order'));
+const OrderData = lazy(
+  () => import('@/pages/order/order-data'),
+);
 
 // Shop Related Pages
 const Shop = lazy(() => import('@/pages/shop/shop'));
@@ -188,6 +191,17 @@ const router = createBrowserRouter([
           <Suspense fallback={<PageLoader />}>
             <PrivateRoute
               element={<FinalizeOrder />}
+              roles={[USER_ROLES.ADMIN]}
+            />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'order/:queueId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PrivateRoute
+              element={<OrderData />}
               roles={[USER_ROLES.ADMIN]}
             />
           </Suspense>

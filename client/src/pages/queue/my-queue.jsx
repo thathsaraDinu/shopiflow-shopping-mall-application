@@ -21,11 +21,12 @@ const MyQueue = () => {
   const leaveQueueMutation = useMutation({
     mutationFn: leaveQueue,
     onSuccess: () => {
-      toast.success('Joined queue successfully'), refetch();
+      toast.success('Left queue successfully');
+      refetch();
     },
     onError: (error) => {
       console.error(error);
-      toast.error('Error joining queue');
+      toast.error('Error leaving queue');
     },
   });
 
