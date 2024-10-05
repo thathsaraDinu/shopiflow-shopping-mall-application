@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import useProduct from '@/hooks/useProduct';
 import { useParams } from 'react-router-dom';
-
+import toast from 'react-hot-toast';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,17 +15,46 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteProductById } from '@/api/product.api';
+import {
+  deleteProductById,
+  updateProduct,
+} from '@/api/product.api';
 import InventoryForm from '@/components/inventory/inventoryForm';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useEffect } from 'react';
 
 const ItemDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, refetch } = useProduct(id);
   const [open, setOpen] = useState(false);
+  const [quantity, setQuantity] = useState(0);
+  const [thresholdValue, setThresholdValue] = useState(0);
+  const [activeTab, setActiveTab] = useState('overview');
   const detailsRef = useRef(null);
+
+  useEffect(() => {
+    if (data) {
+      setQuantity(data.quantity);
+      setThresholdValue(data.thresholdValue);
+    }
+  }, [data]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    data.quantity = quantity;
+    data.thresholdValue = thresholdValue;
+
+    try {
+      await updateProduct(data);
+      toast.success('Stock updated successfully');
+    } catch (error) {
+      toast.error('Something went wrong!');
+      console.log(error);
+    }
+  };
 
   const handleDelete = async () => {
     await deleteProductById(id);
@@ -38,19 +67,16 @@ const ItemDetails = () => {
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
 
-      // Create a landscape PDF (wide page)
-      const pdf = new jsPDF('l', 'mm', 'a4'); // 'l' is for landscape orientation
+      const pdf = new jsPDF('l', 'mm', 'a4');
 
-      // Get the width and height for the PDF
-      const imgWidth = 297; // A4 landscape width in mm
+      const imgWidth = 297;
       const pageHeight = pdf.internal.pageSize.height;
       const imgHeight =
-        (canvas.height * imgWidth) / canvas.width; // Preserve aspect ratio
+        (canvas.height * imgWidth) / canvas.width;
 
       let heightLeft = imgHeight;
       let position = 0;
 
-      // Add the image to the PDF
       pdf.addImage(
         imgData,
         'PNG',
@@ -61,7 +87,6 @@ const ItemDetails = () => {
       );
       heightLeft -= pageHeight;
 
-      // Add additional pages if necessary
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
@@ -76,7 +101,6 @@ const ItemDetails = () => {
         heightLeft -= pageHeight;
       }
 
-      // Save the PDF with the product name
       pdf.save(`${data.name}_details.pdf`);
     });
   };
@@ -210,106 +234,251 @@ const ItemDetails = () => {
           </div>
           <div className="border-b border-grey-50 mb-5">
             <ul className="flex text-grey-700">
-              <li className="px-2 mr-10 border-b-2 border-blue-500 pb-3">
+              <li
+                onClick={() => setActiveTab('overview')}
+                className={`px-2 mr-10 ${activeTab === 'overview' && 'border-b-2 border-blue-500'} pb-3 cursor-pointer`}
+              >
                 Overview
               </li>
-              <li className="px-2 mr-10">Purchases</li>
-              <li className="px-2 mr-10">Adjustments</li>
-              <li className="px-2 mr-10">History</li>
+              <li
+                onClick={() => setActiveTab('adjustments')}
+                className={`px-2 mr-10 ${activeTab === 'adjustments' && 'border-b-2 border-blue-500'} pb-3 cursor-pointer`}
+              >
+                Adjustments
+              </li>
             </ul>
           </div>
-          <div ref={detailsRef} className="flex">
-            <div className="ml-2 w-1/3">
-              <h3 className="font-semibold text-grey-700 mb-4">
-                Primary Details
-              </h3>
-              <div className="grid font-medium text-sm max-w-[500px]">
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Product name
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.name}
-                  </p>
-                </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Product ID
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.productID}
-                  </p>
-                </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Product category
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.category}
-                  </p>
-                </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Supplier name
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.supplier}
-                  </p>
-                </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Buying Price
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.buyingPrice}
-                  </p>
+          {activeTab === 'overview' ? (
+            <div ref={detailsRef} className="flex">
+              <div className="ml-2 w-1/3">
+                <h3 className="font-semibold text-grey-700 mb-4">
+                  Primary Details
+                </h3>
+                <div className="grid font-medium text-sm max-w-[500px]">
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Product name
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.name}
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Product ID
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.productID}
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Product category
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.category}
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Supplier name
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.supplier}
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Buying Price
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.buyingPrice}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mx-10 w-1/3 mt-10">
-              <div className="grid font-medium text-sm max-w-[500px] mx-auto">
-                <div className="flex mb-8 ">
-                  <p className="text-grey-400 w-1/2">
-                    Opening Stock
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.quantity}
-                  </p>
+              <div className="mx-10 w-1/3 mt-10">
+                <div className="grid font-medium text-sm max-w-[500px] mx-auto">
+                  <div className="flex mb-8 ">
+                    <p className="text-grey-400 w-1/2">
+                      Opening Stock
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.quantity}
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Remaining Stock
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      40
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Unit Price
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.unitPrice}
+                    </p>
+                  </div>
+                  <div className="flex mb-8">
+                    <p className="text-grey-400 w-1/2">
+                      Threshold value
+                    </p>
+                    <p className="text-grey-600 w-1/2">
+                      {data.thresholdValue}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
+              </div>
+              <div className="mt-10 h-[170px] w-[170px] border-dashed border-2 border-[#9D9D9D] rounded-sm mb-[60px] overflow-hidden">
+                {data.image && (
+                  <img
+                    className="w-full h-full"
+                    src={data.image}
+                    alt="image"
+                  />
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <form onSubmit={handleSubmit}>
+                <div className="flex items-center w-[600px] mb-8">
+                  <p className="text-grey-700 w-1/2">
                     Remaining Stock
                   </p>
-                  <p className="text-grey-600 w-1/2">40</p>
+                  <div className="relative flex items-center max-w-[8rem]">
+                    <button
+                      onClick={() =>
+                        setQuantity(quantity - 1)
+                      }
+                      type="button"
+                      className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                    >
+                      <svg
+                        className="w-3 h-3 text-gray-900 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 2"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 1h16"
+                        />
+                      </svg>
+                    </button>
+                    <input
+                      type="text"
+                      className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5"
+                      value={quantity}
+                      readOnly
+                      required
+                    />
+                    <button
+                      onClick={() =>
+                        setQuantity(quantity + 1)
+                      }
+                      type="button"
+                      className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                    >
+                      <svg
+                        className="w-3 h-3 text-gray-900 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 18"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 1v16M1 9h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Unit Price
+                <div className="flex items-center w-[600px] mb-8">
+                  <p className="text-grey-700 w-1/2">
+                    Threshold Value
                   </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.unitPrice}
-                  </p>
+                  <div className="relative flex items-center max-w-[8rem]">
+                    <button
+                      onClick={() =>
+                        setThresholdValue(
+                          thresholdValue - 1,
+                        )
+                      }
+                      type="button"
+                      className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                    >
+                      <svg
+                        className="w-3 h-3 text-gray-900 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 2"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 1h16"
+                        />
+                      </svg>
+                    </button>
+                    <input
+                      type="text"
+                      className="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5"
+                      value={thresholdValue}
+                      readOnly
+                      required
+                    />
+                    <button
+                      onClick={() =>
+                        setThresholdValue(
+                          thresholdValue + 1,
+                        )
+                      }
+                      type="button"
+                      className="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                    >
+                      <svg
+                        className="w-3 h-3 text-gray-900 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 18 18"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 1v16M1 9h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <div className="flex mb-8">
-                  <p className="text-grey-400 w-1/2">
-                    Threshold value
-                  </p>
-                  <p className="text-grey-600 w-1/2">
-                    {data.thresholdValue}
-                  </p>
-                </div>
-              </div>
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all"
+                >
+                  Update Stock
+                </button>
+              </form>
             </div>
-            <div className="mt-10 h-[170px] w-[170px] border-dashed border-2 border-[#9D9D9D] rounded-sm mb-[60px] overflow-hidden">
-              {data.image && (
-                <img
-                  className="w-full h-full"
-                  src={data.image}
-                  alt="image"
-                />
-              )}
-            </div>
-          </div>
+          )}
         </div>
       )}
     </>

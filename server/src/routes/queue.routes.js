@@ -20,6 +20,7 @@ router.delete('/:id', verifyAuth([USER_ROLES.USER]), QueueController.leaveQueue)
 router.get('/:shopID', verifyAuth([USER_ROLES.ADMIN, USER_ROLES.USER]), QueueController.getQueues);
 
 // Admin routes
+router.put('/update/:id', verifyAuth([USER_ROLES.ADMIN]), QueueController.updateQueueStatus);
 router.delete('/:shopID/clear', verifyAuth([USER_ROLES.ADMIN]), QueueController.clearShopQueues);
 
 export default router;

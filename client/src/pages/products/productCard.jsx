@@ -21,12 +21,13 @@ const ProductCard = ({ data }) => {
       console.log(error);
     }
   };
+
   return (
     <>
       <div
         onMouseEnter={() => setShowAddToWhishlist(true)}
         onMouseLeave={() => setShowAddToWhishlist(false)}
-        className="w-[260px] h-[440px] mx-auto"
+        className="w-[260px] h-[450px] border border-grey-100 rounded-lg overflow-hidden"
       >
         <div className="relative flex items-center h-[330px] bg-gray-100">
           <img
@@ -43,11 +44,21 @@ const ProductCard = ({ data }) => {
             </button>
           )}
         </div>
-        <div className="mt-4">
-          <h3 className="font-bold">{data.name}</h3>
+        <div className="mt-2 px-2">
+          <div>
+            <h3 className="font-bold">{data.name}</h3>
+          </div>
           <p className="text-sm mb-1">{data.supplier}</p>
           <p className="mb-1">{data.category}</p>
-          <p>${data.buyingPrice.toFixed(2)}</p>
+          <div className="flex justify-between items-center">
+            <p>${data.buyingPrice.toFixed(2)}</p>
+            <p className="text-xs font-bold">
+              Stock:{' '}
+              {data.quantity > data.thresholdValue
+                ? data.thresholdValue
+                : data.quantity}
+            </p>
+          </div>
         </div>
       </div>
     </>

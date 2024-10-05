@@ -10,11 +10,14 @@ const DashboardNavbar = () => {
         <h1 className="text-2xl font-bold text-gray-800">
           {path === '/allpromotions'
             ? 'PROMOTIONS'
-            : path.replace('/', '').toUpperCase() ||
-              'DASHBOARD'}
+            : path.startsWith('/order')
+              ? 'ORDER DETAILS'
+              : path === '/'
+                ? 'DASHBOARD'
+                : path.toUpperCase().slice(1)}
         </h1>
       </div>
-      <div className="relative grow">
+      <div className="relative grow hidden">
         <Input
           id="search"
           className="text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500"

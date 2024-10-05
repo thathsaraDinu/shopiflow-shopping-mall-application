@@ -1,12 +1,11 @@
 import {
   deletePromotion,
-  getPromotions,
+  getPromotionsByShopId,
 } from '@/api/promotion.api';
 import {
-  useMutation,
   useQuery,
 } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -21,29 +20,49 @@ import { PromotionReportDownload } from './promotionreport/promotionreportdownlo
 import AddPromotionMain from './addpromotionmain';
 import { DeleteModal } from '@/components/modals/delete';
 import toast from 'react-hot-toast';
+import { useShopStore } from '@/store/shop-store';
+import { getShopById } from '@/api/shop.api';
 
 export default function AllPromotions() {
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['promotions'],
-    queryFn: getPromotions,
-    enabled: true,
-  });
-
-  const discounts =
-    data?.data.promotions.discountPercentage;
-  const amounts = data?.data.promotions.discountAmount;
   const [promotionType, setPromotionType] = useState('1');
   const [searchQuery, setSearchQuery] = useState(''); // For search input
-
   const [loading, setLoading] = useState(false);
 
-  const editPromotion = async (id) => {
-    console.log('Edit clicked');
-  };
+  const loggedInShopId = useShopStore(
+    (state) => state.shopId,
+  );
+
+  const {
+    data: promotionsData,
+    isLoading: shopPromotionsLoading,
+    refetch: refetchShopPromotions,
+  } = useQuery({
+    queryKey: ['promotionByShopId'],
+    queryFn: () => getPromotionsByShopId(loggedInShopId),
+    enabled: !!loggedInShopId,
+  });
+
+  console.log('promotionsData:', promotionsData);
+
+  const {
+    data: currentShop,
+    isLoading: currentShopLoading,
+  } = useQuery({
+    queryKey: ['currentShop'],
+    queryFn: () => getShopById(loggedInShopId),
+    enabled: !!loggedInShopId,
+  });
+
+  const shopName = currentShop?.name;
+
+  const discounts =
+    promotionsData?.data.promotions.discountPercentage;
+
+  const amounts =
+    promotionsData?.data.promotions.discountAmount;
 
   const handleClick = async () => {
     setLoading(true); // Start loading
-
     try {
       if (promotionType === '1') {
         await PromotionReportDownload(
@@ -64,24 +83,35 @@ export default function AllPromotions() {
   };
 
   // Filter promotions based on search query
-  const filteredDiscounts = discounts?.filter((promotion) =>
-    promotion.storeName
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase()),
+  const filteredDiscounts = discounts?.filter(
+    (promotion) =>
+      promotion.storeName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      promotion.description
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()),
   );
-  const filteredAmounts = amounts?.filter((promotion) =>
-    promotion.storeName
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase()),
+
+  const filteredAmounts = amounts?.filter(
+    (promotion) =>
+      promotion.storeName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      promotion.description
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()),
   );
 
   return (
     <div className="my-10 mx-3 flex flex-col gap-3">
-      <div className="flex justify-between items-center">
-        <h3 className="scroll-m-20 text-xl m-5 font-semibold tracking-tight">
-          All Promotions
+      <div className="flex justify-between flex-wrap items-center">
+        <h3 className="scroll-m-20 text-xl m-5 font-semibold">
+          {loggedInShopId
+            ? `${currentShop?.name}`
+            : 'All Promotions'}
         </h3>
-        <div className="flex gap-6">
+        <div className="flex gap-6 flex-wrap">
           <input
             type="text"
             placeholder="Search promotions..."
@@ -89,24 +119,25 @@ export default function AllPromotions() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 mr-5 border rounded-md w-56 appearance-none focus:outline-none text-sm focus:ring-1 focus:ring-blue-500 focus:border-transparent"
           />
-          <AddPromotionMain
-            refetch={refetch}
-            isUpdate={false}
-          />
-
-          <Button
-            disabled={loading}
-            onClick={handleClick}
-            className="bg-red-500 text-white text-sm transition rounded-md px-5 py-5 hover:bg-red-600"
-          >
-            {loading ? 'Loading...' : 'Download Report'}
-          </Button>
+          <div className="flex gap-5 flex-wrap">
+            <AddPromotionMain
+              loggedInShopId={loggedInShopId}
+              refetch={refetchShopPromotions}
+              isUpdate={false}
+              shopName={shopName}
+            />
+            <Button
+              disabled={loading}
+              onClick={handleClick}
+              className="bg-red-500 text-white text-sm transition rounded-md px-5 py-5 hover:bg-red-600"
+            >
+              {loading ? 'Loading...' : 'Download Report'}
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Search Input */}
-
-      <div>
+      <div className="flex flex-col ">
         <div className="relative flex pt-4 gap-5 justify-start ">
           <div className="flex flex-col items-center">
             <h4
@@ -133,35 +164,35 @@ export default function AllPromotions() {
           <hr className="border-2 absolute bottom-0 w-full z-0"></hr>
         </div>
 
-        <div className="m-5">
+        <div className="m-5 ">
           {promotionType == 1 ? (
-            <Table className="max-w-[1150px]">
+            <Table className="">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-black w-1/6">
-                    Store Name
+                  <TableHead className="text-black w-1/6 py-3">
+                    Promotion Title
                   </TableHead>
-                  <TableHead className="text-black w-1/6">
+                  <TableHead className="text-black w-1/6  py-3">
                     Percentage
                   </TableHead>
-                  <TableHead className="text-black w-1/3">
+                  <TableHead className="text-black w-1/3  py-3">
                     Description
                   </TableHead>
-                  <TableHead className="text-black w-1/6">
+                  <TableHead className="text-black w-1/6  py-3">
                     Start Date
                   </TableHead>
-                  <TableHead className="text-black w-1/6">
+                  <TableHead className="text-black w-1/6 py-3">
                     End Date
                   </TableHead>
-                  <TableHead className="text-black w-1/6">
+                  <TableHead className="text-black w-1/6 py-3">
                     Actions
                   </TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
-                {isLoading && (
-                  <p className="text-blue-400 font-semibold text-md italic">
+                {shopPromotionsLoading && (
+                  <p className="text-blue-400 font-semibold text-md p-5 italic">
                     Loading...
                   </p>
                 )}
@@ -172,7 +203,7 @@ export default function AllPromotions() {
                     <TableRow key={promotion._id}>
                       {/* Apply consistent styles to the table cells */}
                       <TableCell>
-                        {promotion.storeName}
+                        {promotion.promoTitle}
                       </TableCell>
                       <TableCell>
                         {promotion.discountPercentage}%
@@ -193,9 +224,11 @@ export default function AllPromotions() {
                       <TableCell className="flex gap-5 items-center">
                         {/* Keep the same actions styling */}
                         <AddPromotionMain
-                          refetch={refetch}
+                          loggedInShopId={loggedInShopId}
+                          refetch={refetchShopPromotions}
                           promotion={promotion}
                           isUpdate={true}
+                          shopName={shopName}
                         />
                         <DeleteModal
                           btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
@@ -211,7 +244,8 @@ export default function AllPromotions() {
                               toast.success(
                                 'Promotion deleted successfully',
                               );
-                              refetch(); // Re-fetch the updated data after deletion
+
+                              refetchShopPromotions();
                             } catch (error) {
                               toast.error(
                                 'Failed to delete promotion',
@@ -243,7 +277,7 @@ export default function AllPromotions() {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : !isLoading ? (
+                ) : !shopPromotionsLoading ? (
                   <div className="text-red-500 m-3">
                     No promotions found.
                   </div>
@@ -253,36 +287,36 @@ export default function AllPromotions() {
               </TableBody>
             </Table>
           ) : (
-            <Table className="max-w-[1150px]">
+            <Table className="">
               <TableCaption></TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-black w-1/7">
-                    Store Name
+                  <TableHead className="text-black w-1/7 py-3">
+                    Promotion Title
                   </TableHead>
-                  <TableHead className="text-black w-1/7">
+                  <TableHead className="text-black w-1/7 py-3">
                     Qualifying Amount
                   </TableHead>
-                  <TableHead className="text-black w-1/7">
+                  <TableHead className="text-black w-1/7 py-3">
                     Discount Amount
                   </TableHead>
-                  <TableHead className="text-black w-2/7">
+                  <TableHead className="text-black w-2/7 py-3">
                     Description
                   </TableHead>
-                  <TableHead className="text-black w-1/7">
+                  <TableHead className="text-black w-1/7 py-3">
                     Start Date
                   </TableHead>
-                  <TableHead className="text-black w-1/7">
+                  <TableHead className="text-black w-1/7 py-3">
                     End Date
                   </TableHead>
-                  <TableHead className="text-black w-1/7">
+                  <TableHead className="text-black w-1/7 py-3">
                     Actions
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isLoading && (
-                  <p className="text-blue-400 font-semibold text-md italic">
+                {shopPromotionsLoading && (
+                  <p className="text-blue-400 font-semibold text-md p-5 italic">
                     Loading...
                   </p>
                 )}
@@ -291,7 +325,7 @@ export default function AllPromotions() {
                   filteredAmounts.map((promotion) => (
                     <TableRow key={promotion._id}>
                       <TableCell>
-                        {promotion.storeName}
+                        {promotion.promoTitle}
                       </TableCell>
                       <TableCell>
                         {promotion.qualifyingPurchaseAmount}
@@ -314,9 +348,11 @@ export default function AllPromotions() {
                       </TableCell>
                       <TableCell className="flex gap-5 items-center">
                         <AddPromotionMain
-                          refetch={refetch}
+                          loggedInShopId={loggedInShopId}
+                          refetch={refetchShopPromotions}
                           promotion={promotion}
                           isUpdate={true}
+                          shopName={shopName}
                         />
                         <DeleteModal
                           btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
@@ -332,7 +368,8 @@ export default function AllPromotions() {
                               toast.success(
                                 'Promotion deleted successfully',
                               );
-                              refetch(); // Re-fetch the updated data after deletion
+
+                              refetchShopPromotions();
                             } catch (error) {
                               toast.error(
                                 'Failed to delete promotion',
@@ -364,7 +401,7 @@ export default function AllPromotions() {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : !isLoading ? (
+                ) : !shopPromotionsLoading ? (
                   <div className="text-red-500 m-3">
                     No promotions found.
                   </div>

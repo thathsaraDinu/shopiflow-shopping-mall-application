@@ -1,10 +1,15 @@
 import { instance } from '@/hooks/use-axios';
 
-// Get queues by shop ID
-export const getQueues = async (shopID) => {
+// Get queues by shop ID and Query Params
+export const getQueues = async (shopID, statuses) => {
   try {
     const response = await instance.get(
       `/api/queue/${shopID}`,
+      {
+        params: {
+          status: statuses,
+        },
+      },
     );
     return response.data;
   } catch (error) {
@@ -41,14 +46,28 @@ export const getNumberOfQueues = async (shopID) => {
 };
 
 // Join queue
-export const joinQueue = async (shopID) => {
+export const joinQueue = async (queueID) => {
   try {
     const response = await instance.post(
-      `/api/queue/${shopID}`,
+      `/api/queue/${queueID}`,
     );
     return response.data;
   } catch (error) {
     console.error('Error joining queue:', error);
+    throw error;
+  }
+};
+
+// Update queue status (admin only)
+export const updateQueueStatus = async (data) => {
+  try {
+    const response = await instance.put(
+      `/api/queue/update/${data.queueID}`,
+      { status: data.status },
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error updating queue status:', error);
     throw error;
   }
 };

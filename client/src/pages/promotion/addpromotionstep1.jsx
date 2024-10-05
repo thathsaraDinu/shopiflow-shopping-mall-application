@@ -12,14 +12,14 @@ export function AddPromotionStep1({ register, errors, promotion }) {
   return (
     <div
       id="firstpart"
-      className="transition-all duration-500 px-3 mb-6 mx-10 "
+      className="transition-all duration-500 px-3 mb-6"
     >
       <div className="mt-5 mb-10 flex pt-5 items-center flex-col gap-4">
         <CardTitle className="text-base font-semibold text-gray-800">
           Select a Promotion Type
         </CardTitle>
 
-        <div className="relative w-full">
+        <div className="relative w-full  sm:w-3/4">
           <select
           defaultValue={promotion ? promotion.promotionType : -1}
             name="promotionType"

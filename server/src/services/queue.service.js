@@ -1,3 +1,4 @@
+import { QUEUE_STATUS } from '../constants/constants.js';
 import QueueSchema from '../models/queue.model.js';
 
 // Get all queues in a shop by shop ID
@@ -16,7 +17,8 @@ export const getQueues = async (shopID, status) => {
     )
       .sort({ position: 1 })
       .populate('userID')
-      .populate('shopID');
+      .populate('shopID')
+      .populate('orderID');
 
     return queues;
   } catch (error) {
@@ -32,7 +34,8 @@ export const getNumberOfQueues = async (shopID) => {
   try {
     // Find all queues in the shop
     const queues = await QueueSchema.countDocuments({
-      shopID
+      shopID,
+      status: { $ne: QUEUE_STATUS.COMPLETED }
     });
 
     return queues;
@@ -90,10 +93,10 @@ export const joinQueue = async (data) => {
       shopID: data.shopID
     });
 
-    if (existingQueue) {
+    if (existingQueue.status === QUEUE_STATUS.PENDING) {
       throw {
         status: 400,
-        message: 'User already in the queue'
+        message: 'You are already in the queue'
       };
     }
 
@@ -106,7 +109,7 @@ export const joinQueue = async (data) => {
     const queue = new QueueSchema({
       ...data,
       position: lastQueue ? lastQueue.position + 1 : 1,
-      status: 'waiting'
+      status: 'pending'
     });
 
     // Save the queue object to the database
@@ -123,6 +126,45 @@ export const joinQueue = async (data) => {
 
 // Change queue position
 export const changeQueuePosition = async (id, position) => {};
+
+// Update queue status
+export const updateQueueStatus = async (id, status, orderId = null) => {
+  console.log('updateQueueStatus', id, status, orderId);
+  try {
+    // Find the queue by ID
+    const queue = await QueueSchema.findOne({
+      _id: id
+    });
+
+    // If the queue is not found, throw an error
+    if (!queue) {
+      throw {
+        status: 404,
+        message: 'Queue not found'
+      };
+    }
+
+    if (status === QUEUE_STATUS.COMPLETED && orderId) {
+      // If the status is 'completed', set the order ID
+      queue.orderID = orderId;
+    }
+
+    // Update the queue status
+    queue.status = status;
+    console.log('queue', queue.status);
+
+    // Save the updated queue object to the database
+    await queue.save();
+    console.log('queue', queue);
+
+    return queue;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+};
 
 // Leave a queue
 export const leaveQueue = async (userID, id) => {

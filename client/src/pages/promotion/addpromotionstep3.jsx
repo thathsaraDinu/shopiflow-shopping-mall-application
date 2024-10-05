@@ -10,11 +10,9 @@ export function AddPromotionStep3({
   handleFileChange,
   selectedFile,
   watch,
-  setSelectedFile,
   promotion,
   setValue,
 }) {
-  console.log('promotion start date', promotion.startDate);
 
   const startDate = watch('startDate');
   const minEndDate = startDate
@@ -55,7 +53,7 @@ export function AddPromotionStep3({
         )}
       </CardTitle>
       <div className="flex flex-col gap-10">
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-5 flex-wrap">
           <div className=" inline-block">
             <InputField
               defaultValue={
@@ -94,15 +92,17 @@ export function AddPromotionStep3({
           </div>
         </div>
         <div className="flex flex-col gap-5">
-          <div className="flex flex-row justify-start items-center gap-5">
-            <p className=" text-sm font-medium">Photo</p>
+          <div className="flex flex-row justify-start flex-wrap items-center gap-8">
+            <p className=" text-sm font-medium">
+              Promotion Image
+            </p>
 
             <div className="">
               <label
                 htmlFor="file-upload"
                 className="bg-blue-500 text-sm text-white py-2 px-4 rounded-md cursor-pointer hover:bg-blue-600"
               >
-                Upload Photo
+                Upload Image
               </label>
             </div>
             <InputField
@@ -119,26 +119,26 @@ export function AddPromotionStep3({
           </div>
           <div>
             <div className="flex items-center">
-              <div className="inline-block border ">
+              <div className="  flex flex-col w-full h-[250px]">
                 <img
                   src={
                     selectedFile
                       ? URL.createObjectURL(selectedFile)
                       : promotion
                         ? promotion.photo
-                        : ''
+                        : 'https://via.placeholder.com/500?text=No+Image+Selected'
                   }
                   alt="Selected file"
-                  className=" h-[150px] w-[250px] object-cover border"
+                  className=" h-full w-full object-cover border"
                 />
+                {errors.photo && (
+                  <p className="text-red-500 text-sm">
+                    {errors.photo.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
-          {errors.photo && (
-            <p className="text-red-500 text-sm">
-              {errors.photo.message}
-            </p>
-          )}
         </div>
       </div>
     </div>

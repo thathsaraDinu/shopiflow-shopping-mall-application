@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export function PromotionCard({ promotion }) {
   const {
-    storeName,
+    storeName, 
     description,
     startDate,
     endDate,

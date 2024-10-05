@@ -1,6 +1,6 @@
 import { getPromotionById } from '@/api/promotion.api';
 import DiscountAmountCard from '@/components/promotions/discount-amount-card';
-import { MapPromotions } from '@/hooks/map-promotions';
+import { UsePromotionsQuery } from '@/hooks/usePromotions';
 import { PromotionCard } from '@/components/promotions/promotion-card';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -8,18 +8,14 @@ import { PromotionsScrollable } from '@/components/promotions/promotions-scrolla
 
 export default function PromotionDetails() {
   const { type, id } = useParams();
-  
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['promotions', id],
     queryFn: () => getPromotionById(id, type),
     enabled: true,
     onSuccess: (data) => {
-      console.log('Query successful, data:', data);
     },
   });
-
-  
 
   const promotiondetailscss =
     'flex flex-col lg:flex-row gap-5 justify-center xl:w-[800px] md:w-[600px] w-[300px] transition-all ease-in-out';
@@ -27,7 +23,7 @@ export default function PromotionDetails() {
   return (
     <div className="mx-20 my-10 flex flex-col gap-16 items-center">
       <h1 className="text-2xl font-bold text-center  text-gray-800 h-">
-        Promotion Details
+        {data && data.data.promotion.promoTitle}
       </h1>
       <div className="flex gap-10">
         <div className="">
@@ -46,7 +42,6 @@ export default function PromotionDetails() {
               {/* Image at the top */}
               <img
                 src={data.data.promotion.photo}
-                alt={data.data.promotion.storeName}
                 className="w-full h-[500px] object-cover rounded-lg"
               />
               <div className="flex flex-col lg:gap-5 gap-3 justify-start lg:mt-5">
@@ -125,7 +120,7 @@ export default function PromotionDetails() {
         <h1 className="text-2xl font-bold text-center  text-gray-800">
           You May Also Like
         </h1>
-       <PromotionsScrollable/>
+        <PromotionsScrollable />
       </div>
     </div>
   );

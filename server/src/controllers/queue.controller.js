@@ -5,6 +5,7 @@ import {
   getUserQueues,
   joinQueue,
   changeQueuePosition,
+  updateQueueStatus,
   leaveQueue,
   clearShopQueues
 } from '../services/queue.service.js';
@@ -14,10 +15,11 @@ const QueueController = {
   async getQueues(req, res) {
     try {
       // Get the shop ID from the request
-      const shopID = req.params.shopID;
+      const { shopID } = req.params;
+      const { status } = req.query;
 
       // Get all queues in the shop
-      const queues = await getQueues(shopID);
+      const queues = await getQueues(shopID, status);
 
       return res.status(200).json(queues);
     } catch (error) {
@@ -73,13 +75,13 @@ const QueueController = {
       const shopID = req.params.shopID;
 
       // Check if the user is already in the queue
-      const existingQueue = await getUserShopQueue(userID, shopID);
+      // const existingQueue = await getUserShopQueue(userID, shopID);
 
-      if (existingQueue) {
-        return res.status(400).json({
-          message: 'User is already in the queue'
-        });
-      }
+      // if (existingQueue) {
+      //   return res.status(400).json({
+      //     message: 'User is already in the queue'
+      //   });
+      // }
 
       // Create a new queue object
       const queue = {
@@ -118,6 +120,28 @@ const QueueController = {
 
       return res.status(200).json({
         message: 'User removed from the queue'
+      });
+    } catch (error) {
+      return res.status(error.status || 500).json({
+        message: error.message
+      });
+    }
+  },
+
+  // Update queue status
+  async updateQueueStatus(req, res) {
+    try {
+      // Get the queue ID from the request
+      const { id } = req.params;
+
+      // Get the status from the request
+      const status = req.body.status;
+
+      // Update the queue status
+      await updateQueueStatus(id, status, null);
+
+      return res.status(200).json({
+        message: 'Queue status updated'
       });
     } catch (error) {
       return res.status(error.status || 500).json({

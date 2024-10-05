@@ -1,7 +1,6 @@
 import InventoryTable from '@/components/inventory/inventoryTable';
 import OverallInventory from '@/components/inventory/overallInventory';
 import useProducts from '@/hooks/useProducts';
-
 import React from 'react';
 
 const Inventory = () => {
@@ -9,7 +8,7 @@ const Inventory = () => {
 
   return (
     <>
-      <OverallInventory />
+      <OverallInventory totalProducts={tableData?.length} />
       {tableData && (
         <InventoryTable
           data={tableData}

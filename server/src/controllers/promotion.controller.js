@@ -4,6 +4,7 @@ import {
   deletePromotionType1,
   deletePromotionType2,
   getAllPromotions,
+  getPromotionsByShopId,
   getPromotionType1ById,
   getPromotionType2ById,
   updatePromotionType1,
@@ -13,8 +14,20 @@ import {
 export const PromotionController = {
   async promotions(req, res) {
     try {
-      console.log('test get all');
+      
       const promotions = await getAllPromotions();
+
+      return res.status(200).json({
+        promotions
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async getpromotionsbyshopid(req, res) {
+    try {
+      const promotions = await getPromotionsByShopId(req.params.id);
 
       return res.status(200).json({
         promotions
@@ -26,13 +39,8 @@ export const PromotionController = {
 
   async addpromotiontype1(req, res) {
     try {
-      console.log('test controller');
-
       // Await the result of the addPromotionPercentage function
       const promotion = await addPromotionPercentage(req);
-
-      console.log('the test in backend:', promotion);
-
       // Send a success response with the promotion data
       return res.status(200).json({
         promotion

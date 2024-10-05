@@ -1,13 +1,28 @@
 import DiscountPercentageSchema from '../models/promotion.model/promotionondiscountpercentage.model.js';
 import DiscountAmount from '../models/promotion.model/promotionondiscountamount.model.js';
 // Get all promotions
-export const getAllPromotions = async () => {
+export const getAllPromotions = async (req) => {
   try {
     // Find all promotions
     const discountPercentage = await DiscountPercentageSchema.find();
     const discountAmount = await DiscountAmount.find();
-    console.log('test controller');
 
+    return {
+      discountPercentage,
+      discountAmount
+    };
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+};
+
+export const getPromotionsByShopId = async (shopId) => {
+  try {
+    const discountPercentage = await DiscountPercentageSchema.find({ shopId });
+    const discountAmount = await DiscountAmount.find({ shopId });
     return {
       discountPercentage,
       discountAmount
@@ -70,8 +85,7 @@ export const deletePromotionType2 = async (id) => {
 
 export const updatePromotionType1 = async (id, data) => {
   try {
-    const promotion = await DiscountPercentageSchema.findByIdAndUpdate(id, data );
-    console.log('promotionbackend:', promotion);
+    const promotion = await DiscountPercentageSchema.findByIdAndUpdate(id, data);
     return promotion;
   } catch (error) {
     throw {
@@ -79,7 +93,7 @@ export const updatePromotionType1 = async (id, data) => {
       message: error.message
     };
   }
-}
+};
 
 export const updatePromotionType2 = async (id, data) => {
   try {
@@ -87,23 +101,29 @@ export const updatePromotionType2 = async (id, data) => {
       new: true
     });
     return promotion;
-  }
-  catch (error) {
+  } catch (error) {
     throw {
       status: 500,
       message: error.message
     };
   }
-}
+};
 
 // Add a new promotion type percentage discount
 
 export const addPromotionPercentage = async (data) => {
   try {
-    const { promotionType, storeName, startDate, endDate, description, discountPercentage, photo } =
-      data.body;
-
-    console.log('data photo: ', data.body);
+    const {
+      promotionType,
+      shopId,
+      promoTitle,
+      storeName,
+      startDate,
+      endDate,
+      description,
+      discountPercentage,
+      photo
+    } = data.body;
 
     const now = new Date();
     const start = new Date(startDate);
@@ -126,9 +146,10 @@ export const addPromotionPercentage = async (data) => {
       endDate: end,
       description,
       isActive,
+      promoTitle,
+      shopId,
       photo
     });
-    console.log('new promotion:', newPromotion);
 
     const savedPromotion = await newPromotion.save();
     return savedPromotion;
@@ -152,7 +173,9 @@ export const addPromotionAmount = async (data) => {
       description,
       discountAmount,
       qualifyingPurchaseAmount,
-      photo
+      photo,
+      shopId,
+      promoTitle
     } = data;
 
     const now = new Date();
@@ -177,7 +200,9 @@ export const addPromotionAmount = async (data) => {
       endDate: end,
       description,
       isActive,
-      photo
+      photo,
+      promoTitle,
+      shopId
     });
 
     const savedPromotion = await newPromotion.save();
