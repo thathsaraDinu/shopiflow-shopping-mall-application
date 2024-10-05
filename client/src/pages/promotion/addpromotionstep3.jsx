@@ -10,7 +10,6 @@ export function AddPromotionStep3({
   handleFileChange,
   selectedFile,
   watch,
-  setSelectedFile,
   promotion,
   setValue,
 }) {

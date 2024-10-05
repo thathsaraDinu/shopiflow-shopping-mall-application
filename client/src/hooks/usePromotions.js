@@ -14,7 +14,6 @@ export function UsePromotionsQuery() {
     data?.data.promotions.discountPercentage;
   const amounts = data?.data.promotions.discountAmount;
   const [promotionType, setPromotionType] = useState('1');
-  console.log(data);
 
   const [promotions, setPromotions] = useState([]);
   return { discounts, amounts, isLoading };

@@ -10,22 +10,9 @@ export function AddPromotionStep2({
   promotionType,
   register,
   errors,
-  shops,
-  loading,
   promotion,
-  setShopId,
-  setValue,
-  loggedInShopId,
 }) {
-  const [isOpen, setIsOpen] = useState(false); // State to track dropdown open/close
-  setValue(
-    'storeName',
-    shops.find((shop) => shop._id === loggedInShopId).name,
-  );
-  setShopId(loggedInShopId ? loggedInShopId : '');
-
-  
-
+ 
   return (
     <div className="flex flex-col gap-10 transition-all duration-500 ease-in-out">
       <CardTitle className="text-base font-semibold text-gray-800 text-center">
@@ -36,7 +23,6 @@ export function AddPromotionStep2({
         ) : (
           `No Type Selected ${promotionType}`
         )}
-        {console.log('shops', shops)}
       </CardTitle>
       <div className='flex flex-col gap-5 transition-all duration-500 ease-in-out"'>
         <div className="  w-full  transition duration-300 ease-in-out">

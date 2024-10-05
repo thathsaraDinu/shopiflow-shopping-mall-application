@@ -1,13 +1,11 @@
 import {
   deletePromotion,
-  getPromotions,
   getPromotionsByShopId,
 } from '@/api/promotion.api';
 import {
-  useMutation,
   useQuery,
 } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -23,13 +21,11 @@ import AddPromotionMain from './addpromotionmain';
 import { DeleteModal } from '@/components/modals/delete';
 import toast from 'react-hot-toast';
 import { useShopStore } from '@/store/shop-store';
-import { get } from 'react-hook-form';
 import { getShopById } from '@/api/shop.api';
 
 export default function AllPromotions() {
   const [promotionType, setPromotionType] = useState('1');
   const [searchQuery, setSearchQuery] = useState(''); // For search input
-
   const [loading, setLoading] = useState(false);
 
   const loggedInShopId = useShopStore(
@@ -46,6 +42,8 @@ export default function AllPromotions() {
     enabled: !!loggedInShopId,
   });
 
+  console.log('promotionsData:', promotionsData);
+
   const {
     data: currentShop,
     isLoading: currentShopLoading,
@@ -55,6 +53,8 @@ export default function AllPromotions() {
     enabled: !!loggedInShopId,
   });
 
+  const shopName = currentShop?.name;
+
   const discounts =
     promotionsData?.data.promotions.discountPercentage;
 
@@ -63,7 +63,6 @@ export default function AllPromotions() {
 
   const handleClick = async () => {
     setLoading(true); // Start loading
-
     try {
       if (promotionType === '1') {
         await PromotionReportDownload(
@@ -125,6 +124,7 @@ export default function AllPromotions() {
               loggedInShopId={loggedInShopId}
               refetch={refetchShopPromotions}
               isUpdate={false}
+              shopName={shopName}
             />
             <Button
               disabled={loading}
@@ -136,8 +136,6 @@ export default function AllPromotions() {
           </div>
         </div>
       </div>
-
-      {/* Search Input */}
 
       <div className="flex flex-col ">
         <div className="relative flex pt-4 gap-5 justify-start ">
@@ -230,6 +228,7 @@ export default function AllPromotions() {
                           refetch={refetchShopPromotions}
                           promotion={promotion}
                           isUpdate={true}
+                          shopName={shopName}
                         />
                         <DeleteModal
                           btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
@@ -316,12 +315,11 @@ export default function AllPromotions() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {!loggedInShopId &&
-                  allPromotionsLoading && (
-                    <p className="text-blue-400 font-semibold text-md p-5 italic">
-                      Loading...
-                    </p>
-                  )}
+                {shopPromotionsLoading && (
+                  <p className="text-blue-400 font-semibold text-md p-5 italic">
+                    Loading...
+                  </p>
+                )}
                 {filteredAmounts &&
                 filteredAmounts.length > 0 ? (
                   filteredAmounts.map((promotion) => (
@@ -354,6 +352,7 @@ export default function AllPromotions() {
                           refetch={refetchShopPromotions}
                           promotion={promotion}
                           isUpdate={true}
+                          shopName={shopName}
                         />
                         <DeleteModal
                           btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"

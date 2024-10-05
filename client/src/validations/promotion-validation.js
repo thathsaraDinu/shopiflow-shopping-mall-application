@@ -10,11 +10,6 @@ export const schema2 = z.object({
   promoTitle: z
     .string()
     .min(1, { message: 'Promotion title is required' })
-    .max(255),  
-
-  storeName: z
-    .string()
-    .min(1, { message: 'Store name is required' })
     .max(255),
 
   discountPercentage: z
@@ -37,11 +32,8 @@ export const schema3 = z.object({
   promoTitle: z
     .string()
     .min(1, { message: 'Promotion title is required' })
-    .max(255),  
-  storeName: z
-    .string()
-    .min(1, { message: 'Store name is required' })
     .max(255),
+
   discountAmount: z
     .string()
     .min(1, { message: 'Discount amount is required' })
@@ -87,12 +79,18 @@ export const schema4 = z.object({
     .string()
     .min(1, { message: 'End date is required' }),
   photo: z
-    .instanceof(File) // Ensure the input is a File instance
+    .instanceof(File, {
+      message: 'Please upload a valid file',
+    }) // Ensure the input is a File instance
     .refine(
       (file) => file.size <= 5000000,
       'Max file size is 5MB',
     ) // File size validation (max 5MB)
-    .refine((file) =>
-      ['image/jpeg', 'image/png'].includes(file.type),
-    ),
+    .refine(
+      (file) =>
+        ['image/jpeg', 'image/png', 'image/webp'].includes(
+          file.type,
+        ),
+      'Only JPEG, PNG, or WebP formats are allowed',
+    ), // File type validation
 });
