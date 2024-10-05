@@ -1,28 +1,38 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
-export const OrderSchema = new Schema(
+const OrderItemSchema = new Schema({
+  productId: {
+    type: Types.ObjectId,
+    ref: 'Product',
+    required: [true, 'Product ID is required']
+  },
+  quantity: {
+    type: Number,
+    required: [true, 'Quantity is required']
+  },
+  buyingPrice: {
+    type: Number,
+    required: [true, 'Buying price is required']
+  }
+});
+
+const OrderSchema = new Schema(
   {
-    productID: {
-      type: Types.ObjectId,
-      ref: 'Product',
-      required: [true, 'Product ID is required'],
-      unique: false
-    },
-    shopID: {
+    shopId: {
       type: Types.ObjectId,
       ref: 'Shop',
-      required: [true, 'Shop ID is required'],
-      unique: false
+      required: [true, 'Shop ID is required']
     },
-    quantity: {
+    items: [OrderItemSchema], // Array of order items
+    totalAmount: {
       type: Number,
-      required: [true, 'Quantity is required'],
-      unique: false
+      required: [true, 'Total amount is required']
     },
-    buyingPrice: {
-      type: Number,
-      required: [true, 'Buying price is required'],
-      unique: false
+    queueId: {
+      type: Types.ObjectId,
+      ref: 'Queue',
+      required: [true, 'Queue ID is required'],
+      unique: true
     }
   },
   {
@@ -30,4 +40,4 @@ export const OrderSchema = new Schema(
   }
 );
 
-export default mongoose.model.Orders || mongoose.model('Order', OrderSchema);
+export default mongoose.models.Orders || mongoose.model('Order', OrderSchema);

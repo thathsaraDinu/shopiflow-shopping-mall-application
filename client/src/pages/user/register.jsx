@@ -153,14 +153,14 @@ export default function Register() {
       <Card className="w-full max-w-2xl mx-4 my-16 h-full">
         <div className="flex h-12">
           <Button
-            className="w-1/2 rounded-none rounded-tl-xl h-full text-lg"
+            className="w-full rounded-none rounded-tl-xl rounded-tr-xl h-full text-lg"
             onClick={() => setForm('user')}
           >
             User Register
           </Button>
-          <div className="w-px bg-gray-300" />
+          <div className="w-px bg-gray-300 hidden" />
           <Button
-            className="w-1/2 rounded-none rounded-tr-xl h-full text-lg"
+            className="w-1/2 rounded-none rounded-tr-xl h-full text-lg hidden"
             onClick={() => setForm('shop')}
           >
             Shop Register

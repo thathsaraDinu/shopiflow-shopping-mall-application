@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/spinner';
+import { useShopStore } from '@/store/shop-store';
 
 const FinalizeOrder = () => {
   const [orderItems, setOrderItems] = useState([]);
@@ -23,6 +24,7 @@ const FinalizeOrder = () => {
   const location = useLocation();
   const queue = location.state?.queue;
   const navigate = useNavigate();
+  const shopId = useShopStore((state) => state.shopId);
 
   const { handleSubmit } = useForm();
 
@@ -74,7 +76,7 @@ const FinalizeOrder = () => {
     );
     if (existingProduct) {
       setOrderItems((prevItems) =>
-        prevItems.map((item) =>
+        prevItems?.map((item) =>
           item._id === product._id
             ? { ...item, buyQuantity: item.buyQuantity + 1 }
             : item,
@@ -100,7 +102,7 @@ const FinalizeOrder = () => {
 
   const changeQuantity = (productId, buyQuantity) => {
     setOrderItems((prevItems) =>
-      prevItems.map((item) =>
+      prevItems?.map((item) =>
         item._id === productId
           ? {
               ...item,
@@ -158,7 +160,14 @@ const FinalizeOrder = () => {
   const onSubmit = async (data) => {
     completeOrderMutation.mutate({
       ...data,
-      items: orderItems,
+      items: orderItems?.map((item) => ({
+        productId: item._id,
+        quantity: item.buyQuantity,
+        buyingPrice: item.buyingPrice,
+      })),
+      queueId: queue._id,
+      shopId,
+      totalAmount: totalAmount.toFixed(2),
     });
   };
 

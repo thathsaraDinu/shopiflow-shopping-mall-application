@@ -9,6 +9,7 @@ import DashboardNavbar from './components/navbar/dashboard-navbar';
 import { useQuery } from '@tanstack/react-query';
 import { getProfileData } from './api/user.api';
 import { LoadingSpinner } from './components/ui/spinner';
+import { useEffect } from 'react';
 
 const Layout = () => {
   const isLoggedIn = useAuthStore(
@@ -30,9 +31,11 @@ const Layout = () => {
     enabled: isLoggedIn,
   });
 
-  if (profileSuccess) {
-    setProfile(profile);
-  }
+  useEffect(() => {
+    if (profileSuccess) {
+      setProfile(profile);
+    }
+  }, [profile, profileSuccess, setProfile]);
 
   if (profileLoading) {
     return <LoadingSpinner />;

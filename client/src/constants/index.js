@@ -7,3 +7,13 @@ export const USER_ROLES = {
   ADMIN: 'admin',
   SUPER_ADMIN: 'super_admin',
 };
+
+// Queue status constants
+export const QUEUE_STATUS = {
+  PENDING: 'pending',
+  IN_PROGRESS: 'in_progress',
+  HOLD: 'hold',
+  COMPLETED: 'completed',
+  LEAVED: 'leaved',
+  CANCELLED: 'cancelled',
+};

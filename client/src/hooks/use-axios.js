@@ -6,13 +6,29 @@ import axios, { AxiosError } from 'axios';
 // Create an instance of axios
 const baseConfig = {
   baseURL: SERVER_URL,
-  withCredentials: true,
+  withCredentials: true, // to include cookies for cross-origin requests if needed
 };
 
 export const instanceWithoutInterceptors =
   axios.create(baseConfig);
 
 export const instance = axios.create(baseConfig);
+
+// Track the refresh token promise to prevent multiple refreshes simultaneously
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
 
 instance.interceptors.request.use(
   function (config) {
@@ -36,12 +52,27 @@ instance.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
 
+    // Check if the error status is 403 and if the request is not already retried
     if (
       error.response?.status === 403 &&
-      originalRequest &&
       !originalRequest._retry
     ) {
+      if (isRefreshing) {
+        // If another refresh token request is already in progress, queue this request
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return instance(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         const response = await refreshToken();
@@ -50,19 +81,28 @@ instance.interceptors.response.use(
 
         useAuthStore.setState({ accessToken });
 
+        // Update authorization headers and process queued requests
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        processQueue(null, accessToken);
 
         return instance(originalRequest);
-      } catch (error) {
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+
+        // Log out the user if refreshing token fails
         if (
-          error instanceof AxiosError &&
-          error.response?.status === 403
+          refreshError instanceof AxiosError &&
+          refreshError.response?.status === 403
         ) {
           useAuthStore.getState().logOut();
-          return;
         }
+
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
+
     return Promise.reject(error);
   },
 );

@@ -55,7 +55,6 @@ export const getProfile = async (id) => {
 
     // If user is admin, get shop details by user id
     if (user.role === USER_ROLES.ADMIN) {
-      console.log('user', user);
       const shop = await getShopByOwnerId(user._id);
       user.shop = shop._id;
 

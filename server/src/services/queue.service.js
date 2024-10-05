@@ -106,7 +106,7 @@ export const joinQueue = async (data) => {
     const queue = new QueueSchema({
       ...data,
       position: lastQueue ? lastQueue.position + 1 : 1,
-      status: 'waiting'
+      status: 'pending'
     });
 
     // Save the queue object to the database
@@ -123,6 +123,37 @@ export const joinQueue = async (data) => {
 
 // Change queue position
 export const changeQueuePosition = async (id, position) => {};
+
+// Update queue status
+export const updateQueueStatus = async (id, status) => {
+  try {
+    // Find the queue by ID
+    const queue = await QueueSchema.findOne({
+      _id: id
+    });
+
+    // If the queue is not found, throw an error
+    if (!queue) {
+      throw {
+        status: 404,
+        message: 'Queue not found'
+      };
+    }
+
+    // Update the queue status
+    queue.status = status;
+
+    // Save the updated queue object to the database
+    await queue.save();
+
+    return queue;
+  } catch (error) {
+    throw {
+      status: 500,
+      message: error.message
+    };
+  }
+};
 
 // Leave a queue
 export const leaveQueue = async (userID, id) => {

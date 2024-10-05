@@ -1,6 +1,12 @@
-import { getQueues } from '@/api/queue.api';
+import {
+  getQueues,
+  updateQueueStatus,
+} from '@/api/queue.api';
 import { useShopStore } from '@/store/shop-store';
-import { useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import QueueCard from '@/components/queue-card/queue-card';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
@@ -8,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import ProfileImg from '@/assets/avatar/user.jpg';
+import { QUEUE_STATUS } from '@/constants';
+import toast from 'react-hot-toast';
 
 const ManageQueue = () => {
   // Update date time every second
@@ -23,10 +31,16 @@ const ManageQueue = () => {
     data: queues,
     isLoading: queuesLoading,
     error: queuesError,
-    // refetch,
+    refetch: refetchQueues,
   } = useQuery({
     queryKey: ['queues'],
-    queryFn: () => getQueues(shopId),
+    queryFn: () =>
+      getQueues(
+        shopId,
+        QUEUE_STATUS.PENDING ||
+          QUEUE_STATUS.IN_PROGRESS ||
+          QUEUE_STATUS.HOLD,
+      ),
   });
 
   useEffect(() => {
@@ -36,9 +50,24 @@ const ManageQueue = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const holdQueueMutation = useMutation({
+    mutationFn: updateQueueStatus,
+    onSuccess: async () => {
+      refetchQueues();
+      toast.success('Queue held successfully');
+    },
+    onError: (error) => {
+      console.error('Error holding queue:', error);
+      toast.error('Failed to hold queue');
+    },
+  });
+
   // Hold the queue window pop up
   const holdHandler = () => {
-    alert('Hold the queue');
+    holdQueueMutation.mutate({
+      queueID: queues[0]._id,
+      status: QUEUE_STATUS.HOLD,
+    });
   };
 
   return (
@@ -122,6 +151,10 @@ const ManageQueue = () => {
                         .toUpperCase() +
                         queues[0].userID.gender.slice(1)}
                     </p>
+                    {/* If 0 Status is In Progress */}
+                    <div className="text-green-500 font-medium">
+                      In Progress
+                    </div>
                   </div>
                 </div>
                 {/* Line */}
@@ -153,7 +186,7 @@ const ManageQueue = () => {
           {/* Right side: Scrollable list of other queues */}
           <div className="sidebar-scroll overflow-y-auto">
             <div className="flex flex-col gap-4 pr-3">
-              {queues.slice(1).map((queue, index) => (
+              {queues.slice(1)?.map((queue, index) => (
                 <QueueCard
                   key={queue._id}
                   queue={queue}
