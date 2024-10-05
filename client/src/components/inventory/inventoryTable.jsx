@@ -2,8 +2,32 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import InventoryForm from './inventoryForm';
 import { Link } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const InventoryTable = ({ data, refetch }) => {
+  const downloadPDF = async () => {
+    const table = document.getElementById('inventoryTable');
+    const canvas = await html2canvas(table, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'px',
+      format: [canvas.width, canvas.height],
+    });
+
+    pdf.addImage(
+      imgData,
+      'PNG',
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
+    pdf.save('inventory.pdf');
+  };
+
   return (
     <>
       <div className="mt-5 bg-white rounded-lg pt-5 pb-3">
@@ -16,36 +40,23 @@ const InventoryTable = ({ data, refetch }) => {
               refetch={refetch}
               title="New Product"
               button={
-                <Button className="bg-blue-500 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
+                <Button className="bg-blue-500 mx-4 hover:shadow-none h-10 px-4 rounded-sm text-white text-sm hover:bg-blue-700 font-medium transition-all">
                   Add Product
                 </Button>
               }
             />
-            <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all mx-3">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-grey-600 inline-block mb-0.5 mr-2"
-              >
-                <path
-                  d="M5 10H15M2.5 5H17.5M7.5 15H12.5"
-                  stroke="currentColor"
-                  strokeWidth="1.67"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Filters
-            </Button>
-            <Button className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all">
+            <Button
+              onClick={downloadPDF}
+              className="bg-white hover:shadow-none h-10 px-4 border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all"
+            >
               Download All
             </Button>
           </div>
         </div>
-        <table className="w-full text-left text-sm">
+        <table
+          id="inventoryTable"
+          className="w-full text-left text-sm"
+        >
           <thead className="text-grey-500">
             <tr>
               <th className="font-medium p-4">Product</th>
@@ -69,13 +80,20 @@ const InventoryTable = ({ data, refetch }) => {
                 className="border-t border-grey-100"
               >
                 <td className="px-4 py-[14px]">
-                  <Link to={item.productID}>
+                  <Link
+                    className="flex items-center"
+                    to={item.productID}
+                  >
+                    <img
+                      className="mr-5 w-10 h-10"
+                      src={item.image}
+                      alt={item.name}
+                    />
                     {item.name}
                   </Link>
                 </td>
                 <td className="px-4 py-[14px]">
-                  Rs.
-                  {parseFloat(item.buyingPrice).toFixed(2)}
+                  ${parseFloat(item.buyingPrice).toFixed(2)}
                 </td>
                 <td className="px-4 py-[14px]">
                   {item.quantity}
@@ -99,7 +117,7 @@ const InventoryTable = ({ data, refetch }) => {
           </Button>
           <div className="text-sm text-grey-700">
             Page <span className="font-medium">1</span> of{' '}
-            <span className="font-medium">10</span>
+            <span className="font-medium">1</span>
           </div>
           <Button className="bg-white h-9.5 px-4 hover:shadow-none border border-grey-100 rounded-sm text-grey-600 hover:bg-white text-sm font-medium transition-all">
             Next

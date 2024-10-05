@@ -21,7 +21,7 @@ export const createOrder = async (orderData) => {
 
     // If saved, change queue status to 'completed'
     if (order.queueId) {
-      await updateQueueStatus(order.queueId, QUEUE_STATUS.COMPLETED);
+      await updateQueueStatus(order.queueId, QUEUE_STATUS.COMPLETED, order._id);
     }
 
     return order;

@@ -200,17 +200,19 @@ const ManageQueue = () => {
                       queues[0].status === QUEUE_STATUS.HOLD
                     }
                     variant="primary"
-                    className="w-full py-2 bg-green-400 hover:bg-green-500 text-white"
+                    className="w-full py-2 bg-green-500 hover:bg-green-600 text-white"
                     onClick={() =>
                       navigate('/finalize', {
                         state: { queue: queues[0] },
                       })
                     }
                   >
-                    Complete
+                    {queues[0].status === QUEUE_STATUS.HOLD
+                      ? 'Unhold First >'
+                      : 'Finalize'}
                   </Button>
                   <Button
-                    className="w-full py-2 bg-red-400 hover:bg-red-500 text-white"
+                    className="w-full py-2 bg-red-500 hover:bg-red-600 text-white"
                     onClick={
                       queues[0].status === QUEUE_STATUS.HOLD
                         ? unHoldHandler

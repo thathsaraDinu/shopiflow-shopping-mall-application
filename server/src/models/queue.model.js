@@ -23,6 +23,11 @@ export const QueueSchema = new Schema(
       type: String,
       required: [true, 'Status is required'],
       unique: false
+    },
+    orderID: {
+      type: Types.ObjectId,
+      ref: 'Order',
+      required: false
     }
   },
   {
