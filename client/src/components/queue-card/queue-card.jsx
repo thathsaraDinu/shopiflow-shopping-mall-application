@@ -36,12 +36,18 @@ const QueueCard = ({ queue, index }) => {
         <CardHeader className="flex justify-between items-center">
           <div>
             <CardTitle className="text-xl font-semibold">
-              {queue.userID.firstName +
-                ' ' +
-                queue.userID.lastName}{' '}
-              {/* Token number shows with 5 digits */}
-              (Token Number: #
-              {queue.position.toString().padStart(5, '0')})
+              <div className="grid grid-cols-5">
+                <h2 className="text-xl font-semibold text-gray-600 col-start-1 col-span-4">
+                  {queue.userID.firstName}{' '}
+                  {queue.userID.lastName}
+                </h2>
+                <span className="text-gray-400 col-end-6">
+                  #
+                  {queue.position
+                    .toString()
+                    .padStart(5, '0')}
+                </span>
+              </div>
             </CardTitle>
             <CardDescription className="text-gray-500">
               Joined:{' '}
