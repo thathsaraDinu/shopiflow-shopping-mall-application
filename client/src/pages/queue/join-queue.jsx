@@ -24,11 +24,7 @@ import propTypes from 'prop-types';
 import { useState } from 'react';
 import { getProfileData } from '@/api/user.api';
 
-const JoinQueueModal = ({
-  shopID,
-  onSuccess,
-  queueIds,
-}) => {
+const JoinQueueModal = ({ shopID, onSuccess, joined }) => {
   const [isOpen, setIsOpen] = useState(false);
   const isAuthenticated = useAuthStore(
     (state) => state.isLoggedIn,
@@ -98,8 +94,7 @@ const JoinQueueModal = ({
             ? 'Loading...'
             : profileError
               ? 'Error'
-              : profile?.id &&
-                  queueIds?.includes(profile.id)
+              : joined
                 ? 'Leave Queue'
                 : 'Join Queue'}
         </Button>
@@ -168,5 +163,5 @@ export default JoinQueueModal;
 JoinQueueModal.propTypes = {
   shopID: propTypes.string.isRequired,
   onSuccess: propTypes.func.isRequired,
-  queueIds: propTypes.array.isRequired,
+  joined: propTypes.bool,
 };

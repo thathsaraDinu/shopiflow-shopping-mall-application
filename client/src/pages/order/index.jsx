@@ -13,11 +13,13 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import { useShopStore } from '@/store/shop-store';
+import { ConfirmationModal } from '@/components/modals/accept';
 
 const FinalizeOrder = () => {
   const [orderItems, setOrderItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] =
     useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -157,7 +159,7 @@ const FinalizeOrder = () => {
     }
   };
 
-  const onSubmit = async (data) => {
+  const handleConfirm = async (data) => {
     completeOrderMutation.mutate({
       ...data,
       items: orderItems?.map((item) => ({
@@ -169,6 +171,21 @@ const FinalizeOrder = () => {
       shopId,
       totalAmount: totalAmount.toFixed(2),
     });
+    setIsModalOpen(false);
+    completeOrderMutation.mutate({
+      items: orderItems?.map((item) => ({
+        productId: item._id,
+        quantity: item.buyQuantity,
+        buyingPrice: item.buyingPrice,
+      })),
+      queueId: queue._id,
+      shopId,
+      totalAmount: totalAmount.toFixed(2),
+    });
+  };
+
+  const onSubmit = async () => {
+    setIsModalOpen(true);
   };
 
   {
@@ -352,7 +369,7 @@ const FinalizeOrder = () => {
           <div className="flex justify-between items-center">
             <p className="font-semibold">Total Amount:</p>
             <p className="text-lg font-bold">
-              LKR. {totalAmount.toFixed(2)}
+              LKR. {totalAmount?.toFixed(2)}
             </p>
           </div>
 
@@ -368,6 +385,11 @@ const FinalizeOrder = () => {
           </form>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };

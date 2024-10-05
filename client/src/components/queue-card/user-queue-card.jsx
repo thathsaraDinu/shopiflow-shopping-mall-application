@@ -10,13 +10,14 @@ import { format } from 'date-fns';
 import propTypes from 'prop-types';
 import { Button } from '@/components/ui/button';
 import { DeleteModal } from '@/components/modals/delete';
+import { QUEUE_STATUS } from '@/constants';
 
 const UserQueueCard = ({ queue, index, onLeave }) => {
   return (
     <Card
       key={queue._id}
       className={cn(
-        'w-full p-1 flex flex-row',
+        `w-full p-1 ${queue.status !== QUEUE_STATUS.COMPLETED ? 'flex flex-row' : 'hidden'} `,
         'hover:shadow-md',
       )}
     >
@@ -42,7 +43,7 @@ const UserQueueCard = ({ queue, index, onLeave }) => {
           <Button
             variant="outline"
             size="lg"
-            className="w-full bg-green-500 text-white hover:bg-green-400 hover:text-white"
+            className="w-full bg-green-500 text-white hover:bg-green-400 hover:text-white hidden"
             onClick={() => {
               console.log('Move Down');
             }}

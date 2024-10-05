@@ -34,7 +34,8 @@ export const getNumberOfQueues = async (shopID) => {
   try {
     // Find all queues in the shop
     const queues = await QueueSchema.countDocuments({
-      shopID
+      shopID,
+      status: { $ne: QUEUE_STATUS.COMPLETED }
     });
 
     return queues;
@@ -92,10 +93,10 @@ export const joinQueue = async (data) => {
       shopID: data.shopID
     });
 
-    if (existingQueue) {
+    if (existingQueue.status === QUEUE_STATUS.PENDING) {
       throw {
         status: 400,
-        message: 'User already in the queue'
+        message: 'You are already in the queue'
       };
     }
 

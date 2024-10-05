@@ -75,13 +75,13 @@ const QueueController = {
       const shopID = req.params.shopID;
 
       // Check if the user is already in the queue
-      const existingQueue = await getUserShopQueue(userID, shopID);
+      // const existingQueue = await getUserShopQueue(userID, shopID);
 
-      if (existingQueue) {
-        return res.status(400).json({
-          message: 'User is already in the queue'
-        });
-      }
+      // if (existingQueue) {
+      //   return res.status(400).json({
+      //     message: 'User is already in the queue'
+      //   });
+      // }
 
       // Create a new queue object
       const queue = {

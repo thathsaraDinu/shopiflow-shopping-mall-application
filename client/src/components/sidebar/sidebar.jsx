@@ -10,12 +10,12 @@ import {
   MdLogout,
   MdSpaceDashboard,
   MdInventory,
-  MdSettings,
+  // MdSettings,
 } from 'react-icons/md';
 import { FaShop } from 'react-icons/fa6';
 import {
   BiSolidOffer,
-  BiSolidReport,
+  // BiSolidReport,
 } from 'react-icons/bi';
 import { TbReorder } from 'react-icons/tb';
 import toast from 'react-hot-toast';
@@ -57,20 +57,20 @@ const sideBarItems = [
     to: '/allpromotions',
     roles: [USER_ROLES.ADMIN],
   },
-  {
-    title: 'Reports',
-    icon: <BiSolidReport />,
-    submenu: [],
-    to: '/reports',
-    roles: [USER_ROLES.ADMIN],
-  },
-  {
-    title: 'Settings',
-    icon: <MdSettings />,
-    submenu: [],
-    to: '/settings',
-    roles: [USER_ROLES.ADMIN],
-  },
+  // {
+  //   title: 'Reports',
+  //   icon: <BiSolidReport />,
+  //   submenu: [],
+  //   to: '/reports',
+  //   roles: [USER_ROLES.ADMIN],
+  // },
+  // {
+  //   title: 'Settings',
+  //   icon: <MdSettings />,
+  //   submenu: [],
+  //   to: '/settings',
+  //   roles: [USER_ROLES.ADMIN],
+  // },
 ];
 
 const SideBar = () => {
@@ -108,9 +108,9 @@ const SideBar = () => {
               <img
                 src={Logo}
                 alt="logo"
-                className="h-12 w-12"
+                className="h-12 w-12 rounded-sm"
               />
-              <div className="text-blue-500 text-2xl font-bold">
+              <div className="text-[#010F27] text-2xl font-bold">
                 ShopiFlow
               </div>
             </Link>

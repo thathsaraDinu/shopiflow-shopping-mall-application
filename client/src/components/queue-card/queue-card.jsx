@@ -11,12 +11,26 @@ import { format, differenceInMinutes } from 'date-fns';
 import propTypes from 'prop-types';
 import { Button } from '../ui/button';
 
-const QueueCard = ({ queue, index, unHold }) => {
+const QueueCard = ({
+  queue,
+  index,
+  unHold,
+  mine = null,
+}) => {
   // Calculate the waiting time
   const waitingTime = differenceInMinutes(
     new Date(),
     new Date(queue.createdAt),
   );
+
+  const isOnHold = queue.status === QUEUE_STATUS.HOLD;
+  const timeLeft = isOnHold
+    ? Math.ceil(
+        (120000 -
+          (new Date() - new Date(queue.updatedAt))) /
+          1000,
+      )
+    : null;
 
   // Estimate time to serve the customer
   const estimatedTime = index * 2;
@@ -27,13 +41,16 @@ const QueueCard = ({ queue, index, unHold }) => {
       className={cn(
         'w-full p-4 flex flex-row items-center',
         'hover:shadow-lg transition-shadow',
+        mine && 'border-2 border-green-500',
       )}
     >
       {/* Large Queue Index */}
       <div className="grid grid-cols-5">
         <div className="col-start-1 col-end-2">
           <div className="grid grid-rows-2 grid-flow-col gap-1">
-            <div className="bg-gray-100 text-gray-800 flex items-center justify-center rounded-md w-full h-16 font-bold text-3xl">
+            <div
+              className={`bg-gray-100 text-gray-800 flex items-center justify-center rounded-md w-full h-16 font-bold text-3xl`}
+            >
               {index + 1}
             </div>
             <img
@@ -80,13 +97,21 @@ const QueueCard = ({ queue, index, unHold }) => {
             <div className="col-span-4">
               {/* Queue Status */}
               {queue.status === QUEUE_STATUS.COMPLETED ? (
-                <p className="text-green-500 font-medium">
+                <div className="text-green-500 font-medium">
                   Completed
-                </p>
-              ) : (
-                <p className="text-red-500 font-medium">
+                </div>
+              ) : queue.status === QUEUE_STATUS.HOLD ? (
+                <div className="text-red-500 font-medium">
+                  On Hold
+                </div>
+              ) : queue.status === QUEUE_STATUS.PENDING ? (
+                <div className="text-blue-500 font-medium">
                   Pending
-                </p>
+                </div>
+              ) : (
+                <div className="text-yellow-500 font-medium">
+                  In Progress
+                </div>
               )}
 
               {/* Estimated Waiting Time */}
@@ -119,7 +144,7 @@ const QueueCard = ({ queue, index, unHold }) => {
                     onClick={() => unHold(queue._id)}
                     className="w-full mt-4 bg-red-500 hover:bg-red-600"
                   >
-                    Unhold
+                    {timeLeft}
                   </Button>
                 )}
             </div>
@@ -137,4 +162,5 @@ QueueCard.propTypes = {
   queue: propTypes.object.isRequired,
   index: propTypes.number.isRequired,
   unHold: propTypes.func,
+  mine: propTypes.bool,
 };
