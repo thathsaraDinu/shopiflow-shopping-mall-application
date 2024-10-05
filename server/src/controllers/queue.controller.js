@@ -133,14 +133,12 @@ const QueueController = {
     try {
       // Get the queue ID from the request
       const { id } = req.params;
-      console.log('ID', id);
 
       // Get the status from the request
       const status = req.body.status;
-      console.log('Status', status);
 
       // Update the queue status
-      await updateQueueStatus(id, status);
+      await updateQueueStatus(id, status, null);
 
       return res.status(200).json({
         message: 'Queue status updated'

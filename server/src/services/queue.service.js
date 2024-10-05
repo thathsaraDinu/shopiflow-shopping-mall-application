@@ -1,3 +1,4 @@
+import { QUEUE_STATUS } from '../constants/constants.js';
 import QueueSchema from '../models/queue.model.js';
 
 // Get all queues in a shop by shop ID
@@ -16,7 +17,8 @@ export const getQueues = async (shopID, status) => {
     )
       .sort({ position: 1 })
       .populate('userID')
-      .populate('shopID');
+      .populate('shopID')
+      .populate('orderID');
 
     return queues;
   } catch (error) {
@@ -125,7 +127,8 @@ export const joinQueue = async (data) => {
 export const changeQueuePosition = async (id, position) => {};
 
 // Update queue status
-export const updateQueueStatus = async (id, status) => {
+export const updateQueueStatus = async (id, status, orderId = null) => {
+  console.log('updateQueueStatus', id, status, orderId);
   try {
     // Find the queue by ID
     const queue = await QueueSchema.findOne({
@@ -140,11 +143,18 @@ export const updateQueueStatus = async (id, status) => {
       };
     }
 
+    if (status === QUEUE_STATUS.COMPLETED && orderId) {
+      // If the status is 'completed', set the order ID
+      queue.orderID = orderId;
+    }
+
     // Update the queue status
     queue.status = status;
+    console.log('queue', queue.status);
 
     // Save the updated queue object to the database
     await queue.save();
+    console.log('queue', queue);
 
     return queue;
   } catch (error) {
