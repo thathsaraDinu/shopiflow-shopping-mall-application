@@ -11,9 +11,7 @@ import {
   schema3,
   schema4,
 } from '../../validations/promotion-validation';
-import {
-  useMutation,
-} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import {
   addpromotion,
   updatePromotion,
@@ -36,7 +34,9 @@ export default function AddPromotionMain({
   shopName,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [shopId, setShopId] = useState(loggedInShopId ? loggedInShopId : '');
+  const [shopId, setShopId] = useState(
+    loggedInShopId ? loggedInShopId : '',
+  );
   const [formData, setFormData] = useState({
     promotionType: -1,
     storeName: '',
@@ -51,7 +51,6 @@ export default function AddPromotionMain({
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [theStep, setTheStep] = useState(1);
-
   const {
     register,
     handleSubmit,
@@ -90,8 +89,7 @@ export default function AddPromotionMain({
         toast.error('Something went wrong');
       }
     },
-    onSettled: () => {
-    },
+    onSettled: () => {},
   });
 
   const updatepromotion = useMutation({
@@ -107,7 +105,6 @@ export default function AddPromotionMain({
       setIsOpen(false);
     },
     onError: (error) => {
-      
       console.log('the error: ', error);
       if (error.response.status === 400) {
         toast.error('Promotion already exists');
@@ -115,8 +112,7 @@ export default function AddPromotionMain({
         toast.error('Something went wrong');
       }
     },
-    onSettled: () => {
-    },
+    onSettled: () => {},
   });
 
   const handleFileConversion = async (file) => {
@@ -185,19 +181,11 @@ export default function AddPromotionMain({
     } catch (error) {}
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Get the first selected file
-    setValue('photo', file);
-    if (file) {
-      setSelectedFile(file); // Store the selected file in state
-    }
-  };
-
   useEffect(() => {
     if (currentStepIndex == 0) setTheStep(1);
     else if (
-      currentStepIndex == 1 &&
-      formData.promotionType == 1
+      (currentStepIndex == 1 &&
+        formData.promotionType == 1) 
     )
       setTheStep(2);
     else if (
@@ -222,6 +210,7 @@ export default function AddPromotionMain({
       register={register}
       errors={errors}
       promotion={promotion}
+      setValue={setValue}
     />,
     <AddPromotionStep2
       {...formData}
@@ -234,7 +223,7 @@ export default function AddPromotionMain({
       register={register}
       errors={errors}
       watch={watch}
-      handleFileChange={handleFileChange}
+      setSelectedFile={setSelectedFile}
       selectedFile={selectedFile}
       promotion={promotion}
       setValue={setValue}
@@ -247,7 +236,7 @@ export default function AddPromotionMain({
         <Button
           className={
             isUpdate
-              ? 'w-8 mt-0 p-1 h-8 bg-white border-none'
+              ? 'w-8 mt-0 p-1 h-8 bg-white hover:bg-gray-200 border-none'
               : 'bg-blue-500 text-white hover:bg-blue-600 hover:text-white transition py-5 px-5 rounded-md'
           }
           variant="outline"

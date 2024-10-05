@@ -1,7 +1,4 @@
 import { getPromotionById } from '@/api/promotion.api';
-import DiscountAmountCard from '@/components/promotions/discount-amount-card';
-import { UsePromotionsQuery } from '@/hooks/usePromotions';
-import { PromotionCard } from '@/components/promotions/promotion-card';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { PromotionsScrollable } from '@/components/promotions/promotions-scrollable';
@@ -13,8 +10,7 @@ export default function PromotionDetails() {
     queryKey: ['promotions', id],
     queryFn: () => getPromotionById(id, type),
     enabled: true,
-    onSuccess: (data) => {
-    },
+    onSuccess: (data) => {},
   });
 
   const promotiondetailscss =
@@ -22,7 +18,10 @@ export default function PromotionDetails() {
 
   return (
     <div className="mx-20 my-10 flex flex-col gap-16 items-center">
-      <h1 className="text-2xl font-bold text-center  text-gray-800 h-">
+      <h1
+        className="text-3xl font-medium text-center  text-gray-800 "
+        style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+      >
         {data && data.data.promotion.promoTitle}
       </h1>
       <div className="flex gap-10">
@@ -66,12 +65,12 @@ export default function PromotionDetails() {
                     })}
                   </div>
                 </div>
-                <hr />
+                <hr className="border" />
 
                 {/* Store Name and Discounts */}
                 <div className="flex flex-col gap-2 lg:gap-5">
                   <div className="flex justify-between">
-                    <h2 className="text-xl font-semibold text-gray-800">
+                    <h2 className="text-2xl font-bold text-gray-800">
                       {data.data.promotion.storeName}
                     </h2>
                   </div>
@@ -79,10 +78,13 @@ export default function PromotionDetails() {
                   {type === 'type1' ? (
                     <span className="text-gray-700">
                       Discounts Upto{' '}
-                      {
-                        data.data.promotion
-                          .discountPercentage
-                      }
+                      <span className="font-bold">
+                        {' '}
+                        {
+                          data.data.promotion
+                            .discountPercentage
+                        }
+                      </span>
                       %
                     </span>
                   ) : (
@@ -90,7 +92,7 @@ export default function PromotionDetails() {
                       Discounts Upto{' '}
                       <span className="text-black font-bold">
                         {data.data.promotion.discountAmount}{' '}
-                        /=
+                        LKR
                       </span>{' '}
                       on{' '}
                       <span className="text-black font-bold">
@@ -98,7 +100,7 @@ export default function PromotionDetails() {
                           data.data.promotion
                             .qualifyingPurchaseAmount
                         }{' '}
-                        /=
+                        LKR{' '}
                       </span>{' '}
                       worth of purchase
                     </span>
@@ -117,7 +119,10 @@ export default function PromotionDetails() {
         </div>
       </div>
       <div className="flex flex-col mx-10 gap-10 ">
-        <h1 className="text-2xl font-bold text-center  text-gray-800">
+        <h1
+          className="text-3xl font-medium text-center  text-gray-800"
+          style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+        >
           You May Also Like
         </h1>
         <PromotionsScrollable />

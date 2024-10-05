@@ -3,15 +3,26 @@ import DiscountAmountCard from './discount-amount-card';
 import { PromotionCard } from './promotion-card';
 
 export function PromotionsScrollable() {
-  const { discounts, amounts, isLoading } = UsePromotionsQuery();
+  const { discounts, amounts, isLoading } =
+    UsePromotionsQuery();
+
   const scrollableContainer = document.getElementById(
     'scrollableContainer',
   );
 
-  const allPromos = [
+  const allPromotions = [
     ...(discounts || []),
     ...(amounts || []),
   ];
+
+  const handleSorting = (promotions) => {
+    return [...promotions].sort(
+      (a, b) =>
+        new Date(a.startDate) - new Date(b.startDate),
+    );
+  };
+
+  const allPromos = handleSorting(allPromotions);
 
   function scrollLeft() {
     const screenWidth = window.innerWidth;
@@ -44,7 +55,7 @@ export function PromotionsScrollable() {
   return (
     <>
       {isLoading ? (
-        <p className="text-center h-[700px]">Loading...</p>
+        <p className="text-center h-[400px]">Loading...</p>
       ) : (
         <div className="relative">
           {/* Left Scroll Button */}
