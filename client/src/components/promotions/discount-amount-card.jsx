@@ -60,12 +60,15 @@ export function DiscountAmountCard({ promotion }) {
       </div>
       <hr></hr>
       <div className="card-header flex flex-col gap-1">
-        <div className="text-lg font-medium">
+        <div
+          className="text-lg font-medium"
+          style={{ fontFamily: 'Georgia, serif' }}
+        >
           {truncateText(storeName, 30)}
         </div>
         <div className="flex justify-between items-start">
           <p className="text-sm font-medium">
-            Upto {discountAmount}/= Discounts{' '}
+            Upto {discountAmount}{' '}LKR Discounts{' '}
           </p>
           <Link
             to={`/promotiondetails/${'type2'}/${promotion._id}`}

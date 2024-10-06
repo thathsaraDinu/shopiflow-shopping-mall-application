@@ -20,6 +20,7 @@ export function AddPromotionStep1({ register, errors, promotion }) {
         </CardTitle>
 
         <div className="relative w-full  sm:w-3/4">
+        {promotion ? '' : ''}
           <select
           defaultValue={promotion ? promotion.promotionType : -1}
             name="promotionType"

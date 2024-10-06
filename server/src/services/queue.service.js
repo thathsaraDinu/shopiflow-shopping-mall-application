@@ -93,11 +93,13 @@ export const joinQueue = async (data) => {
       shopID: data.shopID
     });
 
-    if (existingQueue.status === QUEUE_STATUS.PENDING) {
-      throw {
-        status: 400,
-        message: 'You are already in the queue'
-      };
+    if (existingQueue) {
+      if (existingQueue.status === QUEUE_STATUS.PENDING) {
+        throw {
+          status: 400,
+          message: 'You are already in the queue'
+        };
+      }
     }
 
     // Get the last position in the queue

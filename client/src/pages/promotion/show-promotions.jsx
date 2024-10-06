@@ -1,4 +1,3 @@
-import { getPromotions } from '@/api/promotion.api';
 import DiscountAmountCard from '@/components/promotions/discount-amount-card';
 import { PromotionCard } from '@/components/promotions/promotion-card';
 import { CardTitle } from '@/components/ui/card';
@@ -93,7 +92,10 @@ export default function ShowPromotions() {
 
   return (
     <div className="transition-all duration-500 py-5 px-10 md:py-10 md:px-20 flex flex-col gap-10">
-      <CardTitle className="text-center text-xl">
+      <CardTitle
+        style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+        className="text-center text-4xl font-medium"
+      >
         Promotions
       </CardTitle>
       <div className="flex flex-col gap-10">
@@ -194,11 +196,11 @@ export default function ShowPromotions() {
           {/* Sorting options */}
         </div>
         {isFilterByStoreOpen && (
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 shadow-md max-h-48 rounded-lg p-5 overflow-y-auto border border-gray-200">
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 shadow-md max-h-48 rounded-lg p-5 overflow-hidden border border-gray-200">
             <h3 className="text-lg font-bold mb-3 text-blue-900">
               Filter by Store
             </h3>
-            <div className="flex flex-col items-start gap-3">
+            <div className="flex flex-wrap gap-3 items-start max-h-48">
               {storeNames.map((store) => (
                 <label
                   key={store}
@@ -225,27 +227,25 @@ export default function ShowPromotions() {
         {/* Promotion display */}
         <div className="flex flex-wrap xl:gap-10 gap-6 justify-center">
           {isLoading && <p>Please wait...</p>}
-          {filteredAndSortedPromos.length > 0 ? (
-            filteredAndSortedPromos.map((promotion) => {
-              if (promotion.promotionType == '1') {
-                return (
-                  <PromotionCard
-                    key={promotion._id}
-                    promotion={promotion}
-                  />
-                );
-              } else {
-                return (
-                  <DiscountAmountCard
-                    key={promotion._id}
-                    promotion={promotion}
-                  />
-                );
-              }
-            })
-          ) : !isLoading && (
-            <p>No promotions found.</p>
-          )}
+          {filteredAndSortedPromos.length > 0
+            ? filteredAndSortedPromos.map((promotion) => {
+                if (promotion.promotionType == '1') {
+                  return (
+                    <PromotionCard
+                      key={promotion._id}
+                      promotion={promotion}
+                    />
+                  );
+                } else {
+                  return (
+                    <DiscountAmountCard
+                      key={promotion._id}
+                      promotion={promotion}
+                    />
+                  );
+                }
+              })
+            : !isLoading && <p>No promotions found.</p>}
         </div>
       </div>
     </div>

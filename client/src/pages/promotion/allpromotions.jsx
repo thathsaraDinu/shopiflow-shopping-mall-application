@@ -2,9 +2,7 @@ import {
   deletePromotion,
   getPromotionsByShopId,
 } from '@/api/promotion.api';
-import {
-  useQuery,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import {
   Table,
@@ -42,7 +40,6 @@ export default function AllPromotions() {
     enabled: !!loggedInShopId,
   });
 
-  console.log('promotionsData:', promotionsData);
 
   const {
     data: currentShop,
@@ -169,22 +166,22 @@ export default function AllPromotions() {
             <Table className="">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-black w-1/6 py-3">
+                  <TableHead className="text-black py-3">
                     Promotion Title
                   </TableHead>
-                  <TableHead className="text-black w-1/6  py-3">
+                  <TableHead className="text-black py-3">
                     Percentage
                   </TableHead>
-                  <TableHead className="text-black w-1/3  py-3">
+                  <TableHead className="text-black py-3">
                     Description
                   </TableHead>
-                  <TableHead className="text-black w-1/6  py-3">
+                  <TableHead className="text-black py-3">
                     Start Date
                   </TableHead>
-                  <TableHead className="text-black w-1/6 py-3">
+                  <TableHead className="text-black py-3">
                     End Date
                   </TableHead>
-                  <TableHead className="text-black w-1/6 py-3">
+                  <TableHead className="text-black py-3">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -221,7 +218,7 @@ export default function AllPromotions() {
                           promotion.endDate,
                         ).toLocaleDateString()}
                       </TableCell>
-                      <TableCell className="flex gap-5 items-center">
+                      <TableCell className="flex gap-2 items-center justify-end">
                         {/* Keep the same actions styling */}
                         <AddPromotionMain
                           loggedInShopId={loggedInShopId}
@@ -231,7 +228,7 @@ export default function AllPromotions() {
                           shopName={shopName}
                         />
                         <DeleteModal
-                          btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
+                          btnClassName="w-8 mt-0 p-1 h-8 hover:bg-gray-200  bg-white border-none"
                           title={'Delete Promotion'}
                           description={`Are you sure you want to delete ${promotion.storeName} promotion?`}
                           onYes={async () => {
@@ -291,25 +288,25 @@ export default function AllPromotions() {
               <TableCaption></TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-black w-1/7 py-3">
+                  <TableHead className="text-black py-3">
                     Promotion Title
                   </TableHead>
-                  <TableHead className="text-black w-1/7 py-3">
+                  <TableHead className="text-black py-3">
                     Qualifying Amount
                   </TableHead>
-                  <TableHead className="text-black w-1/7 py-3">
+                  <TableHead className="text-black py-3">
                     Discount Amount
                   </TableHead>
-                  <TableHead className="text-black w-2/7 py-3">
+                  <TableHead className="text-black py-3">
                     Description
                   </TableHead>
-                  <TableHead className="text-black w-1/7 py-3">
+                  <TableHead className="text-black py-3">
                     Start Date
                   </TableHead>
-                  <TableHead className="text-black w-1/7 py-3">
+                  <TableHead className="text-black py-3">
                     End Date
                   </TableHead>
-                  <TableHead className="text-black w-1/7 py-3">
+                  <TableHead className="text-black py-3">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -346,7 +343,7 @@ export default function AllPromotions() {
                           promotion.endDate,
                         ).toLocaleDateString('en-GB')}
                       </TableCell>
-                      <TableCell className="flex gap-5 items-center">
+                      <TableCell className="flex gap-2 items-center justify-end">
                         <AddPromotionMain
                           loggedInShopId={loggedInShopId}
                           refetch={refetchShopPromotions}
@@ -355,7 +352,7 @@ export default function AllPromotions() {
                           shopName={shopName}
                         />
                         <DeleteModal
-                          btnClassName="w-8 mt-0 p-1 h-8 bg-white border-none"
+                          btnClassName="w-8 mt-0 hover:bg-gray-200 p-1 h-8 bg-white border-none"
                           title={'Delete Promotion'}
                           description={`Are you sure you want to delete ${promotion.storeName} promotion?`}
                           onYes={async () => {
