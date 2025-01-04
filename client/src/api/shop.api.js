@@ -1,3 +1,4 @@
+import { SERVER_URL } from '@/constants';
 import axios from 'axios';
 
 const apiUrl = `${SERVER_URL}/api/shops`;
