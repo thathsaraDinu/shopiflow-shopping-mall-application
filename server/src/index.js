@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 const app = express();
 const PORT = SERVER_PORT;
 const corsOptions = {
-  origin: process.env.NODE_ENV, // Specify your frontend URL
+  origin: process.env.CORS_ORIGIN, // Specify your frontend URL
   credentials: true // Allow cookies to be sent
 };
 
