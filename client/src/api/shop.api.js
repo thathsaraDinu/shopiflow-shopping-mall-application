@@ -1,7 +1,7 @@
 import { SERVER_URL } from '@/constants';
 import axios from 'axios';
 
-const apiUrl = `${SERVER_URL}/api/shops`;
+const apiUrl = `${SERVER_URL}/api/shop`;
 
 export const getShops = async () => {
   const response = await axios.get(apiUrl);
