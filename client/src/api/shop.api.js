@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:3000/api/shop';
+const apiUrl = `${SERVER_URL}/api/shops`;
 
 export const getShops = async () => {
   const response = await axios.get(apiUrl);
