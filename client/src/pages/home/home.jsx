@@ -10,7 +10,16 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-5 md:py-10 px-5">
       <HeroSection />
-      <div className="mb-10"/>
+      <div className="mb-10" />
+      <div className="container mx-auto flex flex-col gap-10 mb-10">
+        <h2
+          className=" text-3xl font-semibold text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
+          style={{ fontFamily: 'Bebas Neue, sans-serif' }}
+        >
+          Discover Events & Offers
+        </h2>
+        <PromotionsScrollable></PromotionsScrollable>
+      </div>
       <div className="container mx-auto flex flex-col gap-10 mb-10">
         <h2
           className=" text-3xl font-semibold text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
@@ -32,17 +41,6 @@ const Home = () => {
               ))
           )}
         </div>
-      </div>
-      <div className="container mx-auto flex flex-col gap-10 mb-10">
-        
-          <h2
-            className=" text-3xl font-semibold text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
-            style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-          >
-            Discover Events & Offers
-          </h2>
-          <PromotionsScrollable></PromotionsScrollable>
-       
       </div>
     </div>
   );
