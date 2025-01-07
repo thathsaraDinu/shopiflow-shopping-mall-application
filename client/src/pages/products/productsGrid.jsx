@@ -1,10 +1,11 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import ProductCard from './productCard';
 import useProducts from '@/hooks/useProducts';
 import { Input } from '@/components/ui/input';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 const ProductsGrid = () => {
-  const { data } = useProducts();
+  const { data, isLoading } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = data?.filter(
@@ -44,10 +45,16 @@ const ProductsGrid = () => {
           </svg>
         </div>
         <div className="grid place-items-center md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4 mt-10">
-          {filteredProducts &&
+          {isLoading ? (
+            <div className="col-span-5">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            filteredProducts &&
             filteredProducts.map((item) => (
               <ProductCard key={item.name} data={item} />
-            ))}
+            ))
+          )}
         </div>
       </div>
     </>

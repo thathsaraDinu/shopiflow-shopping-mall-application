@@ -98,40 +98,49 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <Card className="w-full max-w-md mx-4 my-16 h-full">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">
-              Login
-            </CardTitle>
-            <CardDescription className="text-center">
-              Enter your username and password to log in.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 px-4 py-6">
-            <InputField
-              label="Email"
-              name="email"
-              type="email"
-              register={register}
-              errors={errors}
-            />
-            <InputField
-              label="Password"
-              name="password"
-              type="password"
-              register={register}
-              errors={errors}
-            />
-          </CardContent>
-          <CardFooter className="p-4">
-            <Button type="submit" className="w-full">
-              Log In
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+    <div className="flex items-center h-full">
+      <div className="hidden lg:flex items-center justify-center w-1/2 h-screen">
+        <img
+          src="/login_image.jpg"
+          alt="Login"
+          className="w-full h-full object-cover"
+        />  
+      </div>
+      <div className="flex items-center justify-center w-full lg:w-1/2 h-full">
+        <Card className="w-full max-w-md mx-4 my-16 h-full">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardHeader>
+              <CardTitle className="text-2xl text-center">
+                Login
+              </CardTitle>
+              <CardDescription className="text-center">
+                Enter your username and password to log in.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 px-4 py-6">
+              <InputField
+                label="Email"
+                name="email"
+                type="email"
+                register={register}
+                errors={errors}
+              />
+              <InputField
+                label="Password"
+                name="password"
+                type="password"
+                register={register}
+                errors={errors}
+              />
+            </CardContent>
+            <CardFooter className="p-4">
+              <Button type="submit" className="w-full">
+                Log In
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { getPromotionById } from '@/api/promotion.api';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { PromotionsScrollable } from '@/components/promotions/promotions-scrollable';
+import { LoadingSpinner } from '@/components/ui/spinner';
 
 export default function PromotionDetails() {
   const { type, id } = useParams();
@@ -19,7 +20,7 @@ export default function PromotionDetails() {
   return (
     <div className="mx-20 my-10 flex flex-col gap-16 items-center">
       <h1
-        className="text-3xl font-medium text-center  text-gray-800 "
+        className="text-3xl font-semibold text-center text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
         style={{ fontFamily: 'Bebas Neue, sans-serif' }}
       >
         {data && data.data.promotion.promoTitle}
@@ -27,9 +28,9 @@ export default function PromotionDetails() {
       <div className="flex gap-10">
         <div className="">
           {isLoading && (
-            <p className="text-center h-[700px]">
-              Loading...
-            </p>
+            <div className="h-screen w-full">
+              <LoadingSpinner />
+            </div>
           )}
           {isError && (
             <p className="text-center text-red-500">
@@ -120,7 +121,7 @@ export default function PromotionDetails() {
       </div>
       <div className="flex flex-col mx-10 gap-10 ">
         <h1
-          className="text-3xl font-medium text-center  text-gray-800"
+          className="text-3xl font-semibold text-center text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
           style={{ fontFamily: 'Bebas Neue, sans-serif' }}
         >
           You May Also Like
