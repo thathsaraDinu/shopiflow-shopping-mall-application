@@ -18,9 +18,9 @@ const Home = () => {
         >
           Featured Products
         </h2>
-        <div className="mx-auto grid place-items-center  xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4">
+        <div className="grid place-items-center xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4">
           {isLoading ? (
-            <div className="col-span-5">
+            <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />
             </div>
           ) : (

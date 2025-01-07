@@ -228,9 +228,9 @@ export default function ShowPromotions() {
         {/* Promotion display */}
         <div className="flex flex-wrap xl:gap-10 gap-6 justify-center">
           {isLoading && (
-            <p>
+            <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />
-            </p>
+            </div>
           )}
           {filteredAndSortedPromos.length > 0
             ? filteredAndSortedPromos.map((promotion) => {

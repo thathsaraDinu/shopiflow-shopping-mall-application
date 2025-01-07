@@ -46,7 +46,7 @@ const ProductsGrid = () => {
         </div>
         <div className="grid place-items-center md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4 mt-10">
           {isLoading ? (
-            <div className="col-span-5">
+            <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />
             </div>
           ) : (

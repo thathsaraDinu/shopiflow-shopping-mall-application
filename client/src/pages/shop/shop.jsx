@@ -46,9 +46,9 @@ const Shop = () => {
       </h1>
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading && (
-          <p className="text-center col-span-5 flex justify-center">
+          <div className="col-span-5 h-96 flex items-center justify-center">
             <LoadingSpinner />
-          </p>
+          </div>
         )}
         {error && (
           <p className="text-center text-red-500">

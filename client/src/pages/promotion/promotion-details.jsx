@@ -11,7 +11,6 @@ export default function PromotionDetails() {
     queryKey: ['promotions', id],
     queryFn: () => getPromotionById(id, type),
     enabled: true,
-    onSuccess: (data) => {},
   });
 
   const promotiondetailscss =
@@ -28,7 +27,7 @@ export default function PromotionDetails() {
       <div className="flex gap-10">
         <div className="">
           {isLoading && (
-            <div className="h-screen w-full">
+            <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />
             </div>
           )}

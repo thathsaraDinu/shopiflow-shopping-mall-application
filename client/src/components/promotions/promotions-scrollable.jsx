@@ -56,7 +56,7 @@ export function PromotionsScrollable() {
   return (
     <div className="w-full flex justify-center">
       {isLoading ? (
-        <div className="flex justify-center w-full h-[400px]">
+        <div className="col-span-5 h-96 flex items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : (
