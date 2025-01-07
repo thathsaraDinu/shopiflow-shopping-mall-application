@@ -27,18 +27,18 @@ const ProductCard = ({ data }) => {
       <div
         onMouseEnter={() => setShowAddToWhishlist(true)}
         onMouseLeave={() => setShowAddToWhishlist(false)}
-        className="w-[260px] h-[450px] border border-grey-100 rounded-lg overflow-hidden"
+        className="w-[220px] h-[370px] border border-grey-100 rounded-lg overflow-hidden"
       >
-        <div className="relative flex items-center h-[330px] bg-gray-100">
+        <div className="relative flex items-center h-[220px] overflow-clip bg-gray-100">
           <img
-            className="mix-blend-multiply w-[200px] h-[200px] mx-auto"
+            className="mix-blend-multiply   mx-auto"
             src={data.image}
             alt={data.name}
           />
           {showAddToWhishlist && (
             <button
               onClick={addItemToWishlist}
-              className="absolute top-[280px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-[200px] py-3 rounded-lg transition-all"
+              className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-2/3 py-3 rounded-lg transition-all"
             >
               Add to Whishlist
             </button>

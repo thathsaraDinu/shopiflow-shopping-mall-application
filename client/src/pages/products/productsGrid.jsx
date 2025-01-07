@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import ProductCard from './productCard';
 import useProducts from '@/hooks/useProducts';
 import { Input } from '@/components/ui/input';
@@ -19,8 +19,8 @@ const ProductsGrid = () => {
 
   return (
     <>
-      <div className="max-w-screen-lg mx-auto">
-        <div className="relative grow">
+      <div className="container mx-auto">
+        <div className="relative md:w-1/2 mx-auto mt-10">
           <Input
             id="search"
             className="text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500"
@@ -43,7 +43,7 @@ const ProductsGrid = () => {
             />
           </svg>
         </div>
-        <div className="grid place-items-center grid-cols-3 gap-4 mt-10">
+        <div className="grid place-items-center md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4 mt-10">
           {filteredProducts &&
             filteredProducts.map((item) => (
               <ProductCard key={item.name} data={item} />
