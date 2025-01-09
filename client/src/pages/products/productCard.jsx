@@ -3,7 +3,7 @@ import { addToWishlist } from '@/api/wishlist.api';
 import { useState } from 'react';
 import { useWishlitStore } from '@/store/wishlist-store';
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ data, isLoggedIn }) => {
   const [showAddToWhishlist, setShowAddToWhishlist] =
     useState(false);
   const setWishlistData = useWishlitStore(
@@ -12,6 +12,10 @@ const ProductCard = ({ data }) => {
 
   const addItemToWishlist = async () => {
     try {
+      if (!isLoggedIn) {
+        window.location.href = '/login';
+        return;
+      }
       const response = await addToWishlist({
         productId: data._id,
       });

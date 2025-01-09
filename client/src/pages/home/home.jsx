@@ -25,7 +25,7 @@ const Home = () => {
           className=" text-3xl font-semibold text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
           style={{ fontFamily: 'Bebas Neue, sans-serif' }}
         >
-          Featured Products
+          Newest Products
         </h2>
         <div className="grid place-items-center xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4">
           {isLoading ? (

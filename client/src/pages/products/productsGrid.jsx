@@ -3,10 +3,15 @@ import ProductCard from './productCard';
 import useProducts from '@/hooks/useProducts';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/spinner';
+import { useAuthStore } from '@/store/auth-store';
 
 const ProductsGrid = () => {
   const { data, isLoading } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
+
+   const isLoggedIn = useAuthStore(
+      (state) => state.isLoggedIn,
+    );
 
   const filteredProducts = data?.filter(
     (item) =>
@@ -52,7 +57,7 @@ const ProductsGrid = () => {
           ) : (
             filteredProducts &&
             filteredProducts.map((item) => (
-              <ProductCard key={item.name} data={item} />
+              <ProductCard key={item.name} data={item} isLoggedIn={isLoggedIn}/>
             ))
           )}
         </div>
