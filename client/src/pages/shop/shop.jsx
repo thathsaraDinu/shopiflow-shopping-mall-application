@@ -163,7 +163,7 @@ const Shop = () => {
             <Card key={shop.id} className="overflow-hidden">
               <div className="h-48 overflow-hidden">
                 <img
-                  src={shop.image == '' ? '/images/shop image.jpg': shop.image}
+                  src={shop.image || '/images/shop image.jpg'}
                   alt={shop.name}
                   className="w-full h-full object-cover transition-transform hover:scale-105"
                 />
