@@ -5,7 +5,7 @@ import { PromotionsScrollable } from '@/components/promotions/promotions-scrolla
 import { LoadingSpinner } from '@/components/ui/spinner';
 
 const Home = () => {
-  const { data, isLoading } = useProducts();
+  const { products, isLoading } = useProducts();
 
   return (
     <div className="min-h-screen bg-gray-100 py-5 md:py-10 px-5">
@@ -27,8 +27,8 @@ const Home = () => {
               <LoadingSpinner />
             </div>
           ) : (
-            data &&
-            data
+            products &&
+            products
               .slice(0, 5)
               .map((item) => (
                 <ProductCard key={item.name} data={item} />

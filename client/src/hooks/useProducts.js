@@ -1,32 +1,13 @@
 import { getAllProducts } from '@/api/product.api';
-import React, { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-const useProducts = () => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const response = await getAllProducts();
-
-      setIsLoading(false);
-      setData(response.data);
-      setError(null);
-    } catch (error) {
-      setError(error);
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const refetch = () => fetchData();
-
-  return { data, isLoading, error, refetch };
+const UseProducts = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: getAllProducts,
+  });
+  const products = data?.data;
+  return { products, isLoading, error };
 };
 
-export default useProducts;
+export default UseProducts;

@@ -19,40 +19,26 @@ import {
   MdStore as StoreIcon,
   MdPeople as UsersIcon,
 } from 'react-icons/md';
+import { useQuery } from '@tanstack/react-query';
 
 const ITEMS_PER_PAGE = 4;
 
 const Shop = () => {
   const navigate = useNavigate();
-  const [shops, setShops] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedShopType, setSelectedShopType] =
     useState('all');
   const isLoggedIn = useAuthStore(
     (state) => state.isLoggedIn,
   );
-
-  // Fetch the shops data
-  const fetchShops = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getShops();
-      setShops(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchShops();
-  }, []);
+  const { data, isLoading } = useQuery({
+    queryKey: ['shops'],
+    queryFn: getShops,
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(
-    shops.length / ITEMS_PER_PAGE,
+    data?.length / ITEMS_PER_PAGE,
   );
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -61,11 +47,11 @@ const Shop = () => {
   // Get unique shop types for filter dropdown
   const shopTypes = [
     'all',
-    ...new Set(shops.map((shop) => shop.shopType)),
+    ...new Set(data?.map((shop) => shop.shopType)),
   ];
 
   // Filter and search logic
-  const filteredShops = shops.filter((shop) => {
+  const filteredShops = data?.filter((shop) => {
     const matchesSearch = shop.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
@@ -75,7 +61,7 @@ const Shop = () => {
     return matchesSearch && matchesShopType;
   });
 
-  const currentShops = filteredShops.slice(
+  const currentShops = filteredShops?.slice(
     startIndex,
     endIndex,
   );
@@ -114,7 +100,7 @@ const Shop = () => {
             <option>Please wait...</option>
           ) : (
             shopTypes
-              .filter((category) => category !== 'all')
+              ?.filter((category) => category !== 'all')
               .map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -152,7 +138,7 @@ const Shop = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-auto">
         {isLoading ? (
           <div className="col-span-5 h-96 flex items-center justify-center">
             <LoadingSpinner />
@@ -164,7 +150,7 @@ const Shop = () => {
                 <img
                   src={shop.image || '/shop image.jpg'}
                   alt={shop.name}
-                  className="w-full h-full object-cover transition-transform hover:scale-105"
+                  className="w-full h-full object-cover transition-transform hover:scale-110 duration-300 ease-in-out"
                 />
               </div>
               <CardHeader>

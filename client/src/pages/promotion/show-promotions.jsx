@@ -80,16 +80,14 @@ export default function ShowPromotions() {
   );
 
   return (
-    <div className="transition-all duration-500 py-5 container mx-auto md:py-10 min-h-screen flex flex-col gap-10">
+    <div className="transition-all duration-500 py-5 mx-auto md:py-10 min-h-screen flex flex-col gap-10">
       <div className="text-3xl font-bold text-center text-black">
         Promotions
       </div>
-      <div className="flex flex-col gap-10">
-        <div className="text-sm flex items-start justify-end flex-wrap gap-4">
-          {/* Search and filter options */}
-
+      <div className="flex flex-col  gap-10">
+        <div className="text-sm container flex items-start justify-between flex-wrap gap-4">
           {/* Checkbox card for store name selection */}
-          <div className="flex justify-between items-start flex-wrap gap-4">
+          <div className="flex justify-start items-start flex-wrap gap-4">
             <Button
               className="bg-gray-100 border-gray-400 hover:border-gray-600 hover:bg-gray-200"
               variant="outline"
@@ -115,6 +113,8 @@ export default function ShowPromotions() {
               </div>
               <div className="pl-3">Fiter by Store</div>
             </Button>
+          </div>
+          <div className="flex items-center flex-wrap gap-4">
             <select
               defaultValue={'startDate'}
               onChange={(e) =>
@@ -136,39 +136,40 @@ export default function ShowPromotions() {
                 Ending Date (Earliest to Latest)
               </option>
             </select>
+            <div className=" relative focus:outline-none">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                color="gray"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+              <input
+                className="  border-gray-300 border focus:outline-0 focus:ring-gray-400 focus:ring-1 pl-9 py-2 rounded-sm w-full h-full"
+                type="text"
+                placeholder="Search"
+                value={searchQuery}
+                onChange={(e) =>
+                  setSearchQuery(e.target.value)
+                }
+              />
+            </div>
           </div>
-          <div className=" relative   focus:outline-none">
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 15 15"
-              fill="none"
-              color="gray"
-              className="absolute left-3 top-1/2 transform -translate-y-1/2"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
-                fill="currentColor"
-                fillRule="evenodd"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-            <input
-              className="  border-gray-300 border focus:outline-0 focus:ring-gray-400 focus:ring-1 pl-9 py-2 rounded-sm w-full h-full"
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) =>
-                setSearchQuery(e.target.value)
-              }
-            />
-          </div>
+
           {/* Sorting options */}
         </div>
 
         {isFilterByStoreOpen && (
-          <div className="bg-gradient-to-r from-gray-50 to-gray-100 shadow-md max-h-48 rounded-lg p-5 overflow-hidden border border-gray-200">
+          <div className="bg-gradient-to-r container from-gray-50 to-gray-100 shadow-md max-h-48 rounded-lg p-5 overflow-hidden border border-gray-200">
             <h3 className="text-lg font-bold mb-3 text-blue-900">
               Filter by Store
             </h3>
@@ -197,31 +198,34 @@ export default function ShowPromotions() {
         )}
 
         {/* Promotion display */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto gap-6">
-          {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto gap-7">
+          {isLoading ? (
             <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />
             </div>
+          ) : filteredAndSortedPromos?.length > 0 ? (
+            filteredAndSortedPromos.map((promotion) => {
+              if (promotion.promotionType == '1') {
+                return (
+                  <PromotionCard
+                    key={promotion._id}
+                    promotion={promotion}
+                  />
+                );
+              } else {
+                return (
+                  <DiscountAmountCard
+                    key={promotion._id}
+                    promotion={promotion}
+                  />
+                );
+              }
+            })
+          ) : (
+            <p className="text-center col-span-5 text-gray-500">
+              No promotions found.
+            </p>
           )}
-          {filteredAndSortedPromos.length > 0
-            ? filteredAndSortedPromos.map((promotion) => {
-                if (promotion.promotionType == '1') {
-                  return (
-                    <PromotionCard
-                      key={promotion._id}
-                      promotion={promotion}
-                    />
-                  );
-                } else {
-                  return (
-                    <DiscountAmountCard
-                      key={promotion._id}
-                      promotion={promotion}
-                    />
-                  );
-                }
-              })
-            : !isLoading && <p>No promotions found.</p>}
         </div>
       </div>
     </div>

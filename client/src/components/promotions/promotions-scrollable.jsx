@@ -31,7 +31,7 @@ export function PromotionsScrollable() {
     if (screenWidth >= 1280) {
       scrollAmount = 420;
     } else {
-      scrollAmount = 340;
+      scrollAmount = 320;
     }
     scrollableContainer.scrollBy({
       left: -scrollAmount,
@@ -45,7 +45,7 @@ export function PromotionsScrollable() {
     if (screenWidth >= 1280) {
       scrollAmount = 420;
     } else {
-      scrollAmount = 340;
+      scrollAmount = 320;
     }
     scrollableContainer.scrollBy({
       left: scrollAmount,
@@ -60,7 +60,7 @@ export function PromotionsScrollable() {
           <LoadingSpinner />
         </div>
       ) : (
-        <div className="relative max-w-[320px] md:max-w-[660px] xl:max-w-[1240px]">
+        <div className="relative max-w-[300px] md:max-w-[660px] xl:max-w-[1240px]">
           {/* Left Scroll Button */}
           <button
             onClick={() => scrollLeft()}

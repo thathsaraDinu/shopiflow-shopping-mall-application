@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ProductCard from './productCard';
-import useProducts from '@/hooks/useProducts';
+import UseProducts from '@/hooks/useProducts';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth-store';
@@ -8,7 +8,7 @@ import { useAuthStore } from '@/store/auth-store';
 const ITEMS_PER_PAGE = 5;
 
 const ProductsGrid = () => {
-  const { data, isLoading } = useProducts();
+  const { products, isLoading } = UseProducts();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] =
     useState('all');
@@ -19,13 +19,14 @@ const ProductsGrid = () => {
     (state) => state.isLoggedIn,
   );
 
+  console.log(products);
   // Ensure "all" is always available, even when data is loading
-  const categories = data
-    ? ['all', ...new Set(data.map((item) => item.category))]
+  const categories = products
+    ? ['all', ...new Set(products.map((item) => item.category))]
     : ['all'];
 
   // Filter products based on search query and selected category
-  const filteredProducts = data?.filter((item) => {
+  const filteredProducts = products?.filter((item) => {
     const matchesSearch =
       item.name
         .toLowerCase()
@@ -162,7 +163,7 @@ const ProductsGrid = () => {
         </div>
       </div>
 
-      <div className="grid xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4">
+      <div className="grid xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2 mx-auto gap-4">
         {isLoading ? (
           <div className="col-span-5 h-96 flex items-center justify-center">
             <LoadingSpinner />
