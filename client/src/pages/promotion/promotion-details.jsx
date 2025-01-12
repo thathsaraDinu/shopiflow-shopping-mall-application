@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { PromotionsScrollable } from '@/components/promotions/promotions-scrollable';
 import { LoadingSpinner } from '@/components/ui/spinner';
-import { MdDiscount, MdOutlineDateRange } from 'react-icons/md';
+import { MdOutlineDateRange } from 'react-icons/md';
 
 export default function PromotionDetails() {
   const { type, id } = useParams();
@@ -18,7 +18,7 @@ export default function PromotionDetails() {
     'flex flex-col lg:flex-row gap-5 justify-center xl:w-[800px] md:w-[600px] w-[300px] transition-all ease-in-out';
 
   return (
-    <div className="mx-20 my-10 flex flex-col gap-16 items-center">
+    <div className="mx-20 py-10 flex flex-col gap-10 items-center">
       <h1 className="text-2xl italic font-bold text-center">
         {data && data.data.promotion.promoTitle}
       </h1>

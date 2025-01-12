@@ -51,7 +51,7 @@ const Layout = () => {
       {!isLoggedIn || role === USER_ROLES.USER ? (
         <div>
           <Navbar />
-          <div className="flex-grow min-h-[calc(100vh-137px)]">
+          <div className="flex-grow bg-gray-100 min-h-[calc(100vh-137px)]">
             <Outlet />
           </div>
           <Footer />
@@ -63,7 +63,7 @@ const Layout = () => {
           <Sidebar />
           <div className="flex min-h-screen flex-1 flex-col overflow-y-auto">
             <DashboardNavbar />
-            <div className="overflow-y-auto p-4">
+            <div className="overflow-y-auto p- ">
               <Outlet />
             </div>
           </div>

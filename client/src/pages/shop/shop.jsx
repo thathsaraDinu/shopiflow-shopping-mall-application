@@ -79,7 +79,7 @@ const Shop = () => {
   };
 
   return (
-    <div className="container mx-auto min-h-screen py-5 flex flex-col gap-10 md:py-10">
+    <div className="container mx-auto min-h-screen py-5 flex flex-col bg-transparent gap-10 md:py-10 ">
       <h1 className="text-3xl font-bold text-center text-black">
         Explore Our Shops
       </h1>
@@ -145,7 +145,10 @@ const Shop = () => {
           </div>
         ) : currentShops?.length > 0 ? (
           currentShops.map((shop) => (
-            <Card key={shop._id} className="overflow-hidden">
+            <Card
+              key={shop._id}
+              className="overflow-hidden"
+            >
               <div className="h-48 overflow-hidden">
                 <img
                   src={shop.image || '/shop image.jpg'}

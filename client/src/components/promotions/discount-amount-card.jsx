@@ -23,7 +23,7 @@ export function DiscountAmountCard({ promotion }) {
   }
 
   return (
-    <div className="flex flex-col border bg-gray-100 mb-3 gap-2 xl:w-[400px] w-[300px] min-w-[300px] xl:min-w-[400px] rounded-md">
+    <div className="flex flex-col border bg-white mb-3 gap-2 xl:w-[400px] w-[300px] min-w-[300px] xl:min-w-[400px] rounded-md">
       <div>
         <Link
           to={`/promotiondetails/${'type2'}/${promotion._id}`}

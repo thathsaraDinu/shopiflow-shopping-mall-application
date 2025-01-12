@@ -80,7 +80,7 @@ export default function ShowPromotions() {
   );
 
   return (
-    <div className="transition-all duration-500 py-5 mx-auto md:py-10 min-h-screen flex flex-col gap-10">
+    <div className="transition-all duration-500 py-5 mx-auto md:py-10 min-h-screen flex flex-col gap-10 ">
       <div className="text-3xl font-bold text-center text-black">
         Promotions
       </div>
@@ -89,7 +89,7 @@ export default function ShowPromotions() {
           {/* Checkbox card for store name selection */}
           <div className="flex justify-start items-start flex-wrap gap-4">
             <Button
-              className="bg-gray-100 border-gray-400 hover:border-gray-600 hover:bg-gray-200"
+              className="bg-white border-gray-400 hover:bg-slate-100"
               variant="outline"
               onClick={() =>
                 setIsFilterByStoreOpen(!isFilterByStoreOpen)
@@ -169,7 +169,7 @@ export default function ShowPromotions() {
         </div>
 
         {isFilterByStoreOpen && (
-          <div className="bg-gradient-to-r container from-gray-50 to-gray-100 shadow-md max-h-48 rounded-lg p-5 overflow-hidden border border-gray-200">
+          <div className=" container bg-white shadow-md max-h-48 rounded-lg p-5 overflow-hidden border border-gray-200">
             <h3 className="text-lg font-bold mb-3 text-blue-900">
               Filter by Store
             </h3>

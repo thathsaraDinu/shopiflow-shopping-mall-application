@@ -17,6 +17,7 @@ import Logo from '@/assets/logo/logo.png';
 import AvatarIcon from '@/components/navbar/avatar';
 import { useAuthStore } from '@/store/auth-store';
 import { useWishlitStore } from '@/store/wishlist-store';
+import { Route } from 'react-router-dom';
 
 // Menu Items for all users (public)
 const MenuItemsAll = [
@@ -99,6 +100,8 @@ export default function Navbar() {
   const wishlistCount = useWishlitStore(
     (state) => state.count,
   );
+
+  const url = window.location.pathname; 
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
