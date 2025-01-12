@@ -155,7 +155,7 @@ const ProductsGrid = () => {
           currentProducts.map((product) => (
             <ProductCard
               key={product.id}
-              product={product}
+              data={product}
               isLoggedIn={isLoggedIn}
             />
           ))
