@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { getShops } from '@/api/shop.api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuthStore } from '@/store/auth-store';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import {
@@ -138,14 +138,14 @@ const Shop = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {isLoading ? (
           <div className="col-span-5 h-96 flex items-center justify-center">
             <LoadingSpinner />
           </div>
         ) : currentShops?.length > 0 ? (
           currentShops.map((shop) => (
-            <Card key={shop.id} className="overflow-hidden">
+            <Card key={shop._id} className="overflow-hidden">
               <div className="h-48 overflow-hidden">
                 <img
                   src={shop.image || '/shop image.jpg'}
