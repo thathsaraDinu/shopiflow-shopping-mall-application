@@ -12,19 +12,13 @@ const Home = () => {
       <HeroSection />
       <div className="mb-10" />
       <div className="container mx-auto flex flex-col gap-10 mb-10">
-        <h2
-          className=" text-3xl font-semibold text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
-          style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-        >
+        <h2 className="text-2xl font-bold">
           Discover Events & Offers
         </h2>
         <PromotionsScrollable></PromotionsScrollable>
       </div>
       <div className="container mx-auto flex flex-col gap-10 mb-10">
-        <h2
-          className=" text-3xl font-semibold text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
-          style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-        >
+        <h2 className="text-2xl font-bold">
           Newest Products
         </h2>
         <div className="grid place-items-center xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4">

@@ -1,6 +1,5 @@
 import DiscountAmountCard from '@/components/promotions/discount-amount-card';
 import { PromotionCard } from '@/components/promotions/promotion-card';
-import { CardTitle } from '@/components/ui/card';
 import { useState } from 'react';
 import { UsePromotionsQuery } from '@/hooks/usePromotions';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,6 @@ export default function ShowPromotions() {
   const { discounts, amounts, isLoading } =
     UsePromotionsQuery();
   const [searchQuery, setSearchQuery] = useState('');
-  const [promotionType, setPromotionType] = useState('0');
   const [sortOption, setSortOption] = useState('startDate');
   const [selectedStores, setSelectedStores] = useState([]); // Array for storing selected stores
   const [isFilterByStoreOpen, setIsFilterByStoreOpen] =
@@ -42,16 +40,6 @@ export default function ShowPromotions() {
         .toLowerCase()
         .includes(searchQuery.toLowerCase()),
     );
-
-    if (promotionType === '1') {
-      filteredPromos = filteredPromos.filter(
-        (promotion) => promotion.promotionType == '1',
-      );
-    } else if (promotionType === '2') {
-      filteredPromos = filteredPromos.filter(
-        (promotion) => promotion.promotionType == '3',
-      );
-    }
 
     // Filter by selected stores
     if (selectedStores.length > 0) {
@@ -92,61 +80,16 @@ export default function ShowPromotions() {
   );
 
   return (
-    <div className="transition-all duration-500 py-5 px-10 md:py-10 md:px-20 flex flex-col gap-10">
-      <CardTitle
-        className="text-5xl font-bold text-center text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
-        style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-      >
+    <div className="transition-all duration-500 py-5 container mx-auto md:py-10 min-h-screen flex flex-col gap-10">
+      <div className="text-3xl font-bold text-center text-black">
         Promotions
-      </CardTitle>
+      </div>
       <div className="flex flex-col gap-10">
-        <div className="text-sm flex items-start justify-between flex-wrap gap-5">
+        <div className="text-sm flex items-start justify-end flex-wrap gap-4">
           {/* Search and filter options */}
-          <div className="flex flex-row justify-space flex-wrap items-center gap-5">
-            <div className=" relative   focus:outline-none">
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 15 15"
-                fill="none"
-                color="gray"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
-                  fill="currentColor"
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-              <input
-                className="  border-gray-300 border focus:outline-0 focus:ring-gray-400 focus:ring-1 pl-9 py-2 rounded-sm w-full h-full"
-                type="text"
-                placeholder="Search"
-                value={searchQuery}
-                onChange={(e) =>
-                  setSearchQuery(e.target.value)
-                }
-              />
-            </div>
-
-            <select
-              onChange={(e) =>
-                setPromotionType(e.target.value)
-              }
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-gray-400 focus:ring-1"
-            >
-              <option value="0">View All</option>
-              <option value="1">
-                Percentage Discounts
-              </option>
-              <option value="2">Special Discounts</option>
-            </select>
-          </div>
 
           {/* Checkbox card for store name selection */}
-          <div className="flex justify-between items-start flex-wrap gap-5">
+          <div className="flex justify-between items-start flex-wrap gap-4">
             <Button
               className="bg-gray-100 border-gray-400 hover:border-gray-600 hover:bg-gray-200"
               variant="outline"
@@ -177,7 +120,7 @@ export default function ShowPromotions() {
               onChange={(e) =>
                 setSortOption(e.target.value)
               }
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-gray-400 focus:ring-1"
+              className="border border-gray-300 rounded-sm px-3 py-2 focus:outline-none focus:ring-gray-400 focus:ring-1"
             >
               <option value="startDate">Sort By</option>
               <option value="storeNameAsc">
@@ -194,8 +137,36 @@ export default function ShowPromotions() {
               </option>
             </select>
           </div>
+          <div className=" relative   focus:outline-none">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 15 15"
+              fill="none"
+              color="gray"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
+                fill="currentColor"
+                fillRule="evenodd"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+            <input
+              className="  border-gray-300 border focus:outline-0 focus:ring-gray-400 focus:ring-1 pl-9 py-2 rounded-sm w-full h-full"
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) =>
+                setSearchQuery(e.target.value)
+              }
+            />
+          </div>
           {/* Sorting options */}
         </div>
+
         {isFilterByStoreOpen && (
           <div className="bg-gradient-to-r from-gray-50 to-gray-100 shadow-md max-h-48 rounded-lg p-5 overflow-hidden border border-gray-200">
             <h3 className="text-lg font-bold mb-3 text-blue-900">
@@ -226,7 +197,7 @@ export default function ShowPromotions() {
         )}
 
         {/* Promotion display */}
-        <div className="flex flex-wrap xl:gap-10 gap-6 justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading && (
             <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />

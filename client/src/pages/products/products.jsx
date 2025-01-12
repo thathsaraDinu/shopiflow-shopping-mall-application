@@ -3,11 +3,8 @@ import ProductsGrid from './productsGrid';
 const Products = () => {
   return (
     <>
-      <div className="py-5 md:py-10">
-        <div
-          className="text-5xl font-bold text-center text-gradient bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent"
-          style={{ fontFamily: 'Bebas Neue, sans-serif' }}
-        >
+      <div className="py-5 md:py-10 container mx-auto flex flex-col gap-10 min-h-screen">
+        <div className="text-3xl font-bold text-center text-black">
           Products
         </div>
         <ProductsGrid />

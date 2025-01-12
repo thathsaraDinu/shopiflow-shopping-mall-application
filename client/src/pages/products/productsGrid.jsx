@@ -1,68 +1,196 @@
 import { useState } from 'react';
 import ProductCard from './productCard';
 import useProducts from '@/hooks/useProducts';
-import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/spinner';
+import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth-store';
+
+const ITEMS_PER_PAGE = 3;
 
 const ProductsGrid = () => {
   const { data, isLoading } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] =
+    useState('all');
+  const [sortOption, setSortOption] = useState('default'); // 'price-asc', 'price-desc', 'date-asc', 'date-desc'
+  const [currentPage, setCurrentPage] = useState(1);
 
-   const isLoggedIn = useAuthStore(
-      (state) => state.isLoggedIn,
-    );
+  const isLoggedIn = useAuthStore(
+    (state) => state.isLoggedIn,
+  );
 
-  const filteredProducts = data?.filter(
-    (item) =>
+  // Ensure "all" is always available, even when data is loading
+  const categories = data
+    ? ['all', ...new Set(data.map((item) => item.category))]
+    : ['all'];
+
+  // Filter products based on search query and selected category
+  const filteredProducts = data?.filter((item) => {
+    const matchesSearch =
       item.name
         .toLowerCase()
         .includes(searchQuery.toLowerCase()) ||
       item.category
         .toLowerCase()
-        .includes(searchQuery.toLowerCase()),
+        .includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === 'all' ||
+      item.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  // Sort products based on selected sorting option
+  const sortedProducts = filteredProducts?.sort((a, b) => {
+    switch (sortOption) {
+      case 'price-asc':
+        return a.price - b.price;
+      case 'price-desc':
+        return b.price - a.price;
+      case 'date-asc':
+        return (
+          new Date(a.createdAt) - new Date(b.createdAt)
+        );
+      case 'date-desc':
+        return (
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+      default:
+        return 0; // No sorting
+    }
+  });
+
+  // Pagination logic
+  const totalPages = Math.ceil(
+    (sortedProducts?.length || 0) / ITEMS_PER_PAGE,
+  );
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentProducts = sortedProducts?.slice(
+    startIndex,
+    endIndex,
   );
 
+  const handlePreviousPage = () => {
+    setCurrentPage((p) => Math.max(1, p - 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((p) => Math.min(totalPages, p + 1));
+  };
+
   return (
-    <>
-      <div className="container mx-auto">
-        <div className="relative md:w-1/2 mx-auto mt-10">
-          <Input
-            id="search"
-            className="text-grey-600 bg-white rounded-sm focus-visible:ring-blue-500"
+    <div className="flex flex-col gap-10">
+      {/* Search, category filters, and sorting options */}
+      <div className="flex flex-wrap items-center justify-end gap-4 text-sm">
+        {/* Category Selector */}
+        <select
+          className="border-gray-300 border rounded-sm py-2 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          value={selectedCategory}
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            setCurrentPage(1); // Reset to first page on category change
+          }}
+        >
+          <option value="all">All Categories</option>
+          {isLoading ? (
+            <option>Please wait...</option>
+          ) : (
+            categories
+              .filter((category) => category !== 'all')
+              .map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))
+          )}
+        </select>
+
+        {/* Sort Selector */}
+        <select
+          className="border-gray-300 border rounded-sm py-2 px-4 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          value={sortOption}
+          onChange={(e) => {
+            setSortOption(e.target.value);
+            setCurrentPage(1); // Reset to first page on sort change
+          }}
+        >
+          <option value="default">Sort By</option>
+          <option value="price-asc">
+            Price: Low to High
+          </option>
+          <option value="price-desc">
+            Price: High to Low
+          </option>
+          <option value="date-asc">
+            Date: Oldest First
+          </option>
+          <option value="date-desc">
+            Date: Newest First
+          </option>
+        </select>
+
+        {/* Search Input */}
+        <div className="relative">
+          <input
+            className="border-gray-300 border focus:outline-0 focus:ring-gray-400 focus:ring-1 pl-9 py-2 rounded-sm w-full h-full"
+            type="text"
             placeholder="Search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1); // Reset to first page on search
+            }}
           />
-
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="absolute top-1.5 right-2.5"
-          >
-            <path
-              d="M21.7275 20.4093L16.9401 15.6226C16.697 15.3795 16.3534 15.3025 16.0431 15.3844L15.0159 14.3573C16.1747 13.0448 16.8845 11.3267 16.8845 9.44218C16.8845 5.33871 13.5462 2 9.44261 2C5.33847 2 1.99976 5.33871 1.99976 9.44285C1.99976 13.5467 5.33847 16.885 9.44261 16.885C11.3268 16.885 13.0449 16.1755 14.3577 15.0164L15.3848 16.0436C15.3029 16.354 15.3796 16.6972 15.6231 16.9406L20.4097 21.727C20.5921 21.9093 20.83 22 21.0686 22C21.3072 22 21.5454 21.909 21.7274 21.727C22.0911 21.3633 22.0911 20.7733 21.7274 20.4093L21.7275 20.4093ZM2.93168 9.44254C2.93168 5.85288 5.85211 2.93187 9.44236 2.93187C13.0326 2.93187 15.9527 5.85288 15.9527 9.44287C15.9527 13.0325 13.0319 15.9532 9.44236 15.9532C5.85277 15.9532 2.93168 13.0325 2.93168 9.44254Z"
-              fill="#5D6679"
-            />
-          </svg>
-        </div>
-        <div className="grid place-items-center md:grid-cols-3 xl:grid-cols-5 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4 mt-10">
-          {isLoading ? (
-            <div className="col-span-5 h-96 flex items-center justify-center">
-              <LoadingSpinner />
-            </div>
-          ) : (
-            filteredProducts &&
-            filteredProducts.map((item) => (
-              <ProductCard key={item.name} data={item} isLoggedIn={isLoggedIn}/>
-            ))
-          )}
         </div>
       </div>
-    </>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? (
+          <div className="col-span-5 h-96 flex items-center justify-center">
+            <LoadingSpinner />
+          </div>
+        ) : currentProducts?.length > 0 ? (
+          currentProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              isLoggedIn={isLoggedIn}
+            />
+          ))
+        ) : (
+          <p className="text-center col-span-5 text-gray-500">
+            No products found.
+          </p>
+        )}
+      </div>
+
+      {!isLoading &&
+        sortedProducts?.length > ITEMS_PER_PAGE && (
+          <div className="mt-8 flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <div className="flex items-center gap-2 px-4">
+              <span className="text-sm text-gray-600">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
+            <Button
+              variant="outline"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+    </div>
   );
 };
 
