@@ -1,4 +1,3 @@
-import React from 'react';
 import { addToWishlist } from '@/api/wishlist.api';
 import { useState } from 'react';
 import { useWishlitStore } from '@/store/wishlist-store';

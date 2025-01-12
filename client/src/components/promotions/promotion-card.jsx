@@ -15,11 +15,7 @@ export function PromotionCard({ promotion }) {
     discountPercentage,
     promoTitle,
   } = promotion;
-  function truncateText(text, length) {
-    return text.length > length
-      ? text.substring(0, length) + '...'
-      : text;
-  }
+
   const cardcss =
     'flex flex-col mb-3 gap-2 xl:w-[400px] border bg-white w-[300px] min-w-[300px] xl:min-w-[400px] rounded-md';
   return (
