@@ -197,7 +197,7 @@ export default function ShowPromotions() {
         )}
 
         {/* Promotion display */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto gap-6">
           {isLoading && (
             <div className="col-span-5 h-96 flex items-center justify-center">
               <LoadingSpinner />
