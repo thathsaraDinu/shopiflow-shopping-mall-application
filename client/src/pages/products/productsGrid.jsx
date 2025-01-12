@@ -5,7 +5,7 @@ import { LoadingSpinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth-store';
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_PER_PAGE = 5;
 
 const ProductsGrid = () => {
   const { data, isLoading } = useProducts();
@@ -146,7 +146,7 @@ const ProductsGrid = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid xl:grid-cols-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-1 sm:grid-cols-2  gap-4">
         {isLoading ? (
           <div className="col-span-5 h-96 flex items-center justify-center">
             <LoadingSpinner />
