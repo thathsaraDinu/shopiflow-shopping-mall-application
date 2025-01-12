@@ -162,9 +162,7 @@ const Shop = () => {
             <Card key={shop.id} className="overflow-hidden">
               <div className="h-48 overflow-hidden">
                 <img
-                  src={
-                    shop.image || '/shop image.jpg'
-                  }
+                  src={shop.image || '/shop image.jpg'}
                   alt={shop.name}
                   className="w-full h-full object-cover transition-transform hover:scale-105"
                 />
@@ -234,29 +232,30 @@ const Shop = () => {
         )}
       </div>
 
-      {!isLoading && filteredShops.length > 3 && (
-        <div className="mt-8 flex justify-end gap-2">
-          <Button
-            variant="outline"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <div className="flex items-center gap-2 px-4">
-            <span className="text-sm text-gray-600">
-              Page {currentPage} of {totalPages}
-            </span>
+      {!isLoading &&
+        filteredShops?.length > ITEMS_PER_PAGE && (
+          <div className="mt-8 flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <div className="flex items-center gap-2 px-4">
+              <span className="text-sm text-gray-600">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
+            <Button
+              variant="outline"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
-        </div>
-      )}
+        )}
     </div>
   );
 };
