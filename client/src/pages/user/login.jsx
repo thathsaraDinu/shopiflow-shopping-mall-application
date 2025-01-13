@@ -21,6 +21,7 @@ import { useAuthStore } from '@/store/auth-store';
 import { getProfileData } from '@/api/user.api';
 import { useShopStore } from '@/store/shop-store';
 import { USER_ROLES } from '@/constants';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const login = useAuthStore((state) => state.login);
@@ -43,12 +44,14 @@ export default function Login() {
     queryFn: getProfileData,
     enabled: false,
   });
+  const navigate = useNavigate();
 
   const loginUser = useMutation({
     mutationFn: userLogin,
     onSuccess: async (data) => {
       login(data.accessToken);
       toast.success('Logged in successfully');
+      navigate('/');
 
       // Fetch profile data after successful login
       try {
@@ -104,7 +107,7 @@ export default function Login() {
           src="/login_image.jpg"
           alt="Login"
           className="w-full h-full object-cover"
-        />  
+        />
       </div>
       <div className="flex items-center justify-center w-full lg:w-1/2 h-full">
         <Card className="w-full max-w-md mx-4 my-16 h-full">

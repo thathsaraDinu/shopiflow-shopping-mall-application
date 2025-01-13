@@ -13,7 +13,7 @@ const QueueTable = ({ queues, isLoading, isError }) => {
   const navigate = useNavigate();
 
   if (isLoading) {
-    return <LoadingSpinner className={'m-auto w-96'} />;
+    return <LoadingSpinner className={'m-auto w-16'} />;
   }
 
   if (isError) {
