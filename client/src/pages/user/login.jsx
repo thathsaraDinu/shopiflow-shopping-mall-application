@@ -102,14 +102,8 @@ export default function Login() {
 
   return (
     <div className="flex items-center h-full">
-      <div className="hidden lg:flex items-center justify-center w-1/2 min-h-[calc(100vh-137px)]">
-        <img
-          src="/login_image.jpg"
-          alt="Login"
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="flex items-center justify-center w-full lg:w-1/2 h-full">
+      <div className="hidden lg:block w-1/2 bg-[url('/login_image.jpg')] h-[calc(100vh-137px)] bg-cover bg-center"/>
+      <div className="flex items-center justify-center w-full lg:w-1/2">
         <Card className="w-full max-w-md mx-4 my-16 h-full">
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardHeader>
