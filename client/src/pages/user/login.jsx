@@ -102,7 +102,7 @@ export default function Login() {
 
   return (
     <div className="flex items-center h-full">
-      <div className="hidden lg:flex items-center justify-center w-1/2 h-screen">
+      <div className="hidden lg:flex items-center justify-center w-1/2 min-h-[calc(100vh-137px)]">
         <img
           src="/login_image.jpg"
           alt="Login"
