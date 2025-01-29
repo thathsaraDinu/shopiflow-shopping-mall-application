@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getProfileData } from './api/user.api';
 import { LoadingSpinner } from './components/ui/spinner';
 import { useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
 const Layout = () => {
   const isLoggedIn = useAuthStore(
@@ -75,6 +76,7 @@ const Layout = () => {
           zIndex: 9999,
         }}
       />
+      <Analytics />
     </div>
   );
 };
