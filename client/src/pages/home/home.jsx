@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useAuthStore } from '@/store/auth-store';
 
 const Home = () => {
   const { products, isLoading } = useProducts();
@@ -21,7 +22,9 @@ const Home = () => {
     { name: 'Home', icon: FiHome },
     { name: 'Featured', icon: FiStar },
   ];
-
+  const isLoggedIn = useAuthStore(
+    (state) => state.isLoggedIn,
+  );
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
@@ -29,8 +32,8 @@ const Home = () => {
 
       {/* Promotions Section */}
       <section className="container mx-auto px-5 my-16">
-        <div className="flex items-center justify-between gap-5 mb-8">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple bg-clip-text text-transparent">
+        <div className="flex items-center justify-between gap-3 mb-8">
+          <h2 className="text-3xl text-left font-bold bg-gradient-to-r from-blue-600 to-purple bg-clip-text text-transparent">
             Discover Events & Offers
           </h2>
           <Link
@@ -70,9 +73,9 @@ const Home = () => {
       </section>
 
       {/* Newest Products Section */}
-      <section className="container mx-auto px-5 mb-16 text-center">
-        <div className="flex items-center justify-between gap-5 mb-8">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple bg-clip-text text-transparent">
+      <section className="container flex flex-col gap-8 px-5 mb-16 text-center">
+        <div className="flex items-center justify-between gap-3 ">
+          <h2 className="text-left text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple bg-clip-text text-transparent">
             Newest Products
           </h2>
           <Link
@@ -92,7 +95,11 @@ const Home = () => {
             products
               .slice(0, 5)
               .map((item, index) => (
-                <ProductCard key={index} data={item} />
+                <ProductCard
+                  key={index}
+                  data={item}
+                  isLoggedIn={isLoggedIn}
+                />
               ))
           )}
         </div>
