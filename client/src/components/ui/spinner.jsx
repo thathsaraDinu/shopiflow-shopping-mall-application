@@ -9,7 +9,7 @@ export const LoadingSpinner = ({ className }) => {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke="blue"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
