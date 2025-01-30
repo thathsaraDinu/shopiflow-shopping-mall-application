@@ -124,7 +124,9 @@ export default function Footer() {
             <form
               onSubmit={(e) => {
                 e.preventDefault(); // Prevents the page from reloading
-                toast.success('Successful');
+                setTimeout(() => {
+                  toast.success('Successful');
+                }, 400); // Show toast message after 1 second
               }}
               className="flex gap-2"
             >
