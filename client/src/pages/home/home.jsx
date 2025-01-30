@@ -70,7 +70,7 @@ const Home = () => {
       </section>
 
       {/* Newest Products Section */}
-      <section className="container mx-auto px-5 mb-16">
+      <section className="container mx-auto px-5 mb-16 text-center">
         <div className="flex items-center justify-between gap-5 mb-8">
           <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple bg-clip-text text-transparent">
             Newest Products

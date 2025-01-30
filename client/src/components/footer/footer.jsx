@@ -7,7 +7,6 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaShoppingBag,
 } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +23,6 @@ export default function Footer() {
               to="/"
               className="flex items-center gap-3"
             >
-              <FaShoppingBag className="h-8 w-8 text-white" />
               <span className="text-xl font-bold text-white">
                 ShopiFlow
               </span>
