@@ -12,10 +12,10 @@ import {
 } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import SignedAvatarImg from '@/assets/avatar/logged-in.png';
-import AvatarImg from '@/assets/avatar/avatar.png';
 import { useAuthStore } from '@/store/auth-store';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { MdPerson } from 'react-icons/md';
 
 export default function AvatarIcon() {
   const isLoggedIn = useAuthStore(
@@ -45,10 +45,7 @@ export default function AvatarIcon() {
                 alt="User's avatar"
               />
             ) : (
-              <AvatarImage
-                src={AvatarImg}
-                alt="User's avatar"
-              />
+              <MdPerson color='white' size={35} />
             )}
 
             <span className="sr-only">

@@ -102,8 +102,7 @@ export default function Login() {
 
   return (
     <div className="flex items-center h-full">
-      <div className="hidden lg:block w-1/2 bg-[url('/login_image.jpg')] h-[calc(100vh-137px)] bg-cover bg-center"/>
-      <div className="flex items-center justify-center w-full lg:w-1/2">
+      <div className="flex items-center justify-center w-full ">
         <Card className="w-full max-w-md mx-4 my-16 h-full">
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardHeader>

@@ -1,109 +1,46 @@
-import { useState, useEffect } from 'react';
-import HeroImg1 from '../../assets/hero/hero1.jpg';
-import HeroImg2 from '../../assets/hero/hero2.jpg';
-import HeroImg3 from '../../assets/hero/hero3.jpg';
-import { Button } from '../ui/button';
-import { useAuthStore } from '@/store/auth-store';
-import { useNavigate } from 'react-router-dom';
+import { FiArrowRight } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
-export default function HeroSection() {
-  const heroImages = [HeroImg1, HeroImg2, HeroImg3];
-  const [currentImageIndex, setCurrentImageIndex] =
-    useState(0);
-
-  const isLoggedIn = useAuthStore(
-    (state) => state.isLoggedIn,
-  );
-
-  const fullName = useAuthStore((state) => state.fullName);
-
-  const navigate = useNavigate();
-
-  // Automatically change the image every 5 seconds
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex + 1) % heroImages.length,
-      );
-    }, 5000); // 5000ms = 5 seconds
-
-    return () => clearInterval(intervalId); // Cleanup on unmount
-  }, [heroImages.length]);
-
+const HeroSection = () => {
   return (
-    <div className="relative container py-11 lg:py-11">
-      {/* Grid */}
-      <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
-        <div className="lg:col-span-3">
-          {!isLoggedIn && (
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              Welcome to ShopiFlow!
-            </h1>
-          )}
-          {isLoggedIn && (
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              Hi {fullName}, Welcome back!
-            </h1>
-          )}
-          <p className="mt-3 text-xl text-muted-foreground">
-            Get better experience with ShopiFlow
+    <div className="relative md:h-[600px] min-h-[calc(100vh-137px)] flex justify-center items-center py-20 bg-gradient-to-r from-blue-600 to-purple overflow-hidden">
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80"
+          alt="Hero background"
+          className="w-full h-full object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
+      </div>
+      <div className="relative container mx-auto px-5 h-full flex items-center">
+        <div className="max-w-2xl animate-slide-in">
+          <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white mb-6 animate-float">
+            🎉 New Season Collection
+          </span>
+          <h1 className="text-6xl font-bold mb-6 text-white">
+            Discover Amazing
+            <span className="block bg-gradient-to-r from-yellow-200 to-yellow-400 bg-clip-text text-transparent">
+              Premium Products
+            </span>
+          </h1>
+          <p className="text-xl mb-8 text-blue-100 leading-relaxed">
+            Shop the latest trends and innovations with our
+            curated collection of premium products.
+            Experience quality like never before.
           </p>
-          <p className="mt-6 text-lg text-muted-foreground">
-            You can find the best products here. We have a
-            wide range of products for you to choose from.
-            Shop now and get the best deals!
-          </p>
-          <Button
-            onClick={() => {
-              navigate('/products');
-            }}
-            className="mt-6"
-          >
-            Shop Now
-          </Button>
-        </div>
-        {/* End Col */}
-        <div className="lg:col-span-4 mt-10 lg:mt-0 relative">
-          {/* Image Container */}
-          <div className="relative overflow-hidden rounded-xl w-full h-48 sm:h-64 md:h-80 lg:h-96">
-            {/* Images with sliding effect */}
-            <div
-              className="flex transition-transform duration-1000 ease-in-out"
-              style={{
-                transform: `translateX(-${currentImageIndex * 100}%)`,
-              }}
+          <div className='w-44'>
+            <Link
+              to={'/shops'}
+              className="group px-8 py-4 bg-white text-blue-600 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
             >
-              {heroImages.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  className="w-full h-full object-cover flex-shrink-0"
-                  alt={`Hero Image ${index + 1}`}
-                />
-              ))}
-            </div>
-
-            {/* Image Changer Dots */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {heroImages.map((_, index) => (
-                <div
-                  key={index}
-                  className={`w-3 h-3 rounded-full cursor-pointer ${
-                    currentImageIndex === index
-                      ? 'bg-white'
-                      : 'bg-gray-400'
-                  }`}
-                  onClick={() =>
-                    setCurrentImageIndex(index)
-                  }
-                ></div>
-              ))}
-            </div>
+              Shop Now
+              <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
+            </Link>
           </div>
         </div>
-        {/* End Col */}
       </div>
-      {/* End Grid */}
     </div>
   );
-}
+};
+
+export default HeroSection;

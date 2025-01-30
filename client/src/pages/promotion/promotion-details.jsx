@@ -19,9 +19,9 @@ export default function PromotionDetails() {
 
   return (
     <div className="mx-20 py-10 flex flex-col gap-10 items-center">
-      <h1 className="text-2xl italic font-bold text-center">
+        <h2 className="text-3xl italic font-bold bg-gradient-to-r text-center mb-6 from-blue-600 to-purple bg-clip-text text-transparent">
         {data && data.data.promotion.promoTitle}
-      </h1>
+      </h2>
       <div className="flex gap-10">
         <div className="">
           {isLoading ? (
@@ -123,9 +123,9 @@ export default function PromotionDetails() {
         </div>
       </div>
       <div className="flex flex-col mx-10 gap-10 ">
-        <h1 className="text-2xl font-bold  ">
+        <h2 className="text-2xl font-bold bg-gradient-to-r mb-6 from-blue-600 to-purple bg-clip-text text-transparent">
           You May Also Like
-        </h1>
+        </h2>
         <PromotionsScrollable />
       </div>
     </div>

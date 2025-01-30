@@ -11,6 +11,7 @@ import { getProfileData } from './api/user.api';
 import { LoadingSpinner } from './components/ui/spinner';
 import { useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import ScrollToTop from './components/scroll-to-top';
 
 const Layout = () => {
   const isLoggedIn = useAuthStore(
@@ -48,6 +49,7 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop/>
       {/* User  Layout */}
       {!isLoggedIn || role === USER_ROLES.USER ? (
         <div>
@@ -64,7 +66,7 @@ const Layout = () => {
           <Sidebar />
           <div className="flex min-h-screen flex-1 flex-col overflow-y-auto">
             <DashboardNavbar />
-            <div className="overflow-y-auto p- ">
+            <div className="overflow-y-auto">
               <Outlet />
             </div>
           </div>
