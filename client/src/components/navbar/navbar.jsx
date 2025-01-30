@@ -166,7 +166,7 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="w-[300px] bg-gradient-to-b from-blue-600 to-purple-600 sm:w-[400px]"
+              className="w-[300px] bg-gradient-to-b from-blue-600 to-purple sm:w-[400px]"
             >
               <nav className="grid gap-4 py-4">
                 {[
