@@ -1,6 +1,7 @@
 import { addToWishlist } from '@/api/wishlist.api';
 import { useState } from 'react';
 import { useWishlitStore } from '@/store/wishlist-store';
+import toast from 'react-hot-toast';
 
 const ProductCard = ({ data, isLoggedIn }) => {
   const [showAddToWhishlist, setShowAddToWhishlist] =
@@ -13,6 +14,7 @@ const ProductCard = ({ data, isLoggedIn }) => {
     try {
       if (!isLoggedIn) {
         window.location.href = '/login';
+        toast.error('Please log in');
         return;
       }
       const response = await addToWishlist({
@@ -20,6 +22,7 @@ const ProductCard = ({ data, isLoggedIn }) => {
       });
 
       setWishlistData(response.data.products.length);
+      toast.success('Successfully Added');
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +42,7 @@ const ProductCard = ({ data, isLoggedIn }) => {
             alt={data.name}
           />
           {showAddToWhishlist && (
-            <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               <button
                 onClick={addItemToWishlist}
                 className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-2/3 py-3 rounded-lg transition-all"
