@@ -56,7 +56,7 @@ const ProductCard = ({ data, isLoggedIn }) => {
           <p className="text-sm mb-1">{data.supplier}</p>
           <p className="mb-1">{data.category}</p>
           <div className="flex justify-between items-center">
-            <p>${data.buyingPrice.toFixed(2)}</p>
+            <p>{data.buyingPrice} LKR</p>
             <p className="text-xs font-bold">
               Stock:{' '}
               {data.quantity > data.thresholdValue

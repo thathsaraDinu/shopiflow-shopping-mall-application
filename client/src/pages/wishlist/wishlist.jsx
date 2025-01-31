@@ -16,8 +16,8 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto">
-      <h2 className="font-bold text-2xl my-5">
+    <div className="max-w-screen-xl mx-auto py-5 md:py-10">
+      <h2 className="text-3xl font-bold bg-gradient-to-r text-center mb-6 from-blue-600 to-purple bg-clip-text text-transparent">
         My Wishlist
       </h2>
       <table className="w-full text-left">
@@ -43,7 +43,7 @@ const Wishlist = () => {
                 </td>
                 <td className="pt-5">{item.supplier}</td>
                 <td className="pt-5">
-                  ${item.buyingPrice.toFixed(2)}
+                  {item.buyingPrice} LKR
                 </td>
                 <td className="text-center pt-5">
                   <button
