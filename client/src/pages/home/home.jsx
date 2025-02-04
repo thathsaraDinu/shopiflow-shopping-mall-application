@@ -26,7 +26,7 @@ const Home = () => {
     (state) => state.isLoggedIn,
   );
   return (
-    <div className="min-h-screen bg-blue-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <HeroSection />
 
@@ -106,7 +106,7 @@ const Home = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple py-20">
+      <section className="relative overflow-hidden bg-blue-900  py-20">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80')] bg-cover bg-center" />
         </div>
@@ -132,11 +132,11 @@ const Home = () => {
                 type="email"
                 required
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 rounded-full border-2 border-transparent focus:border-white bg-white/10 backdrop-blur-md text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="flex-1 px-6 py-4 rounded-full border-2 border-transparent focus:border-white bg-white/20 backdrop-blur-md text-white placeholder-blue-100 focus:outline-none focus:ring-2 focus:ring-white/50"
               />
               <button
                 type="submit"
-                className="px-8 py-4 bg-white text-blue-600 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 shadow-lg hover:shadow-xl"
+                className="px-8 py-4 bg-white text-blue-900 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 shadow-lg hover:shadow-xl"
               >
                 Subscribe
               </button>

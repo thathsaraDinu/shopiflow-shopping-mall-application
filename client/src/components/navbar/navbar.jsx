@@ -86,7 +86,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-purple-200/20 bg-gradient-to-r from-blue-600 to-purple backdrop-blur-sm transition-all duration-300">
+    <header className="sticky top-0 z-50 w-full border-b bg-blue-700 transition-all duration-300">
       <div className="container mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-6">
         <Link
           to="/"

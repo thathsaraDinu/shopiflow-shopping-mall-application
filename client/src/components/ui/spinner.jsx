@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import PropTypes from 'prop-types';
+import { BiGame } from 'react-icons/bi';
 
 export const LoadingSpinner = ({ className }) => {
   return (
@@ -8,9 +9,9 @@ export const LoadingSpinner = ({ className }) => {
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="blue"
       strokeWidth="2"
+      stroke="#1976d2"
+      fill='none'
       strokeLinecap="round"
       strokeLinejoin="round"
       className={cn('animate-spin', className)}

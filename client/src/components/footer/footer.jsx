@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-gradient-to-b from-blue-600 to-purple">
+    <footer className="w-full bg-blue-700">
       <div className="container mx-auto max-w-7xl px-4 py-12 md:px-6">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
