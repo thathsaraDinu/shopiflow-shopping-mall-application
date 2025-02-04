@@ -17,7 +17,7 @@ export function PromotionCard({ promotion }) {
   } = promotion;
 
   const cardcss =
-    'flex flex-col mb-3 gap-2  rounded-md border-grey-100 bg-white';
+    'flex flex-col border bg-white mb-3 gap-2 rounded-md border-grey-100 ';
   return (
     <div className={cardcss}>
       <Link
