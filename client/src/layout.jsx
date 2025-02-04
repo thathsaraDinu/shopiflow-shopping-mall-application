@@ -40,7 +40,11 @@ const Layout = () => {
   }, [profile, profileSuccess, setProfile]);
 
   if (profileLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingSpinner className="w-16 h-16" />
+      </div>
+    );
   }
 
   if (profileError) {
@@ -49,7 +53,6 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ScrollToTop/>
       {/* User  Layout */}
       {!isLoggedIn || role === USER_ROLES.USER ? (
         <div>
@@ -79,6 +82,7 @@ const Layout = () => {
         }}
       />
       <Analytics />
+      <ScrollToTop />
     </div>
   );
 };
