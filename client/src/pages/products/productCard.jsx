@@ -14,8 +14,13 @@ const ProductCard = ({ data, isLoggedIn }) => {
   const addItemToWishlist = async () => {
     try {
       if (!isLoggedIn) {
-        Route.push('/login');
-        toast.error('Please log in');
+        <Route
+          render={({ history }) => {
+            history.push('/login');
+            toast.error('Please log in');
+            return null;
+          }}
+        />
         return;
       }
       const response = await addToWishlist({
