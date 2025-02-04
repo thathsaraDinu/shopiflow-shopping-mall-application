@@ -2,6 +2,7 @@ import { addToWishlist } from '@/api/wishlist.api';
 import { useState } from 'react';
 import { useWishlitStore } from '@/store/wishlist-store';
 import toast from 'react-hot-toast';
+import { Route } from 'react-router-dom';
 
 const ProductCard = ({ data, isLoggedIn }) => {
   const [showAddToWhishlist, setShowAddToWhishlist] =
@@ -13,7 +14,7 @@ const ProductCard = ({ data, isLoggedIn }) => {
   const addItemToWishlist = async () => {
     try {
       if (!isLoggedIn) {
-        window.location.href = '/login';
+        Route.push('/login');
         toast.error('Please log in');
         return;
       }
