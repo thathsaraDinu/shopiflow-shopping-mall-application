@@ -151,7 +151,7 @@ const Shop = () => {
             >
               <div className="h-48 overflow-hidden">
                 <img
-                  src={shop.image || '/shop image.jpg'}
+                  src={shop.image || '/default.jpg'}
                   alt={shop.name}
                   className="w-full h-full object-cover transition-transform hover:scale-110 duration-300 ease-in-out"
                 />
