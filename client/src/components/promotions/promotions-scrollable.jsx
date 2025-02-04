@@ -29,9 +29,15 @@ export function PromotionsScrollable() {
     const screenWidth = window.innerWidth;
     let scrollAmount;
     if (screenWidth >= 1280) {
-      scrollAmount = 420;
-    } else {
-      scrollAmount = 320;
+      scrollAmount = 420; // xl
+    } else if (screenWidth >= 1024) {
+      scrollAmount = 340; // lg
+    } else if (screenWidth >= 768) {
+      scrollAmount = 370; // md
+    } else if (screenWidth >= 640) {
+      scrollAmount = 320; // sm
+    }else {
+      scrollAmount = 340; // xs
     }
     scrollableContainer.scrollBy({
       left: -scrollAmount,
@@ -42,10 +48,16 @@ export function PromotionsScrollable() {
   function scrollRight() {
     const screenWidth = window.innerWidth;
     let scrollAmount;
-    if (screenWidth >= 1280) {
-      scrollAmount = 420;
-    } else {
-      scrollAmount = 320;
+   if  (screenWidth >= 1280) {
+     scrollAmount = 420; // xl
+   } else if (screenWidth >= 1024) {
+     scrollAmount = 340; // lg
+   } else if (screenWidth >= 768) {
+     scrollAmount = 370; // md
+   } else if (screenWidth >= 640) {
+     scrollAmount = 320; // sm
+   }  else {
+      scrollAmount = 340; // xs
     }
     scrollableContainer.scrollBy({
       left: scrollAmount,
@@ -60,7 +72,7 @@ export function PromotionsScrollable() {
           <LoadingSpinner />
         </div>
       ) : (
-        <div className="relative max-w-[300px] md:max-w-[660px] xl:max-w-[1240px]">
+        <div className="relative max-w-[320px] sm:max-w-[620px] md:max-w-[720px] lg:max-w-[1000px] xl:max-w-[1240px]">
           {/* Left Scroll Button */}
           <button
             onClick={() => scrollLeft()}
@@ -92,17 +104,23 @@ export function PromotionsScrollable() {
             {allPromos.map((promotion) => {
               if (promotion.promotionType == '1') {
                 return (
-                  <PromotionCard
+                  <div
+                    className="xl:w-[400px]  min-w-[320px] sm:min-w-[300px] md:min-w-[350px] lg:min-w-[320px] xl:min-w-[400px]"
                     key={promotion._id}
-                    promotion={promotion}
-                  />
+                  >
+                    <PromotionCard promotion={promotion} />
+                  </div>
                 );
               } else {
                 return (
-                  <DiscountAmountCard
+                  <div
+                    className="xl:w-[400px]  min-w-[320px] sm:min-w-[300px] md:min-w-[350px] lg:min-w-[320px] xl:min-w-[400px]"
                     key={promotion._id}
-                    promotion={promotion}
-                  />
+                  >
+                    <DiscountAmountCard
+                      promotion={promotion}
+                    />
+                  </div>
                 );
               }
             })}

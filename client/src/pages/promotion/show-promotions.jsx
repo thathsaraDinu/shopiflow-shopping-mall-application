@@ -80,12 +80,12 @@ export default function ShowPromotions() {
   );
 
   return (
-    <div className="transition-all duration-500 py-5 mx-auto md:py-10 min-h-screen flex flex-col gap-10 ">
-        <h2 className="text-3xl font-bold bg-gradient-to-r text-center mb-6 from-blue-600 to-purple bg-clip-text text-transparent">
+    <div className="container transition-all duration-500 py-5 mx-auto md:py-10 min-h-screen flex flex-col gap-10 ">
+      <h2 className="text-3xl font-bold bg-gradient-to-r text-center mb-6 from-blue-600 to-purple bg-clip-text text-transparent">
         Promotions
       </h2>
       <div className="flex flex-col  gap-10">
-        <div className="text-sm container flex items-start justify-between flex-wrap gap-4">
+        <div className="text-sm  flex items-start justify-between flex-wrap gap-4">
           {/* Checkbox card for store name selection */}
           <div className="flex justify-start items-start flex-wrap gap-4">
             <Button

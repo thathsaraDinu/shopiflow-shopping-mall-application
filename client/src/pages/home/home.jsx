@@ -26,7 +26,7 @@ const Home = () => {
     (state) => state.isLoggedIn,
   );
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-blue-50">
+    <div className="min-h-screen bg-blue-50">
       {/* Hero Section */}
       <HeroSection />
 

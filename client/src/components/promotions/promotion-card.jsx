@@ -17,7 +17,7 @@ export function PromotionCard({ promotion }) {
   } = promotion;
 
   const cardcss =
-    'flex flex-col mb-3 gap-2 xl:w-[400px] border bg-white w-[300px] min-w-[300px] xl:min-w-[400px] rounded-md';
+    'flex flex-col mb-3 gap-2  rounded-md border-grey-100 bg-white';
   return (
     <div className={cardcss}>
       <Link
@@ -28,9 +28,10 @@ export function PromotionCard({ promotion }) {
             behavior: 'smooth', // Smooth scrolling effect
           });
         }}
+        className="overflow-clip rounded-t-md"
       >
         <img
-          className="object-cover h-64 xl:h-72 w-full rounded-t-md" // Use 'object-cover' for cropping while maintaining aspect ratio
+          className="object-cover h-64 xl:h-72 w-full hover:scale-110 transition-transform duration-300" // Use 'object-cover' for cropping while maintaining aspect ratio
           src={
             photo
               ? photo
@@ -39,7 +40,7 @@ export function PromotionCard({ promotion }) {
           alt="promotion"
         />
       </Link>
-      <div className='flex flex-col justify-between text-sm gap-2'>
+      <div className="flex flex-col justify-between text-sm gap-2">
         <div className="flex justify-between text-sm text-gray-600 px-2">
           <div>
             <MdOutlineDateRange className="h-4 w-4 mr-2 inline-block" />

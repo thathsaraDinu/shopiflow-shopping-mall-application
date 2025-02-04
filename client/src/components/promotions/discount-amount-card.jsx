@@ -23,8 +23,8 @@ export function DiscountAmountCard({ promotion }) {
   }
 
   return (
-    <div className="flex flex-col border bg-white mb-3 gap-2 xl:w-[400px] w-[300px] min-w-[300px] xl:min-w-[400px] rounded-md">
-      <div>
+    <div className="flex flex-col border bg-white mb-3 gap-2  rounded-md border-grey-100">
+      <div className="overflow-clip rounded-t-md">
         <Link
           to={`/promotiondetails/${'type2'}/${promotion._id}`}
           onClick={() => {
@@ -35,7 +35,7 @@ export function DiscountAmountCard({ promotion }) {
           }}
         >
           <img
-            className="object-cover h-64 xl:h-72 w-full rounded-t-md" // Use 'object-cover' for cropping while maintaining aspect ratio
+            className="object-cover h-64 xl:h-72 w-full hover:scale-110 transition-transform duration-300" // Use 'object-cover' for cropping while maintaining aspect ratio
             src={
               photo
                 ? photo
