@@ -1,4 +1,4 @@
-import { instance } from '@/hooks/use-axios';
+-import { instance } from '@/hooks/use-axios';
 
 // Complete Order
 export const completeOrder = async (data) => {
